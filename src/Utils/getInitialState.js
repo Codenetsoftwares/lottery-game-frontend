@@ -1,8 +1,13 @@
-export const getUserInitialState = (overrides = {}) => ({
-    isLogin: false,
-    userId: null,
-    ...overrides,
-  });
+export const getAdminInitialState = (body = {}) => {
+  
+  return {
+    accessToken: body.accessToken ?? "",
+    isLogin: body.isLogin ?? false,
+    userName: body.userName ?? "",
+    adminId: body.adminId ?? "",
+   };
+
+}
   
   export const getLotteryGameInitialState = (overrides = {}) => ({
     gameId: null,

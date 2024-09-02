@@ -1,8 +1,25 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, { useState } from "react";
+
 import backgroundimage from "../../../../Assets/backgroundImage.jpg";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    console.log("onclicked event ", username, password);
+    if (username === "Tamoghna" && password === "123456") {
+      // Redirect to the lottery-market page on successful login
+      navigate("/lottery-markets");
+    } else {
+      // Handle invalid credentials (show error message or similar)
+      alert("Invalid credentials, please try again.");
+    }
+  };
   return (
     <div
       className="d-flex justify-content-center align-items-center"
@@ -77,6 +94,8 @@ const Login = () => {
                           borderRadius: "5px",
                           border: "1px solid",
                         }}
+                        onChange={(e) => setUsername(e.target.value)}
+                        value={username}
                       />
                     </div>
                     <div className="mb-3">
@@ -89,10 +108,11 @@ const Login = () => {
                           borderRadius: "5px",
                           border: "1px solid",
                         }}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
-                    <a
-                      href="#"
+                    <button
                       className="btn_1 full_width text-center"
                       style={{
                         color: "white",
@@ -102,9 +122,10 @@ const Login = () => {
                         width: "100%",
                         textDecoration: "none",
                       }}
+                      onClick={handleLogin} // Properly attaching the handleLogin function
                     >
                       Log in
-                    </a>
+                    </button>
 
                     <div className="text-center">
                       <a

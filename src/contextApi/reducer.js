@@ -1,37 +1,20 @@
-import strings from '../utils/constant/stringConstant';
-import { getUserInitialState, getLotteryGameInitialState } from '../utils/getInitiateState';
+import strings from "../Utils/constant/stringConstant";
+import { getAdminInitialState } from "../Utils/getInitialState";
+
 
 export const reducer = (state, action) => {
   switch (action.type) {
     case strings.LOG_IN:
       return {
         ...state,
-        user: getUserInitialState(action.payload),
+        admin: getAdminInitialState(action.payload),
       };
 
     case strings.LOG_OUT:
       return {
         ...state,
-        user: getUserInitialState({ isLogin: false }),
+        user: getAdminInitialState({ isLogin: false }),
       };
-
-    // case strings.SET_LOTTERY_GAMES:
-    //   return {
-    //     ...state,
-    //     lotteryGames: action.payload,
-    //   };
-
-    // case strings.SET_CURRENT_GAME:
-    //   return {
-    //     ...state,
-    //     currentGame: getLotteryGameInitialState(action.payload),
-    //   };
-
-    // case strings.SET_LOADING:
-    //   return {
-    //     ...state,
-    //     isLoading: action.payload,
-    //   };
 
     default:
       return state;

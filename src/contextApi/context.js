@@ -1,19 +1,17 @@
-import { createContext, useContext, useReducer, useEffect } from 'react';
-import { reducer } from './reducer';
-import strings from '../utils/constant/stringConstant';
-import { getUserInitialState, getLotteryGameInitialState } from '../utils/getInitiateState';
+import { createContext, useContext, useReducer, useEffect } from "react";
+import { reducer } from "./reducer";
+import { getAdminInitialState } from "../Utils/getInitialState";
+import strings from "../Utils/constant/stringConstant";
 
-const LotteryContext = createContext();
+const AppContext = createContext();
 
 const initialState = {
-  user: getUserInitialState(),
-  lotteryGames: [],
-  currentGame: getLotteryGameInitialState(),
-  isLoading: false,
+  user: getAdminInitialState(),
 };
 
-const LotteryProvider = ({ children }) => {
+const AppProvider = ({ children }) => {
   const [store, dispatch] = useReducer(reducer, initialState, () => {
+    // Load state from local storage if available
     const storedState = localStorage.getItem(strings.LOCAL_STORAGE_KEY);
     return storedState ? JSON.parse(storedState) : initialState;
   });
@@ -24,14 +22,14 @@ const LotteryProvider = ({ children }) => {
   }, [store]);
 
   return (
-    <LotteryContext.Provider value={{ store, dispatch }}>
+    <AppContext.Provider value={{ store, dispatch }}>
       {children}
-    </LotteryContext.Provider>
+    </AppContext.Provider>
   );
 };
 
-const useLotteryContext = () => {
-  return useContext(LotteryContext);
+const useAppContext = () => {
+  return useContext(AppContext);
 };
 
-export { LotteryProvider, useLotteryContext };
+export { AppProvider, useAppContext };

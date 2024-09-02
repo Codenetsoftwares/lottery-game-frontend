@@ -1,5 +1,7 @@
 import urls from "../utils/constant/UrlConstant";
-import strings from "../utils/constant/stringConstant";
+import strings from "./constant/stringConstant";
+
+
 import { getCallParams, getNoAuthCallParams, makeCall } from "./service";
 
 // User login
