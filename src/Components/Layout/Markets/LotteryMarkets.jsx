@@ -4,15 +4,17 @@ import SingleCard from "../Common/SingleCard";
 import Pagination from "../Common/Pagination";
 import CustomModal from "../Common/modal";
 import DearLotteryCard from "../Common/DearLotteryCard";
+import { useAppContext } from "../../../contextApi/context";
 
 const LotteryMarkets = () => {
+  const{dispatch, store}= useAppContext();
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 10; // Set this based on your data
   const [entries, setEntries] = useState(10); // Number of entries dropdown
   const [showModal, setShowModal] = useState(false);
   const [randomToken, setRandomToken] = useState("");
   const [lotteryCards, setLotteryCards] = useState([]);
-
+console.log('======>>> auth', store)
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
     // Fetch or filter data based on the new page number here
