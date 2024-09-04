@@ -7,6 +7,7 @@ class UrlConstant {
     // user api
     user = 'user';
     login = `${this.url_dev}/login`;
+    generateTicketId=`${this.url_dev}/ticket-create`; 
  
   }
   

@@ -13,7 +13,7 @@ export const reducer = (state, action) => {
     case strings.LOG_OUT:
       return {
         ...state,
-        user: getAdminInitialState({ isLogin: false }),
+        admin: getAdminInitialState(), // Clear admin data on logout
       };
 
     default:

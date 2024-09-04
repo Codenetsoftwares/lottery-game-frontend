@@ -2,11 +2,11 @@
 import strings from "./constant/stringConstant";
 
 
-import { getCallParams, getNoAuthCallParams, makeCall } from "./service";
+import { getNoAuthCallParams, makeCall } from "./service";
 import urls from "./UrlConstant";
 
 // User login
-export async function adminLogin(body, isToast = false) {
+export async function adminLogin(body, isToast = true) {
   try {
     const callParams = getNoAuthCallParams(strings.POST, body, isToast);
     const response = await makeCall(urls.login, callParams, isToast);
@@ -16,15 +16,16 @@ export async function adminLogin(body, isToast = false) {
   }
 }
 
-// User logout
-export async function logout(body, isToast = false) {
+
+export async function generateTicketNumber(body, isToast = true) {
   try {
     const callParams = getNoAuthCallParams(strings.POST, body, isToast);
-    const response = await makeCall(urls.userLogout, callParams, isToast);
+    const response = await makeCall(urls.generateTicketId, callParams, isToast);
     return response;
   } catch (error) {
     throw error;
   }
 }
+
 
 

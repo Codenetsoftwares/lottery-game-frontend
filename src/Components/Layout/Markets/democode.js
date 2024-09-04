@@ -1,36 +1,25 @@
 import React, { useState } from "react";
-import "bootstrap/dist/js/bootstrap.bundle.min"; // Ensure Bootstrap JS is included
 import SingleCard from "../Common/SingleCard";
-import Pagination from "../Common/Pagination";
-import DearLotteryCard from "../Common/DearLotteryCard";
-import { useAppContext } from "../../../contextApi/context";
-import CustomModal from "../Common/modal";
-import { generateTicketNumber } from "../../../Utils/apiService";
+import CustomModal from "../Common/CustomModal";
+import Pagination from "../Common/Pagination"; // Assuming you have a Pagination component
 
 const LotteryMarkets = () => {
-  const { dispatch, store } = useAppContext();
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 10; // Set this based on your data
-  const [entries, setEntries] = useState(10); // Number of entries dropdown
   const [randomToken, setRandomToken] = useState("");
-  const [lotteryCards, setLotteryCards] = useState([]);
-  const [sem, setSem] = useState(5); // Default SEM value
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sem, setSem] = useState(5);
   const [lotteryId, setLotteryId] = useState("");
   const [price] = useState(6);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  console.log('======>>> auth', store);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    // Fetch or filter data based on the new page number here
+  const handleGenerateTicketNumber = () => {
+    if (!randomToken) {
+      const prefix = Math.floor(Math.random() * (99 - 38 + 1)) + 38;
+      const alphabet = "ABCDEGHKL";
+      const letter = alphabet[Math.floor(Math.random() * alphabet.length)];
+      const number = Math.floor(Math.random() * 100000).toString().padStart(5, "0");
+      const token = `${prefix}${letter}${number}`;
+      setRandomToken(token);
+    }
   };
-
-  const handleEntriesChange = (event) => {
-    setEntries(event.target.value);
-    // Handle entries per page change here
-  };
-
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -40,28 +29,9 @@ const LotteryMarkets = () => {
     setIsModalOpen(false);
   };
 
-  const handleSemChange = (event) => {
-    setSem(event.target.value);
-  };
-  const handleGenerateTicketNumber = async () => {
-    try {
-      if (!randomToken) {
-        const response = await generateTicketNumber({});
-        if (response) {
-          console.log('generated ticket number', response)
-          setRandomToken(response);
-        } else {
-          console.error("Failed to generate ticket number");
-        }
-      }
-    } catch (error) {
-      console.error("Error generating ticket number:", error);
-    }
-  };
-
   const handleCreateTicket = () => {
     // Implement ticket creation logic here
-    console.log("Creating ticket with the following details:" ,randomToken , lotteryId, sem, price  );
+    console.log("Creating ticket with the following details:");
     console.log("Ticket Number:", randomToken);
     console.log("Lottery ID:", lotteryId);
     console.log("SEM:", sem);
@@ -76,24 +46,9 @@ const LotteryMarkets = () => {
     <SingleCard>
       <SingleCard>
         <div className="d-flex justify-content-between align-items-center mb-3">
-          {/* SEM Dropdown */}
-          <div className="d-flex align-items-center">
-            <label htmlFor="semSelect" className="me-2" style={{ color: "#4682B4", fontWeight: "bold" }}>
-              View Tickets By SEM
-            </label>
-            <select id="semSelect" className="form-select" style={{ maxWidth: "150px" }} onChange={handleSemChange} value={sem}>
-              <option value="5">5 SEM</option>
-              <option value="10">10 SEM</option>
-              <option value="20">20 SEM</option>
-              <option value="50">50 SEM</option>
-              <option value="100">100 SEM</option>
-              <option value="200">200 SEM</option>
-            </select>
-          </div>
-
           {/* Generate Ticket Number */}
           <div className="d-flex align-items-center">
-          {randomToken ? (
+            {randomToken ? (
               <span
                 style={{
                   cursor: "pointer",
@@ -137,33 +92,15 @@ const LotteryMarkets = () => {
         </div>
       </SingleCard>
 
+      {/* View Tickets By SEM Section */}
       <SingleCard>
-        <div className="container">
-          <div className="row justify-content-center">
-            {lotteryCards.map((card) => (
-              <div className="col-md-4 mb-4" key={card.id}>
-                <DearLotteryCard
-                  lotteryName={card.lotteryName}
-                  drawDate={card.drawDate}
-                  prizeAmount={card.prizeAmount}
-                  serialNumber={card.serialNumber}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+        <h4>View Tickets By SEM</h4>
+        {/* Add your ticket list and pagination logic here */}
+        <Pagination />
       </SingleCard>
 
-      <div style={{ marginTop: "20px" }}>
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-      </div>
-
-       {/* Custom Modal for creating a ticket */}
-       <CustomModal
+      {/* Custom Modal for creating a ticket */}
+      <CustomModal
         showModal={isModalOpen}
         onClose={handleCloseModal}
         heading="Create Lottery Ticket"

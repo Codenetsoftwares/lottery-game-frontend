@@ -2,17 +2,11 @@ export const getAdminInitialState = (body = {}) => {
   
   return {
     accessToken: body.accessToken ?? "",
-    isLogin: body.isLogin ?? false,
+    isLogin: !!body.accessToken, // Determine login status based on accessToken
     userName: body.userName ?? "",
     adminId: body.adminId ?? "",
+    roles: body.role ?? [],
    };
 
 }
-  
-  export const getLotteryGameInitialState = (overrides = {}) => ({
-    gameId: null,
-    gameName: '',
-    participants: [],
-    ...overrides,
-  });
   

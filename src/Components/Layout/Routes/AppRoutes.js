@@ -10,7 +10,7 @@ const AppRoutes = () => {
     <AppProvider>
     <BrowserRouter>
       <Routes>
-        <Route index element={<Login />} />
+        <Route index element={<Login/>} />
          <Route path="/" element={<AdminLayout/>}>
           <Route path="/lottery-markets" element={<LotteryMarkets />} />
         </Route>
