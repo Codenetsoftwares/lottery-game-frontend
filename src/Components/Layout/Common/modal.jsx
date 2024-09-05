@@ -1,5 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+// import "./LotteryMarkets.css";
 
 const CustomModal = ({ showModal, onClose, heading,inputs = [], buttonLabel, onButtonClick }) => {
   return (
@@ -24,14 +25,19 @@ const CustomModal = ({ showModal, onClose, heading,inputs = [], buttonLabel, onB
                   <label htmlFor={input.id} className="form-label">
                     {input.label}
                   </label>
-                  <input
-                    type={input.type || "text"}
-                    className="form-control"
-                    id={input.id}
-                    value={input.value}
-                    onChange={(e) => input.onChange(e.target.value)}
-                    readOnly={input.readOnly || false}
-                  />
+                  {/* Conditionally render custom component or input field */}
+                  {input.component ? (
+                    input.component
+                  ) : (
+                    <input
+                      type={input.type || "text"}
+                      className="form-control"
+                      id={input.id}
+                      value={input.value}
+                      onChange={(e) => input.onChange(e.target.value)}
+                      readOnly={input.readOnly || false}
+                    />
+                  )}
                 </div>
               ))
             ) : (

@@ -5,31 +5,58 @@ import Pagination from "../Common/Pagination";
 import DearLotteryCard from "../Common/DearLotteryCard";
 import { useAppContext } from "../../../contextApi/context";
 import CustomModal from "../Common/modal";
-import { generateLotteryTicket, generateTicketNumber } from "../../../Utils/apiService";
+import {
+  generateLotteryTicket,
+  generateTicketNumber,
+} from "../../../Utils/apiService";
 import strings from "../../../Utils/constant/stringConstant";
 import { getLotteryMarketsInitialState } from "../../../Utils/getInitialState";
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { formatISO } from "date-fns";
 
 const LotteryMarkets = () => {
-  const { dispatch} = useAppContext();
+  const { dispatch } = useAppContext();
 
   const [state, setState] = useState(getLotteryMarketsInitialState);
 
   const handlePageChange = (pageNumber) => {
-    setState(prev => ({ ...prev, currentPage: pageNumber }));
+    setState((prev) => ({ ...prev, currentPage: pageNumber }));
     // Fetch or filter data based on the new page number here
   };
 
   const handleEntriesChange = (event) => {
-    setState(prev => ({ ...prev, entries: event.target.value }));
+    setState((prev) => ({ ...prev, entries: event.target.value }));
     // Handle entries per page change here
   };
 
-  const handleOpenModal = () => setState(prev => ({ ...prev, showModal: true }));
-  const handleCloseModal = () => setState(prev => ({ ...prev, showModal: false }));
+  const handleOpenModal = () =>
+    setState((prev) => ({ ...prev, showModal: true }));
+  const handleCloseModal = () => {
+    // Clear input fields when closing the modal
+    setState((prev) => ({
+      ...prev,
+      showModal: false,
+      inputs: {
+        name: "",
+        DateTime: "",
+        firstPrize: "",
+        sem: "",
+        price: "",
+      },
+    }));
+  };
 
-  const handleSemChange = (event) => setState(prev => ({ ...prev, sem: event.target.value }));
-
+ 
+  const handleDateChange = (date) => {
+    const formattedDate = formatISO(date); // Format date as ISO string
+    handleInputChange("DateTime", formattedDate);
+  };
+  const handleSemChange = (event) => {
+    const newSem = event.target.value;
+    setState((prev) => ({ ...prev, sem: newSem }));
+    // Handle any additional logic related to SEM change if needed
+  };
   async function handleGenerateTicketNumber() {
     if (!state.randomToken) {
       const response = await generateTicketNumber({});
@@ -42,53 +69,58 @@ const LotteryMarkets = () => {
           payload: ticketNumber,
         });
 
-        setState(prev => ({ ...prev, randomToken: ticketNumber }));
+        setState((prev) => ({ ...prev, randomToken: ticketNumber }));
       } else {
         console.error("Failed to generate ticket number");
       }
     }
   }
 
- async function  handleCreateTicket ()  {
-  
-  if (state.inputs.sem >0) {
-    for (let i = 0; i < state.sem; i++){
+  async function handleCreateTicket() {
+    if (state.inputs.sem > 0) {
+      const createdTickets = [];
+      for (let i = 0; i < state.inputs.sem; i++) {
+        const response = await generateLotteryTicket({
+          name: state.inputs.name,
+          date: state.inputs.DateTime,
+          firstPrize: state.inputs.firstPrize,
+          sem: state.inputs.sem,
+          price: state.inputs.price,
+        });
 
-      console.log(`Creating ticket ${i + 1} with:`, {
-        DateTime: state.inputs.randomToken,
-        firstPrize: state.inputs.firstPrize,
-        sem: state.inputs.sem,
-        price: state.inputs.price,
-            });
-const response = await  generateLotteryTicket({
-  name: state.inputs.name,
-  date: state.inputs.DateTime,
-  firstPrize: state.inputs.firstPrize,
-  sem: state.inputs.sem,
-  price: state.inputs.price,
+        if (response) {
+          createdTickets.push({
+            lotteryName: state.inputs.name,
+            drawDate: state.inputs.DateTime,
+            drawTime: "", // Add if needed
+            firstPrize: state.inputs.firstPrize,
+            sem: state.inputs.sem,
+            price: state.inputs.price,
+            ticketNumber: state.randomToken, // Use the generated ticket number
+          });
+        } else {
+          console.error(`Failed to create ticket ${i + 1}`);
+        }
+      }
 
-})
+      // Update state with created tickets
+      setState((prev) => ({
+        ...prev,
+        lotteryCards: [...prev.lotteryCards, ...createdTickets],
+      }));
 
-    // Handle successful response (optional)
-    console.log(`Ticket ${i + 1} created successfully:`, response);
-
-    };
-
-
+      handleCloseModal();
+      setState((prev) => ({ ...prev, randomToken: "" }));
+    }
   }
-      
-
-    handleCloseModal();
-    setState(prev => ({ ...prev, randomToken: "" }));
-  };
 
   const handleInputChange = (field, value) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       inputs: {
         ...prev.inputs,
-        [field]: value
-      }
+        [field]: value,
+      },
     }));
   };
 
@@ -175,8 +207,11 @@ const response = await  generateLotteryTicket({
                 <DearLotteryCard
                   lotteryName={card.lotteryName}
                   drawDate={card.drawDate}
-                  prizeAmount={card.prizeAmount}
-                  serialNumber={card.serialNumber}
+                  drawTime={card.drawTime}
+                  firstPrize={card.firstPrize}
+                  sem={card.sem}
+                  price={card.price}
+                  ticketNumber={card.ticketNumber}
                 />
               </div>
             ))}
@@ -199,24 +234,49 @@ const response = await  generateLotteryTicket({
         heading="Create Lottery Ticket"
         inputs={[
           {
-            id: "lotteryId",
-            label: "Lottery ID",
-            value: state.inputs.lotteryId,
-            onChange: (value) => handleInputChange("lotteryId", value)
+            id: "name",
+            label: "Name",
+            value: state.inputs.name,
+            onChange: (value) => handleInputChange("name", value),
+          },
+          {
+            id: "DateTime",
+            label: "Date and Time",
+            component: (
+              <div className="date-time-picker-container">
+                <DatePicker
+                  selected={
+                    state.inputs.DateTime
+                      ? new Date(state.inputs.DateTime)
+                      : new Date() // Fallback to current date if DateTime is invalid
+                  }
+                  onChange={handleDateChange}
+                  showTimeSelect
+                  dateFormat="yyyy-MM-dd'T'HH:mm:ss.SSSXXX" // Format as ISO
+                  className="form-control"
+                />
+              </div>
+            ),
+          },
+          {
+            id: "firstPrize",
+            label: "First Prize",
+            value: state.inputs.firstPrize,
+            onChange: (value) => handleInputChange("firstPrize", value),
           },
           {
             id: "sem",
             label: "SEM",
             type: "number",
             value: state.inputs.sem,
-            onChange: (value) => handleInputChange("sem", value)
+            onChange: (value) => handleInputChange("sem", value),
           },
           {
             id: "price",
             label: "Price",
             value: state.inputs.price,
-            readOnly: true
-          }
+            onChange: (value) => handleInputChange("price", value),
+          },
         ]}
         buttonLabel="Create Ticket"
         onButtonClick={handleCreateTicket}
