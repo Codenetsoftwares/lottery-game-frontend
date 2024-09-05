@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import "bootstrap/dist/js/bootstrap.bundle.min"; // Ensure Bootstrap JS is included
 import SingleCard from "../Common/SingleCard";
 import Pagination from "../Common/Pagination";
@@ -19,6 +19,18 @@ const LotteryMarkets = () => {
   const { dispatch } = useAppContext();
 
   const [state, setState] = useState(getLotteryMarketsInitialState);
+
+
+    // Load tickets from localStorage when the component mounts
+    useEffect(() => {
+      const savedTickets = localStorage.getItem("lotteryCards");
+      if (savedTickets) {
+        setState((prev) => ({
+          ...prev,
+          lotteryCards: JSON.parse(savedTickets),
+        }));
+      }
+    }, []);
 
   const handlePageChange = (pageNumber) => {
     setState((prev) => ({ ...prev, currentPage: pageNumber }));
@@ -78,39 +90,38 @@ const LotteryMarkets = () => {
 
   async function handleCreateTicket() {
     if (state.inputs.sem > 0) {
-      const createdTickets = [];
-      for (let i = 0; i < state.inputs.sem; i++) {
-        const response = await generateLotteryTicket({
-          name: state.inputs.name,
-          date: state.inputs.DateTime,
+      const response = await generateLotteryTicket({
+        name: state.inputs.name,
+        date: state.inputs.DateTime,
+        firstPrize: state.inputs.firstPrize,
+        sem: state.inputs.sem,
+        price: state.inputs.price,
+      });
+
+      if (response) {
+        const createdTicket = {
+          lotteryName: state.inputs.name,
+          drawDate: state.inputs.DateTime,
+          drawTime: "", // Add if needed
           firstPrize: state.inputs.firstPrize,
           sem: state.inputs.sem,
           price: state.inputs.price,
-        });
+          ticketNumber: state.randomToken,
+        };
 
-        if (response) {
-          createdTickets.push({
-            lotteryName: state.inputs.name,
-            drawDate: state.inputs.DateTime,
-            drawTime: "", // Add if needed
-            firstPrize: state.inputs.firstPrize,
-            sem: state.inputs.sem,
-            price: state.inputs.price,
-            ticketNumber: state.randomToken, // Use the generated ticket number
-          });
-        } else {
-          console.error(`Failed to create ticket ${i + 1}`);
-        }
+        const updatedLotteryCards = [...state.lotteryCards, createdTicket];
+        setState((prev) => ({
+          ...prev,
+          lotteryCards: updatedLotteryCards,
+        }));
+
+        localStorage.setItem("lotteryCards", JSON.stringify(updatedLotteryCards));
+
+        handleCloseModal();
+        setState((prev) => ({ ...prev, randomToken: "" }));
+      } else {
+        console.error("Failed to create ticket");
       }
-
-      // Update state with created tickets
-      setState((prev) => ({
-        ...prev,
-        lotteryCards: [...prev.lotteryCards, ...createdTickets],
-      }));
-
-      handleCloseModal();
-      setState((prev) => ({ ...prev, randomToken: "" }));
     }
   }
 
