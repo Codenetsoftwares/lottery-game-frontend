@@ -14,12 +14,11 @@ export class StringConstants {
   
     LOG_IN = 'LOG_IN';
     LOG_OUT = 'LOG_OUT';
-    // Announcement = 'Announcement';
-    // Name = 'Name';
-    // placeBidding = 'placeBidding';
-    // UserWallet = 'UserWallet';
-    // isLoading = 'isLoading';
-    // RESET_PASSWORD = 'RESET_PASSWORD';
+    GENERATE_TICKET_NUMBER= 'GENERATE_TICKET_NUMBER';
+    GENERATE_LOTTERY= 'GENERATE_LOTTERY';
+
+
+   
   }
   
   let strings = new StringConstants();

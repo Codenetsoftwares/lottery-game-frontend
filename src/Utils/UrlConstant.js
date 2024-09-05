@@ -8,6 +8,7 @@ class UrlConstant {
     user = 'user';
     login = `${this.url_dev}/login`;
     generateTicketId=`${this.url_dev}/ticket-create`; 
+    generateLottery=`${this.url_dev}/create-lottery`; 
  
   }
   

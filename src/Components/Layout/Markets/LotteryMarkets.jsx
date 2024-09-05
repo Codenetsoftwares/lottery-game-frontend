@@ -1,75 +1,95 @@
 import React, { useState } from "react";
-import "bootstrap/dist/js/bootstrap.bundle.min"; // Ensure Bootstrap JS is included
+// import "bootstrap/dist/js/bootstrap.bundle.min"; // Ensure Bootstrap JS is included
 import SingleCard from "../Common/SingleCard";
 import Pagination from "../Common/Pagination";
 import DearLotteryCard from "../Common/DearLotteryCard";
 import { useAppContext } from "../../../contextApi/context";
 import CustomModal from "../Common/modal";
-import { generateTicketNumber } from "../../../Utils/apiService";
+import { generateLotteryTicket, generateTicketNumber } from "../../../Utils/apiService";
+import strings from "../../../Utils/constant/stringConstant";
+import { getLotteryMarketsInitialState } from "../../../Utils/getInitialState";
+
 
 const LotteryMarkets = () => {
-  const { dispatch, store } = useAppContext();
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 10; // Set this based on your data
-  const [entries, setEntries] = useState(10); // Number of entries dropdown
-  const [randomToken, setRandomToken] = useState("");
-  const [lotteryCards, setLotteryCards] = useState([]);
-  const [sem, setSem] = useState(5); // Default SEM value
-  const [lotteryId, setLotteryId] = useState("");
-  const [price] = useState(6);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { dispatch} = useAppContext();
 
-  console.log('======>>> auth', store);
+  const [state, setState] = useState(getLotteryMarketsInitialState);
 
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    setState(prev => ({ ...prev, currentPage: pageNumber }));
     // Fetch or filter data based on the new page number here
   };
 
   const handleEntriesChange = (event) => {
-    setEntries(event.target.value);
+    setState(prev => ({ ...prev, entries: event.target.value }));
     // Handle entries per page change here
   };
 
+  const handleOpenModal = () => setState(prev => ({ ...prev, showModal: true }));
+  const handleCloseModal = () => setState(prev => ({ ...prev, showModal: false }));
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
+  const handleSemChange = (event) => setState(prev => ({ ...prev, sem: event.target.value }));
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  async function handleGenerateTicketNumber() {
+    if (!state.randomToken) {
+      const response = await generateTicketNumber({});
+      if (response) {
+        const ticketNumber = response?.data?.ticketNumber;
+        console.log("Generated ticket number:", ticketNumber);
 
-  const handleSemChange = (event) => {
-    setSem(event.target.value);
-  };
-  const handleGenerateTicketNumber = async () => {
-    try {
-      if (!randomToken) {
-        const response = await generateTicketNumber({});
-        if (response) {
-          console.log('generated ticket number', response)
-          setRandomToken(response);
-        } else {
-          console.error("Failed to generate ticket number");
-        }
+        dispatch({
+          type: strings.GENERATE_TICKET_NUMBER,
+          payload: ticketNumber,
+        });
+
+        setState(prev => ({ ...prev, randomToken: ticketNumber }));
+      } else {
+        console.error("Failed to generate ticket number");
       }
-    } catch (error) {
-      console.error("Error generating ticket number:", error);
     }
+  }
+
+ async function  handleCreateTicket ()  {
+  
+  if (state.inputs.sem >0) {
+    for (let i = 0; i < state.sem; i++){
+
+      console.log(`Creating ticket ${i + 1} with:`, {
+        DateTime: state.inputs.randomToken,
+        firstPrize: state.inputs.firstPrize,
+        sem: state.inputs.sem,
+        price: state.inputs.price,
+            });
+const response = await  generateLotteryTicket({
+  name: state.inputs.name,
+  date: state.inputs.DateTime,
+  firstPrize: state.inputs.firstPrize,
+  sem: state.inputs.sem,
+  price: state.inputs.price,
+
+})
+
+    // Handle successful response (optional)
+    console.log(`Ticket ${i + 1} created successfully:`, response);
+
+    };
+
+
+  }
+      
+
+    handleCloseModal();
+    setState(prev => ({ ...prev, randomToken: "" }));
   };
 
-  const handleCreateTicket = () => {
-    // Implement ticket creation logic here
-    console.log("Creating ticket with the following details:" ,randomToken , lotteryId, sem, price  );
-    console.log("Ticket Number:", randomToken);
-    console.log("Lottery ID:", lotteryId);
-    console.log("SEM:", sem);
-    console.log("Price:", price);
-
-    // Reset the state after creating the ticket
-    handleCloseModal();
-    setRandomToken("");
+  const handleInputChange = (field, value) => {
+    setState(prev => ({
+      ...prev,
+      inputs: {
+        ...prev.inputs,
+        [field]: value
+      }
+    }));
   };
 
   return (
@@ -78,10 +98,20 @@ const LotteryMarkets = () => {
         <div className="d-flex justify-content-between align-items-center mb-3">
           {/* SEM Dropdown */}
           <div className="d-flex align-items-center">
-            <label htmlFor="semSelect" className="me-2" style={{ color: "#4682B4", fontWeight: "bold" }}>
+            <label
+              htmlFor="semSelect"
+              className="me-2"
+              style={{ color: "#4682B4", fontWeight: "bold" }}
+            >
               View Tickets By SEM
             </label>
-            <select id="semSelect" className="form-select" style={{ maxWidth: "150px" }} onChange={handleSemChange} value={sem}>
+            <select
+              id="semSelect"
+              className="form-select"
+              style={{ maxWidth: "150px" }}
+              onChange={handleSemChange}
+              value={state.sem}
+            >
               <option value="5">5 SEM</option>
               <option value="10">10 SEM</option>
               <option value="20">20 SEM</option>
@@ -93,7 +123,7 @@ const LotteryMarkets = () => {
 
           {/* Generate Ticket Number */}
           <div className="d-flex align-items-center">
-          {randomToken ? (
+            {state.randomToken ? (
               <span
                 style={{
                   cursor: "pointer",
@@ -104,7 +134,7 @@ const LotteryMarkets = () => {
                 }}
                 onClick={handleOpenModal}
               >
-                Generated Ticket Number: {randomToken}
+                Generated Ticket Number: {state.randomToken}
                 <div
                   style={{
                     position: "absolute",
@@ -130,7 +160,7 @@ const LotteryMarkets = () => {
                 }}
                 onClick={handleGenerateTicketNumber}
               >
-                Generate Ticket Number to Create Lottery Ticket
+                Generate Ticket Number To Create Lottery Ticket
               </span>
             )}
           </div>
@@ -140,7 +170,7 @@ const LotteryMarkets = () => {
       <SingleCard>
         <div className="container">
           <div className="row justify-content-center">
-            {lotteryCards.map((card) => (
+            {state.lotteryCards.map((card) => (
               <div className="col-md-4 mb-4" key={card.id}>
                 <DearLotteryCard
                   lotteryName={card.lotteryName}
@@ -156,73 +186,38 @@ const LotteryMarkets = () => {
 
       <div style={{ marginTop: "20px" }}>
         <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
+          totalPages={state.totalPages}
+          currentPage={state.currentPage}
           onPageChange={handlePageChange}
         />
       </div>
 
-       {/* Custom Modal for creating a ticket */}
-       <CustomModal
-        showModal={isModalOpen}
+      {/* Custom Modal for creating a ticket */}
+      <CustomModal
+        showModal={state.showModal}
         onClose={handleCloseModal}
         heading="Create Lottery Ticket"
-        bodyContent={
-          <form>
-            <div className="mb-3">
-              <label htmlFor="lotteryId" className="form-label">
-                Lottery ID
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="lotteryId"
-                value={lotteryId}
-                onChange={(e) => setLotteryId(e.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="semSelect" className="form-label">
-                SEM
-              </label>
-              <select
-                id="semSelect"
-                className="form-select"
-                value={sem}
-                onChange={(e) => setSem(e.target.value)}
-              >
-                <option value="5">5 SEM</option>
-                <option value="10">10 SEM</option>
-                <option value="20">20 SEM</option>
-                <option value="50">50 SEM</option>
-                <option value="100">100 SEM</option>
-                <option value="200">200 SEM</option>
-              </select>
-            </div>
-            <div className="mb-3">
-              <label htmlFor="price" className="form-label">
-                Price (Rupees)
-              </label>
-              <input
-                type="number"
-                className="form-control"
-                id="price"
-                value={price}
-                readOnly
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="drawDate" className="form-label">
-                Draw Date
-              </label>
-              <input
-                type="date"
-                className="form-control"
-                id="drawDate"
-              />
-            </div>
-          </form>
-        }
+        inputs={[
+          {
+            id: "lotteryId",
+            label: "Lottery ID",
+            value: state.inputs.lotteryId,
+            onChange: (value) => handleInputChange("lotteryId", value)
+          },
+          {
+            id: "sem",
+            label: "SEM",
+            type: "number",
+            value: state.inputs.sem,
+            onChange: (value) => handleInputChange("sem", value)
+          },
+          {
+            id: "price",
+            label: "Price",
+            value: state.inputs.price,
+            readOnly: true
+          }
+        ]}
         buttonLabel="Create Ticket"
         onButtonClick={handleCreateTicket}
       />

@@ -33,7 +33,7 @@ export async function getHeaderObject(accessToken, contentType) {
 // getNoAuthCallParams private api call
 export const getAuthCallParams = async (methodType, body) => {
   const store = JSON.parse(localStorage.getItem(strings.LOCAL_STORAGE_KEY));
-  const accessToken = store.admin?.accessToken;
+  const accessToken = store?.admin?.accessToken;
   const params = {
     method: methodType,
     headers: await getHeaderObject(accessToken, strings.applicationJSON),
@@ -68,25 +68,17 @@ export async function makeCall(callName, callParams, isToast) {
       window.location.href = "/home";
     }
     if (json.success === false) {
-      toast.error(json.errMessage);
+      toast.error(json.errMessage|| "An error occurred");
       return null;
     } else if (isToast && (json.success === true || json.code === 200)) {
       // will update after backend api will provide proper response structure
-      toast.info(json.message);
+      toast.success(json.message || "Operation successful");
     }
-    // if (response && response.ok) {
-    //   return json;
-    // }
-    //  else {
-    //   throw new Error('Something went wrong');
-    // }
-
+   
     return json;
   } catch (error) {
-    // if (await checkStatus(error)) {
-    //   // throw notifiers.LOGGEDOUT;
-    // }
-    toast.error(error.message);
+ 
+    toast.error(error.message || "An error occurred");
     return null;
   }
 }

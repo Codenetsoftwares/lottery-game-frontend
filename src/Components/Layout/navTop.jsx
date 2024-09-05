@@ -2,7 +2,7 @@ import React from "react";
 import { useAppContext } from "../../contextApi/context";
 import strings from "../../Utils/constant/stringConstant";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
 
 const NavTop = () => {
   const { dispatch, store } = useAppContext();
@@ -13,12 +13,15 @@ const NavTop = () => {
     // Dispatch the logout action
     dispatch({ type: strings.LOG_OUT });
 
+    window.confirm("Are you sure you want to log out");
     // Show a toast message
-   window.confirm("Are you sure you want to log out");
+    toast.success("Logged out successfully!");
 
     // Redirect to the login page
+
     navigate("/");
   };
+
   return (
     <div className="container-fluid g-0">
       <div className="row">
