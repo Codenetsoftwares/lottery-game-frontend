@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import "bootstrap/dist/js/bootstrap.bundle.min"; // Ensure Bootstrap JS is included
 import SingleCard from "../Common/SingleCard";
 import Pagination from "../Common/Pagination";
 import DearLotteryCard from "../Common/DearLotteryCard";
@@ -8,6 +7,7 @@ import CustomModal from "../Common/modal";
 import {
   generateLotteryTicket,
   generateTicketNumber,
+  getLotteryTickets,
 } from "../../../Utils/apiService";
 import strings from "../../../Utils/constant/stringConstant";
 import { getLotteryMarketsInitialState } from "../../../Utils/getInitialState";
@@ -19,19 +19,28 @@ const LotteryMarkets = () => {
   const { dispatch } = useAppContext();
 
   const [state, setState] = useState(getLotteryMarketsInitialState);
+console.log('===>> all names ',state.inputs)
 
+  // Fetch tickets when the component mounts
+  useEffect(() => {
+    fetchLotteryTickets();
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
 
-    // Load tickets from localStorage when the component mounts
-    useEffect(() => {
-      const savedTickets = localStorage.getItem("lotteryCards");
-      if (savedTickets) {
-        setState((prev) => ({
-          ...prev,
-          lotteryCards: JSON.parse(savedTickets),
-        }));
-      }
-    }, []);
-
+  const fetchLotteryTickets = async () => {
+    const response = await getLotteryTickets(); // Call the API to get lottery tickets
+    if (response) {
+      setState((prev) => ({
+        ...prev,
+        lotteryCards: response.data, // Assuming response.data contains the tickets array
+      }));
+      dispatch({
+        type: strings.FETCH_LOTTERY_TICKETS,
+        payload: response.data,
+      });
+    } else {
+      console.error("Failed to fetch tickets");
+    }
+  };
   const handlePageChange = (pageNumber) => {
     setState((prev) => ({ ...prev, currentPage: pageNumber }));
     // Fetch or filter data based on the new page number here
@@ -59,7 +68,6 @@ const LotteryMarkets = () => {
     }));
   };
 
- 
   const handleDateChange = (date) => {
     const formattedDate = formatISO(date); // Format date as ISO string
     handleInputChange("DateTime", formattedDate);
@@ -69,6 +77,8 @@ const LotteryMarkets = () => {
     setState((prev) => ({ ...prev, sem: newSem }));
     // Handle any additional logic related to SEM change if needed
   };
+
+  // post api to generate the ticket number
   async function handleGenerateTicketNumber() {
     if (!state.randomToken) {
       const response = await generateTicketNumber({});
@@ -87,7 +97,7 @@ const LotteryMarkets = () => {
       }
     }
   }
-
+  // post Api to generate lottery tickets with the provided fields
   async function handleCreateTicket() {
     if (state.inputs.sem > 0) {
       const response = await generateLotteryTicket({
@@ -99,26 +109,15 @@ const LotteryMarkets = () => {
       });
 
       if (response) {
-        const createdTicket = {
-          lotteryName: state.inputs.name,
-          drawDate: state.inputs.DateTime,
-          drawTime: "", // Add if needed
-          firstPrize: state.inputs.firstPrize,
-          sem: state.inputs.sem,
-          price: state.inputs.price,
-          ticketNumber: state.randomToken,
-        };
-
-        const updatedLotteryCards = [...state.lotteryCards, createdTicket];
-        setState((prev) => ({
-          ...prev,
-          lotteryCards: updatedLotteryCards,
-        }));
-
-        localStorage.setItem("lotteryCards", JSON.stringify(updatedLotteryCards));
+        // Dispatch to global state
+        dispatch({
+          type: strings.GENERATE_LOTTERY,
+          payload: response.data, // assuming response.data contains the created ticket info
+        });
 
         handleCloseModal();
         setState((prev) => ({ ...prev, randomToken: "" }));
+        fetchLotteryTickets();
       } else {
         console.error("Failed to create ticket");
       }
@@ -139,33 +138,8 @@ const LotteryMarkets = () => {
     <SingleCard>
       <SingleCard>
         <div className="d-flex justify-content-between align-items-center mb-3">
-          {/* SEM Dropdown */}
-          <div className="d-flex align-items-center">
-            <label
-              htmlFor="semSelect"
-              className="me-2"
-              style={{ color: "#4682B4", fontWeight: "bold" }}
-            >
-              View Tickets By SEM
-            </label>
-            <select
-              id="semSelect"
-              className="form-select"
-              style={{ maxWidth: "150px" }}
-              onChange={handleSemChange}
-              value={state.sem}
-            >
-              <option value="5">5 SEM</option>
-              <option value="10">10 SEM</option>
-              <option value="20">20 SEM</option>
-              <option value="50">50 SEM</option>
-              <option value="100">100 SEM</option>
-              <option value="200">200 SEM</option>
-            </select>
-          </div>
-
           {/* Generate Ticket Number */}
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center text-end">
             {state.randomToken ? (
               <span
                 style={{
@@ -216,9 +190,9 @@ const LotteryMarkets = () => {
             {state.lotteryCards.map((card) => (
               <div className="col-md-4 mb-4" key={card.id}>
                 <DearLotteryCard
-                  lotteryName={card.lotteryName}
-                  drawDate={card.drawDate}
-                  drawTime={card.drawTime}
+                  lotteryName={card.name}
+                  drawDate={new Date(card.date).toLocaleDateString()} // Corrected prop and formatting
+                  drawTime={new Date(card.date).toLocaleTimeString()} // Formatting draw time 
                   firstPrize={card.firstPrize}
                   sem={card.sem}
                   price={card.price}
@@ -254,7 +228,7 @@ const LotteryMarkets = () => {
             id: "DateTime",
             label: "Date and Time",
             component: (
-              <div className="date-time-picker-container">
+              <div className="date-time-picker-container text-center">
                 <DatePicker
                   selected={
                     state.inputs.DateTime

@@ -204,7 +204,7 @@ const DearLotteryCard = ({
           margin: '5px 0',
         }}
       >
-        ₹{firstPrize}
+      1st PRIZE: ₹{firstPrize}
       </p>
       <p
         style={{

@@ -29,6 +29,12 @@ export const reducer = (state, action) => {
           lotteryTicket: action.payload, // Save the  lottery ticket  in the state
         };
 
+        case strings.FETCH_LOTTERY_TICKETS:
+      return {
+        ...state,
+        lotteryCards: action.payload, // Update the state with fetched tickets
+      };
+
     default:
       return state;
   }

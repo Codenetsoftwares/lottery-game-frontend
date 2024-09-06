@@ -33,3 +33,14 @@ export async function generateLotteryTicket(body, isToast=true) {
     throw error;
   }
 }
+
+
+export async function getLotteryTickets (body, isToast=true) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, body, isToast);
+    const response = await makeCall(urls.getLotteryTicket, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
