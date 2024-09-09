@@ -65,7 +65,7 @@ export async function makeCall(callName, callParams, isToast) {
     if (json.responseCode === 401) {
       localStorage.clear();
       sessionStorage.setItem("sessionExpierd", true);
-      window.location.href = "/home";
+      window.location.href = "/";
     }
     if (json.success === false) {
       toast.error(json.errMessage|| "An error occurred");

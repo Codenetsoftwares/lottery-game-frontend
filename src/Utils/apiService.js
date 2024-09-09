@@ -35,9 +35,9 @@ export async function generateLotteryTicket(body, isToast=true) {
 }
 
 
-export async function getLotteryTickets (body, isToast=true) {
+export async function getLotteryTickets ( isToast=true) {
   try {
-    const callParams = await getAuthCallParams(strings.GET, body, isToast);
+    const callParams = await getAuthCallParams(strings.GET,null,  isToast);
     const response = await makeCall(urls.getLotteryTicket, callParams, isToast);
     return response;
   } catch (error) {

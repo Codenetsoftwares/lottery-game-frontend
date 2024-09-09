@@ -7,32 +7,33 @@ import { useAppContext } from "../../../../contextApi/context";
 import strings from "../../../../Utils/constant/stringConstant";
 
 const Login = () => {
-  const {dispatch} = useAppContext();
+  const { dispatch } = useAppContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(""); // For error handling
   const navigate = useNavigate();
 
-  console.log(dispatch)
+  console.log(dispatch);
 
-  async function handleLogin(e) {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      const response = await  adminLogin ({ userName:username, password:password });
-      if (response.success) {
-        // Redirect or handle successful login
-        console.log('===> auth',response)
-        dispatch({ type: "LOG_IN", payload: response.data});
-        navigate("/lottery-markets"); // Adjust route as needed
+    setError(""); // Clear previous errors
 
-      } else {
-        // Handle login failure
-        setError(response.message || "Login failed. Please try again.");
-      }
-    } catch (error) {
-      setError("An unexpected error occurred. Please try again.");
+    const response = await adminLogin({
+      userName: username,
+      password: password,
+    });
+
+    if (response && response.success) {
+      dispatch({ type: "LOG_IN", payload: response.data });
+     
+      navigate("/lottery-markets");
+      window.location.reload()
+    } else {
+      // Handle login failure
+      setError(response.message || "Login failed. Please try again.");
     }
-  }
+  };
   return (
     <div
       className="d-flex justify-content-center align-items-center"
