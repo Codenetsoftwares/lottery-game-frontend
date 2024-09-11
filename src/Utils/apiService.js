@@ -44,3 +44,13 @@ export async function getLotteryTickets ( isToast=true) {
     throw error;
   }
 }
+
+export async function getPurchasedLotteryTickets ( isToast=true) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET,null,  isToast);
+    const response = await makeCall(urls.getPurchasedLotteryTicket, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}

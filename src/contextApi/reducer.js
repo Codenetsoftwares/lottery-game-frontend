@@ -34,6 +34,11 @@ export const reducer = (state, action) => {
         ...state,
         lotteryCards: action.payload, // Update the state with fetched tickets
       };
+      case strings.PURCHASED_LOTTERY_TICKETS:
+        return {
+          ...state,
+          purchasedTickets: action.payload, // Update the state with fetched tickets
+        };
 
     default:
       return state;

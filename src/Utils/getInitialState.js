@@ -27,3 +27,5 @@ export const getLotteryMarketsInitialState = (body = {}) => {
     showModal: body.showModal ?? false,
   };
 };
+
+

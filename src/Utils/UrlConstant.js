@@ -10,6 +10,7 @@ class UrlConstant {
     generateTicketId=`${this.url_dev}/ticket-create`; 
     generateLottery=`${this.url_dev}/create-lottery`; 
     getLotteryTicket=`${this.url_dev}/getAllLotteries`;
+    getPurchasedLotteryTicket=`${this.url_dev}/allPurchase-Lotteries`; 
  
   }
   
