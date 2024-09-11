@@ -62,11 +62,21 @@ export async function makeCall(callName, callParams, isToast) {
     });
 
     const json = await response.json();
+
+    
     if (json.responseCode === 401) {
       localStorage.clear();
       sessionStorage.setItem("sessionExpierd", true);
       window.location.href = "/";
     }
+
+       // Handle 400: Bad Request - Centralized error
+       if (json.responseCode === 400) {
+        toast.error(json.errMessage || "Bad request. Please try again.");
+        return null; // Optionally, return null to stop further processing
+      }
+
+
     if (json.success === false) {
       toast.error(json.errMessage|| "An error occurred");
       return null;

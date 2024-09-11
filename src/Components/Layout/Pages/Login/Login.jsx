@@ -26,12 +26,9 @@ const Login = () => {
 
     if (response && response.success) {
       dispatch({ type: "LOG_IN", payload: response.data });
-     
+
       navigate("/lottery-markets");
-      window.location.reload()
-    } else {
-      // Handle login failure
-      setError(response.message || "Login failed. Please try again.");
+      window.location.reload();
     }
   };
   return (
