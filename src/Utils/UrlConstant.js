@@ -11,6 +11,8 @@ class UrlConstant {
     generateLottery=`${this.url_dev}/create-lottery`; 
     getLotteryTicket=`${this.url_dev}/getAllLotteries`;
     getPurchasedLotteryTicket=`${this.url_dev}/allPurchase-Lotteries`; 
+    removeCreatedLottery=`${this.url_dev}/deleteAll-lotteries`;
+    deletePurchasedLottery=`${this.url_dev}/deleteAll-purchaseLotteries`;
  
   }
   

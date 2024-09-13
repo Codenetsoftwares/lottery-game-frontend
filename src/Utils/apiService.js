@@ -2,7 +2,7 @@ import strings from "./constant/stringConstant";
 import { getAuthCallParams, getNoAuthCallParams, makeCall } from "./service";
 import urls from "./UrlConstant";
 
-// User login
+// Admin login
 export async function adminLogin(body, isToast = true) {
   try {
     const callParams = getNoAuthCallParams(strings.POST, body);
@@ -55,6 +55,29 @@ export async function getPurchasedLotteryTickets ( body, isToast=true) {
     const response = await makeCall(
       `${urls.getPurchasedLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`, 
       callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+export async function CreatedLotteryTicketsDelete (  isToast=true) {
+  try {
+    const callParams = await getAuthCallParams(strings.DELETE, null,  isToast);
+    const response = await makeCall(urls.removeCreatedLottery, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
+export async function PurchasedLotteryTicketsDelete (  isToast=true) {
+  try {
+    const callParams = await getAuthCallParams(strings.DELETE, null,  isToast);
+    const response = await makeCall(urls.deletePurchasedLottery, callParams, isToast);
     return response;
   } catch (error) {
     throw error;

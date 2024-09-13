@@ -9,6 +9,7 @@ export class StringConstants {
     GET = 'GET';
     POST = 'POST';
     PUT = 'PUT';
+    DELETE="DELETE";
   
     // reducer type
   

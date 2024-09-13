@@ -6,3 +6,30 @@
     max-width: 1200px;
     margin: auto;
   }
+
+
+
+  .table tbody tr {
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #6a0dad; /* Dark violet for row hover */
+    color: #fff; /* White text color on hover */
+  }
+  
+  .table tbody .fas.fa-trash {
+    cursor: pointer;
+    color: #4682B4; /* Initial color of the trash icon */
+    transition: color 0.3s;
+  }
+  
+  .table tbody .fas.fa-trash:hover {
+    color: #6a0dad; /* Violet color on hover */
+  }
+  
+  /* Optional: Add spacing and alignment adjustments for the action column */
+  .table td {
+    vertical-align: middle;
+  }
+  

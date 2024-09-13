@@ -2,7 +2,9 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import "./LotteryMarkets.css";
 
-const CustomModal = ({ showModal, onClose, heading,inputs = [], buttonLabel, onButtonClick }) => {
+const CustomModal = ({ showModal, onClose, heading,inputs = [], buttonLabel, onButtonClick,cancelButtonLabel, textOnly = false }) => {
+
+
   return (
     <div
       className={`modal fade ${showModal ? "show d-block" : ""}`}
@@ -19,13 +21,20 @@ const CustomModal = ({ showModal, onClose, heading,inputs = [], buttonLabel, onB
             </button>
           </div>
           <div className="modal-body" style={{ backgroundColor: "#fff", backdropFilter: "blur(10px)" }}>
-          {inputs.length > 0 ? (
+          {textOnly ? (
+              // Render text only
+              inputs.map((input, index) => (
+                <p key={index} className="text-danger" style={{ fontWeight: 'bold' }}>
+                  {input.label}
+                </p>
+              ))
+            ) : (
+              // Render inputs and/or custom components
               inputs.map((input, index) => (
                 <div className="mb-3" key={index}>
                   <label htmlFor={input.id} className="form-label">
                     {input.label}
                   </label>
-                  {/* Conditionally render custom component or input field */}
                   {input.component ? (
                     input.component
                   ) : (
@@ -40,8 +49,6 @@ const CustomModal = ({ showModal, onClose, heading,inputs = [], buttonLabel, onB
                   )}
                 </div>
               ))
-            ) : (
-              <p>No input fields to display</p>
             )}
           </div>
           <div className="modal-footer">
@@ -49,7 +56,7 @@ const CustomModal = ({ showModal, onClose, heading,inputs = [], buttonLabel, onB
               {buttonLabel}
             </button>
             <button type="button" className="btn btn-secondary" onClick={onClose}>
-              Close
+              {cancelButtonLabel || "Close"}
             </button>
           </div>
         </div>

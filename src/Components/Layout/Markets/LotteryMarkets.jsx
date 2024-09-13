@@ -280,6 +280,7 @@ console.log('===>> all names ',state.inputs)
         ]}
         buttonLabel="Create Ticket"
         onButtonClick={handleCreateTicket}
+        textOnly={false} // Ensures inputs are rendered
       />
     </SingleCard>
   );
