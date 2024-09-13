@@ -35,20 +35,26 @@ export async function generateLotteryTicket(body, isToast=true) {
 }
 
 
-export async function getLotteryTickets ( isToast=true) {
+export async function getLotteryTickets (body, isToast=true) {
   try {
     const callParams = await getAuthCallParams(strings.GET,null,  isToast);
-    const response = await makeCall(urls.getLotteryTicket, callParams, isToast);
+    const response = await makeCall(
+      
+      `${urls.getLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`, 
+      
+      callParams, isToast);
     return response;
   } catch (error) {
     throw error;
   }
 }
 
-export async function getPurchasedLotteryTickets ( isToast=true) {
+export async function getPurchasedLotteryTickets ( body, isToast=true) {
   try {
     const callParams = await getAuthCallParams(strings.GET,null,  isToast);
-    const response = await makeCall(urls.getPurchasedLotteryTicket, callParams, isToast);
+    const response = await makeCall(
+      `${urls.getPurchasedLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`, 
+      callParams, isToast);
     return response;
   } catch (error) {
     throw error;

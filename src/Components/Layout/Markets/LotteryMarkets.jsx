@@ -19,20 +19,40 @@ const LotteryMarkets = () => {
   const { dispatch } = useAppContext();
 
   const [state, setState] = useState(getLotteryMarketsInitialState);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    totalPages: 0,
+    totalItems: 0
+  });
 console.log('===>> all names ',state.inputs)
 
   // Fetch tickets when the component mounts
   useEffect(() => {
     fetchLotteryTickets();
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  }, [pagination.page, pagination.limit]); // Empty dependency array ensures this runs only once when the component mounts
+
+
+ 
+
+    const startIndex = (pagination.page - 1) * pagination.limit + 1;
+    const endIndex = Math.min(pagination.page * pagination.limit, pagination.totalItems);
+
 
   const fetchLotteryTickets = async () => {
-    const response = await getLotteryTickets(); // Call the API to get lottery tickets
+    const response = await getLotteryTickets({page:pagination.page ,limit:pagination.limit,totalPages:pagination.totalPages,totalItems:pagination.totalItems}); // Call the API to get lottery tickets
     if (response) {
       setState((prev) => ({
         ...prev,
         lotteryCards: response.data, // Assuming response.data contains the tickets array
       }));
+
+      setPagination({
+        page: response.pagination.page,
+        limit: response.pagination.limit,
+        totalPages: response.pagination.totalPages,
+        totalItems: response.pagination.totalItems
+      }); 
       dispatch({
         type: strings.FETCH_LOTTERY_TICKETS,
         payload: response.data,
@@ -41,16 +61,12 @@ console.log('===>> all names ',state.inputs)
       console.error("Failed to fetch tickets");
     }
   };
-  const handlePageChange = (pageNumber) => {
-    setState((prev) => ({ ...prev, currentPage: pageNumber }));
+  const handlePageChange = (newPage) => {
+    setPagination((prev) => ({ ...prev, page: newPage }));
     // Fetch or filter data based on the new page number here
   };
 
-  const handleEntriesChange = (event) => {
-    setState((prev) => ({ ...prev, entries: event.target.value }));
-    // Handle entries per page change here
-  };
-
+  
   const handleOpenModal = () =>
     setState((prev) => ({ ...prev, showModal: true }));
   const handleCloseModal = () => {
@@ -72,11 +88,7 @@ console.log('===>> all names ',state.inputs)
     const formattedDate = formatISO(date); // Format date as ISO string
     handleInputChange("DateTime", formattedDate);
   };
-  const handleSemChange = (event) => {
-    const newSem = event.target.value;
-    setState((prev) => ({ ...prev, sem: newSem }));
-    // Handle any additional logic related to SEM change if needed
-  };
+
 
   // post api to generate the ticket number
   async function handleGenerateTicketNumber() {
@@ -205,11 +217,14 @@ console.log('===>> all names ',state.inputs)
       </SingleCard>
 
       <div style={{ marginTop: "20px" }}>
-        <Pagination
-          totalPages={state.totalPages}
-          currentPage={state.currentPage}
-          onPageChange={handlePageChange}
-        />
+      <Pagination
+        currentPage={pagination.page}
+        totalPages={pagination.totalPages}
+        handlePageChange={handlePageChange}
+        startIndex={startIndex}
+        endIndex={endIndex}
+        totalData={pagination.totalItems}
+      />
       </div>
 
       {/* Custom Modal for creating a ticket */}

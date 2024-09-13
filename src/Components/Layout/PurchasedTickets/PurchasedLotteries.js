@@ -4,20 +4,37 @@ import { getPurchasedLotteryTickets } from "../../../Utils/apiService";
 import strings from "../../../Utils/constant/stringConstant";
 import { Table, Spinner } from 'react-bootstrap';
 import './PurchasedLotteries.css';
+import Pagination from "../Common/Pagination";
 
 const PurchasedLotteries = () => {
   const { dispatch } = useAppContext();
   const [purchasedTickets, setPurchasedTickets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    totalPages: 0,
+    totalItems: 0
+  });
   useEffect(() => {
     fetchPurchasedLotteryTickets();
-  }, []);
+  }, [pagination.page, pagination.limit]);
+
+
+  const startIndex = (pagination.page - 1) * pagination.limit + 1;
+  const endIndex = Math.min(pagination.page * pagination.limit, pagination.totalItems);
 
   const fetchPurchasedLotteryTickets = async () => {
-    const response = await getPurchasedLotteryTickets();
+    const response = await getPurchasedLotteryTickets({page:pagination.page ,limit:pagination.limit,totalPages:pagination.totalPages,totalItems:pagination.totalItems});
     console.log(response);
     if (response && response.success) {
       setPurchasedTickets(response.data);
+      setPagination({
+        page: response.pagination.page,
+        limit: response.pagination.limit,
+        totalPages: response.pagination.totalPages,
+        totalItems: response.pagination.totalItems
+      }); 
       dispatch({
         type: strings.PURCHASED_LOTTERY_TICKETS,
         payload: response.data,
@@ -26,6 +43,11 @@ const PurchasedLotteries = () => {
       console.error("Failed to fetch purchased tickets");
     }
     setLoading(false);  // Set loading to false after the data is fetched
+  };
+
+  const handlePageChange = (newPage) => {
+    setPagination((prev) => ({ ...prev, page: newPage }));
+    // Fetch or filter data based on the new page number here
   };
 
   if (loading) {
@@ -55,7 +77,7 @@ const PurchasedLotteries = () => {
         {purchasedTickets.length > 0 ? (
           purchasedTickets.map((ticket, index) => (
             <tr key={ticket.purchaseId}>
-              <td>{index + 1}</td>
+              <td>{startIndex+index }</td>
               <td>{ticket.name}</td>
               <td>{new Date(ticket.purchaseDate).toLocaleDateString()}</td>
               <td>{ticket.purchaseAmount}</td>
@@ -73,6 +95,15 @@ const PurchasedLotteries = () => {
         )}
       </tbody>
     </Table>
+    <Pagination
+        currentPage={pagination.page}
+        totalPages={pagination.totalPages}
+        handlePageChange={handlePageChange}
+        startIndex={startIndex}
+        endIndex={endIndex}
+        totalData={pagination.totalItems}
+      />
+    
   </div>
   );
 };
