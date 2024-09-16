@@ -40,7 +40,7 @@ const PurchasedLotteries = () => {
       totalPages: pagination.totalPages,
       totalItems: pagination.totalItems,
     });
-    console.log(response);
+    console.log('line 43',response);
     if (response && response.success) {
       setPurchasedTickets(response.data);
       setPagination({
@@ -141,6 +141,7 @@ const PurchasedLotteries = () => {
             <th>Serial Number</th>
             <th>Lottery Name</th>
             <th>Date Purchased</th>
+            <th>Draw Time</th>
             <th>Purchased Amount</th>
             <th>SEM</th>
             <th>Ticket Number</th>
@@ -155,6 +156,7 @@ const PurchasedLotteries = () => {
                 <td>{startIndex + index}</td>
                 <td>{ticket.name}</td>
                 <td>{new Date(ticket.purchaseDate).toLocaleDateString()}</td>
+                <td>{new Date(ticket.drawTime).toLocaleTimeString()}</td>
                 <td>{ticket.purchaseAmount}</td>
                 <td>{ticket.sem}</td>
                 <td>{ticket.ticketNumber}</td>
