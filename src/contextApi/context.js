@@ -6,7 +6,7 @@ import strings from "../Utils/constant/stringConstant";
 const AppContext = createContext();
 
 const initialState = {
-  user: getAdminInitialState(),
+  admin: getAdminInitialState(),
 };
 
 const AppProvider = ({ children }) => {
@@ -17,8 +17,13 @@ const AppProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    const saveState = { ...store };
-    localStorage.setItem(strings.LOCAL_STORAGE_KEY, JSON.stringify(saveState));
+    if (store.admin.accessToken) {
+      // Save state to local storage if the user is logged in
+      localStorage.setItem(strings.LOCAL_STORAGE_KEY, JSON.stringify(store));
+    } else {
+      // Remove state from local storage when logged out
+      localStorage.removeItem(strings.LOCAL_STORAGE_KEY);
+    }
   }, [store]);
 
   return (

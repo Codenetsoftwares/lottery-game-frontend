@@ -1,23 +1,34 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
-
 import backgroundimage from "../../../../Assets/backgroundImage.jpg";
 import { useNavigate } from "react-router-dom";
+import { adminLogin, login } from "../../../../Utils/apiService";
+import { useAppContext } from "../../../../contextApi/context";
+import strings from "../../../../Utils/constant/stringConstant";
 
 const Login = () => {
+  const { dispatch } = useAppContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(""); // For error handling
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  console.log(dispatch);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("onclicked event ", username, password);
-    if (username === "Tamoghna" && password === "123456") {
-      // Redirect to the lottery-market page on successful login
+    setError(""); // Clear previous errors
+
+    const response = await adminLogin({
+      userName: username,
+      password: password,
+    });
+
+    if (response && response.success) {
+      dispatch({ type: "LOG_IN", payload: response.data });
+
       navigate("/lottery-markets");
-    } else {
-      // Handle invalid credentials (show error message or similar)
-      alert("Invalid credentials, please try again.");
+      window.location.reload();
     }
   };
   return (

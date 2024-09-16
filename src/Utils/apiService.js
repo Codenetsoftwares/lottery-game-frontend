@@ -1,13 +1,11 @@
-import urls from "../utils/constant/UrlConstant";
 import strings from "./constant/stringConstant";
+import { getAuthCallParams, getNoAuthCallParams, makeCall } from "./service";
+import urls from "./UrlConstant";
 
-
-import { getCallParams, getNoAuthCallParams, makeCall } from "./service";
-
-// User login
-export async function login(body, isToast = false) {
+// Admin login
+export async function adminLogin(body, isToast = true) {
   try {
-    const callParams = getNoAuthCallParams(strings.POST, body, isToast);
+    const callParams = getNoAuthCallParams(strings.POST, body);
     const response = await makeCall(urls.login, callParams, isToast);
     return response;
   } catch (error) {
@@ -15,46 +13,73 @@ export async function login(body, isToast = false) {
   }
 }
 
-// User logout
-export async function logout(body, isToast = false) {
+export async function generateTicketNumber(body, isToast=true) {
   try {
-    const callParams = getNoAuthCallParams(strings.POST, body, isToast);
-    const response = await makeCall(urls.userLogout, callParams, isToast);
+    const callParams = await getAuthCallParams(strings.POST, body, isToast);
+    const response = await makeCall(urls.generateTicketId, callParams, isToast);
     return response;
   } catch (error) {
     throw error;
   }
 }
 
-// Get all lottery games
-// export async function getAllLotteryGames(isToast = false) {
-//   try {
-//     const callParams = getNoAuthCallParams(strings.GET, {}, isToast);
-//     const response = await makeCall(urls.getAllLotteryGames, callParams, isToast);
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
 
-// Get details of a specific lottery game
-// export async function getLotteryGameDetails(gameId, isToast = false) {
-//   try {
-//     const callParams = getNoAuthCallParams(strings.GET, {}, isToast);
-//     const response = await makeCall(`${urls.getLotteryGameDetails}/${gameId}`, callParams, isToast);
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+export async function generateLotteryTicket(body, isToast=true) {
+  try {
+    const callParams = await getAuthCallParams(strings.POST, body, isToast);
+    const response = await makeCall(urls.generateLottery, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
 
-// Place a bet on a lottery game
-// export async function placeLotteryBet(body, isToast = false) {
-//   try {
-//     const callParams = getCallParams(strings.POST, body, isToast);
-//     const response = await makeCall(urls.placeLotteryBet, callParams, isToast);
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+
+export async function getLotteryTickets (body, isToast=true) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET,null,  isToast);
+    const response = await makeCall(
+      
+      `${urls.getLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`, 
+      
+      callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getPurchasedLotteryTickets ( body, isToast=true) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET,null,  isToast);
+    const response = await makeCall(
+      `${urls.getPurchasedLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`, 
+      callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+export async function CreatedLotteryTicketsDelete (  isToast=true) {
+  try {
+    const callParams = await getAuthCallParams(strings.DELETE, null,  isToast);
+    const response = await makeCall(urls.removeCreatedLottery, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
+export async function PurchasedLotteryTicketsDelete (  isToast=true) {
+  try {
+    const callParams = await getAuthCallParams(strings.DELETE, null,  isToast);
+    const response = await makeCall(urls.deletePurchasedLottery, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}

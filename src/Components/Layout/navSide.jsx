@@ -27,14 +27,17 @@ const NavSide = () => {
       </ul>
     </li>
     <li className>
-      <a className="has-arrow" href="#" aria-expanded="false">
-        <div className="nav_icon_small">
+      {/* <a className="has-arrow" href="#" aria-expanded="false"> */}
+        {/* <div className="nav_icon_small">
           <img src="img/menu-icon/2.svg" alt />
-        </div>
-        <div className="nav_title">
-          <span> Expired Games </span>
-        </div>
-      </a>
+        </div> */}
+      <ul>
+
+      <li><Link to="/Purchased-tickets">Purchased Tickets</Link></li>
+      </ul>
+     
+        
+      {/* </a> */}
       {/* <ul>
         <li><a href="editor.html">editor</a></li>
         <li><a href="mail_box.html">Mail Box</a></li>

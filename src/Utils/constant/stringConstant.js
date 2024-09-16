@@ -9,17 +9,19 @@ export class StringConstants {
     GET = 'GET';
     POST = 'POST';
     PUT = 'PUT';
+    DELETE="DELETE";
   
     // reducer type
   
     LOG_IN = 'LOG_IN';
     LOG_OUT = 'LOG_OUT';
-    // Announcement = 'Announcement';
-    // Name = 'Name';
-    // placeBidding = 'placeBidding';
-    // UserWallet = 'UserWallet';
-    // isLoading = 'isLoading';
-    // RESET_PASSWORD = 'RESET_PASSWORD';
+    GENERATE_TICKET_NUMBER= 'GENERATE_TICKET_NUMBER';
+    GENERATE_LOTTERY= 'GENERATE_LOTTERY';
+    FETCH_LOTTERY_TICKETS = 'FETCH_LOTTERY_TICKETS';
+    PURCHASED_LOTTERY_TICKETS = 'PURCHASED_LODTERY_TICKETS';
+
+
+   
   }
   
   let strings = new StringConstants();

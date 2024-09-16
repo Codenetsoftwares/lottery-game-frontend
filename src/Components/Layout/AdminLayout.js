@@ -1,7 +1,7 @@
-import React from 'react'
-import NavTop from './navTop'
-import NavSide from './navSide'
-import Layout from './Layout'
+import React from "react";
+import NavTop from "./navTop";
+import NavSide from "./navSide";
+import Layout from "./Layout";
 
 const AdminLayout = () => {
   return (
@@ -9,42 +9,43 @@ const AdminLayout = () => {
     {/* Sticky Top Navigation */}
     <div
       style={{
-        position: 'sticky',
+        position: "sticky",
         top: 0,
-        zIndex: 1030,  // Higher z-index than default, ensures visibility over sidebar
+        zIndex: 1030, // Ensure NavTop is above sidebar and other elements
       }}
-      className="flex-shrink-0"
     >
       <NavTop />
     </div>
-
-    <div className="d-flex flex-grow-1 overflow-hidden p-5">
+  
+    <div className="d-flex flex-grow-1">
       {/* Sidebar */}
       <div
         className="flex-shrink-0"
         style={{
-          width: '250px',
-          maxWidth: '250px',
-          overflowY: 'auto',
-          zIndex: 1040, // Lower z-index than NavTop to ensure NavTop is above
+          width: "250px",
+          maxWidth: "250px",
+          height: "100%", // Ensure full vertical height for the sidebar
+          overflowY: "auto",
+          zIndex: 1040, // NavTop still remains above
         }}
       >
         <NavSide />
       </div>
-
+  
       {/* Main Content */}
       <div
-        className="flex-grow-1 p-3 overflow-auto"
+        className="flex-grow-1 p-3"
         style={{
-          padding: '20px',
-          overflowY: 'auto',
+          paddingTop: "100px", // Adjust gap between NavTop and Layout
+          overflowY: "auto", // Ensure scrolling for large content
         }}
       >
         <Layout />
       </div>
     </div>
   </div>
-  )
-}
+  
+  );
+};
 
-export default AdminLayout
+export default AdminLayout;

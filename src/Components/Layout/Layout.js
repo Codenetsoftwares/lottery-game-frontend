@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 
 const Layout = () => {
   return (
-    <div class="container-fluid p-0 ">
+    <div class="container-fluid ">
     <Outlet/>
     </div>
    
