@@ -8,6 +8,7 @@ import {
   generateLotteryTicket,
   generateTicketNumber,
   getLotteryTickets,
+  unPurchasedLotteryTicketsDelete,
 } from "../../../Utils/apiService";
 import strings from "../../../Utils/constant/stringConstant";
 import { getLotteryMarketsInitialState } from "../../../Utils/getInitialState";
@@ -26,7 +27,8 @@ const LotteryMarkets = () => {
     totalPages: 0,
     totalItems: 0,
   });
-  console.log("===>> all names ", state.inputs);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  console.log("===>> all names ", state.lotteryCards);
 
   // Fetch tickets when the component mounts
   useEffect(() => {
@@ -41,10 +43,10 @@ const LotteryMarkets = () => {
 
   const fetchLotteryTickets = async () => {
     const response = await getLotteryTickets({
-      page: pagination.page,
-      limit: pagination.limit,
-      totalPages: pagination.totalPages,
-      totalItems: pagination.totalItems,
+      page: pagination.page || 1,
+      limit: pagination.limit || 10,
+      totalPages: pagination.totalPages || 0,
+      totalItems: pagination.totalItems || 0,
     });
     if (response) {
       setState((prev) => ({
@@ -53,10 +55,10 @@ const LotteryMarkets = () => {
       }));
 
       setPagination({
-        page: response.pagination.page,
-        limit: response.pagination.limit,
-        totalPages: response.pagination.totalPages,
-        totalItems: response.pagination.totalItems,
+        page: response?.pagination?.page,
+        limit: response?.pagination?.limit,
+        totalPages: response?.pagination?.totalPages,
+        totalItems: response?.pagination?.totalItems,
       });
       dispatch({
         type: strings.FETCH_LOTTERY_TICKETS,
@@ -147,13 +149,27 @@ const LotteryMarkets = () => {
     }));
   };
 
+  // Function to handle delete confirmation
+  const handleDeleteConfirm = async () => {
+    const response = await unPurchasedLotteryTicketsDelete(true); // Call the delete API
+    if (response) {
+      setShowDeleteModal(false); // Close the modal
+      fetchLotteryTickets(); // Refresh tickets after deletion
+    } else {
+      console.error("Failed to delete all lotteries");
+    }
+  };
+
   return (
-    <div className="bg-white"   style={{
-      height: "600px", // Set main div width
-      // width:"100",
-      margin: "0 auto", // Center the div horizontally
-      overflowX: "hidden", // Ensure no horizontal overflow
-    }} >
+    <div
+      className="bg-white"
+      style={{
+        minHeight: "100vh",
+        // width:"100",
+        margin: "0 auto", // Center the div horizontally
+        overflowX: "hidden", // Ensure no horizontal overflow
+      }}
+    >
       <div
         className="card text-center mt-2 mr-5 ml-5"
         style={{
@@ -213,24 +229,68 @@ const LotteryMarkets = () => {
               )}
             </div>
           </div>
+          {/* Delete icon */}
+          <div className="mr-4">
+            <i
+              className="fas fa-trash-alt"
+              style={{
+                cursor: "pointer",
+                fontSize: "2rem",
+                color: "#4682B4",
+                position: "absolute",
+                right: "20px", // Adjusted positioning
+                top: "10px", // Adjusted positioning for better visibility
+              }}
+              title="Delete all unpurchased lottery tickets"
+              onClick={() => setShowDeleteModal(true)}
+            ></i>
+          </div>
         </SingleCard>
         <div className="card-body  mt-2 mb-3">
           <SingleCard className="mb-2 p-4">
             <div className="container">
               <div className="row justify-content-center">
-                {state.lotteryCards.map((card) => (
-                  <div className="col-md-4 mb-4" key={card.id}>
-                    <DearLotteryCard
-                      lotteryName={card.name}
-                      drawDate={new Date(card.date).toLocaleDateString()} // Corrected prop and formatting
-                      drawTime={new Date(card.date).toLocaleTimeString()} // Formatting draw time
-                      firstPrize={card.firstPrize}
-                      sem={card.sem}
-                      price={card.price}
-                      ticketNumber={card.ticketNumber}
+                {state.lotteryCards ? (
+                  state.lotteryCards.map((card) => (
+                    <div className="col-md-4 mb-4" key={card.id}>
+                      <DearLotteryCard
+                        lotteryName={card.name}
+                        drawDate={new Date(card.date).toLocaleDateString()}
+                        drawTime={new Date(card.date).toLocaleTimeString()}
+                        firstPrize={card.firstPrize}
+                        sem={card.sem}
+                        price={card.price}
+                        ticketNumber={card.ticketNumber}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center mt-5">
+                    <img
+                      src="https://media.giphy.com/media/jy6UhbChQ5dQ4/giphy.gif"
+                      alt="Funny no tickets"
+                      style={{ width: "200px" }}
                     />
+                    <h4 className="text-warning mt-3">
+                      Oops! No Lottery Tickets found!
+                    </h4>
+                    <p className="text-muted">
+                      Seems like the lottery fairy hasn't visited yet. 🧚‍♀️
+                      <br />
+                      Don’t worry, you can be the magician who creates the first
+                      one! 🎩✨
+                    </p>
+                    <button
+                      className="btn btn-primary mt-3"
+                      onClick={handleOpenModal}
+                      style={{ animation: "shake 0.5s" }}
+                    >
+                      Create Your Magic Ticket Now!
+                    </button>
                   </div>
-                ))}
+                )}
+
+             
               </div>
             </div>
           </SingleCard>
@@ -255,7 +315,10 @@ const LotteryMarkets = () => {
             {
               id: "name",
               label: "Name",
-              value: state.inputs.name,
+              value:
+                state.inputs.name ??
+                (state?.lotteryCards?.length ?
+                  state?.lotteryCards[0]?.card?.name : ""),
               onChange: (value) => handleInputChange("name", value),
             },
             {
@@ -280,7 +343,10 @@ const LotteryMarkets = () => {
             {
               id: "firstPrize",
               label: "First Prize",
-              value: state.inputs.firstPrize,
+              value:
+                state.inputs.firstPrize ??
+                (state?.lotteryCards?.length  ?
+                  state?.lotteryCards[0]?.card?.firstPrize : ""),
               onChange: (value) => handleInputChange("firstPrize", value),
             },
             {
@@ -300,6 +366,34 @@ const LotteryMarkets = () => {
           buttonLabel="Create Ticket"
           onButtonClick={handleCreateTicket}
           textOnly={false} // Ensures inputs are rendered
+        />
+
+        {/* Modal for confirming deletion */}
+        <CustomModal
+          showModal={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          heading={
+            <span
+              className="text-danger "
+              style={{ fontWeight: "900", fontSize: "1.5rem" }}
+            >
+              Alert !
+            </span>
+          }
+          inputs={[
+            {
+              label: (
+                <>
+                  Are you sure you want to delete all the unpurchased lottery
+                  tickets?
+                </>
+              ),
+            },
+          ]}
+          buttonLabel="Delete"
+          onButtonClick={handleDeleteConfirm} // Trigger delete when confirmed
+          cancelButtonLabel="Cancel"
+          textOnly={true}
         />
       </div>
     </div>

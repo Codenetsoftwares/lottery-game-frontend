@@ -35,7 +35,7 @@ export async function generateLotteryTicket(body, isToast=true) {
 }
 
 
-export async function getLotteryTickets (body, isToast=true) {
+export async function getLotteryTickets (body, isToast=false) {
   try {
     const callParams = await getAuthCallParams(strings.GET,null,  isToast);
     const response = await makeCall(
@@ -57,7 +57,8 @@ export async function getPurchasedLotteryTickets ( body, isToast=true) {
       callParams, isToast);
     return response;
   } catch (error) {
-    throw error;
+    // throw error;
+    console.log(error)
   }
 }
 
@@ -73,11 +74,21 @@ export async function CreatedLotteryTicketsDelete (  isToast=true) {
 }
 
 
-
+// not in use anymore
 export async function PurchasedLotteryTicketsDelete (  isToast=true) {
   try {
     const callParams = await getAuthCallParams(strings.DELETE, null,  isToast);
     const response = await makeCall(urls.deletePurchasedLottery, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function unPurchasedLotteryTicketsDelete ( isToast=true) {
+  try {
+    const callParams = await getAuthCallParams(strings.DELETE, null,  isToast);
+    const response = await makeCall(urls.UnPurchasedLotteryDelete, callParams, isToast);
     return response;
   } catch (error) {
     throw error;

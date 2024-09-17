@@ -46,6 +46,8 @@ export const getAuthCallParams = async (methodType, body) => {
       return { ...params, body: JSON.stringify(body) };
     case "PUT":
       return { ...params, body: JSON.stringify(body) };
+      case "DELETE":  
+      return params;
 
     default:
       return false;

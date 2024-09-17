@@ -44,10 +44,10 @@ const PurchasedLotteries = () => {
     if (response && response.success) {
       setPurchasedTickets(response.data);
       setPagination({
-        page: response.pagination.page,
-        limit: response.pagination.limit,
-        totalPages: response.pagination.totalPages,
-        totalItems: response.pagination.totalItems,
+        page: response?.pagination?.page,
+        limit: response?.pagination?.limit,
+        totalPages: response?.pagination?.totalPages,
+        totalItems: response?.pagination?.totalItems,
       });
       dispatch({
         type: strings.PURCHASED_LOTTERY_TICKETS,
