@@ -14,6 +14,7 @@ class UrlConstant {
     removeCreatedLottery=`${this.url_dev}/deleteAll-lotteries`;
     deletePurchasedLottery=`${this.url_dev}/deleteAll-purchaseLotteries`;// not in use as of now
     UnPurchasedLotteryDelete=`${this.url_dev}/lotteries/delete-non-purchased`;
+    getSelectSem=`${this.url_dev}/generate-tickets`
  
   }
   

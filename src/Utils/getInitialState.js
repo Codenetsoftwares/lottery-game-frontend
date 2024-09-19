@@ -22,9 +22,11 @@ export const getLotteryMarketsInitialState = (body = {}) => {
       DateTime: "",
       firstPrize: "",
       sem: "",
+      tickets: [],
       price: "",
     },
     showModal: body.showModal ?? false,
+    showTicketModal: body.showTicketModal ?? false
   };
 };
 

@@ -35,10 +35,10 @@ const PurchasedLotteries = () => {
 
   const fetchPurchasedLotteryTickets = async () => {
     const response = await getPurchasedLotteryTickets({
-      page: pagination.page,
-      limit: pagination.limit,
-      totalPages: pagination.totalPages,
-      totalItems: pagination.totalItems,
+      page: pagination.page || 1,
+      limit: pagination.limit || 10,
+      totalPages: pagination.totalPages || 0,
+      totalItems: pagination.totalItems || 0,
     });
     console.log('line 43',response);
     if (response && response.success) {
