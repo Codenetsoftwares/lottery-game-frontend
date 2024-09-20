@@ -19,36 +19,28 @@ import "./LotteryMarkets.css";
 
 const LotteryMarkets = () => {
   const { dispatch } = useAppContext();
-
   const [state, setState] = useState(getLotteryMarketsInitialState);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 10,
-    totalPages: 0,
-    totalItems: 0,
-  });
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  console.log("===>> all names ", state.lotteryCards);
-  const [selectedTicketCount, setSelectedTicketCount] = useState(5); // Default to 5
+  console.log("===>>> random token", state.inputs.tickets);
 
   // Fetch tickets when the component mounts
   useEffect(() => {
     fetchLotteryTickets();
   }, []); // Empty dependency array ensures this runs only once when the component mounts
 
-  const startIndex = (pagination.page - 1) * pagination.limit + 1;
+  const startIndex = (state.page - 1) * state.pagination.limit + 1;
   const endIndex = Math.min(
-    pagination.page * pagination.limit,
-    pagination.totalItems
+    state.pagination.page * state.pagination.limit,
+    state.pagination.totalItems
   );
 
+  // get lottery tickets in the admin panel
   const fetchLotteryTickets = async () => {
     console.log("Fetching Lottery Tickets");
     const response = await getLotteryTickets({
-      page: pagination.page || 1,
-      limit: pagination.limit || 10,
-      totalPages: pagination.totalPages || 0,
-      totalItems: pagination.totalItems || 0,
+      page: state.pagination.page || 1,
+      limit: state.pagination.limit || 10,
+      totalPages: state.pagination.totalPages || 0,
+      totalItems: state.pagination.totalItems || 0,
     });
     if (response) {
       setState((prev) => ({
@@ -58,17 +50,20 @@ const LotteryMarkets = () => {
 
       // Conditionally update pagination if values have changed
       if (
-        response?.pagination?.page !== pagination.page ||
-        response?.pagination?.limit !== pagination.limit ||
-        response?.pagination?.totalPages !== pagination.totalPages ||
-        response?.pagination?.totalItems !== pagination.totalItems
+        response?.pagination?.page !== state.pagination.page ||
+        response?.pagination?.limit !== state.pagination.limit ||
+        response?.pagination?.totalPages !== state.pagination.totalPages ||
+        response?.pagination?.totalItems !== state.pagination.totalItems
       ) {
-        setPagination({
-          page: response?.pagination?.page || 0,
-          limit: response?.pagination?.limit || 0,
-          totalPages: response?.pagination?.totalPages || 0,
-          totalItems: response?.pagination?.totalItems || 0,
-        });
+        setState((prev) => ({
+          ...prev,
+          pagination: {
+            page: response?.pagination?.page || 1,
+            limit: response?.pagination?.limit || 10,
+            totalPages: response?.pagination?.totalPages || 0,
+            totalItems: response?.pagination?.totalItems || 0,
+          },
+        }));
       }
       dispatch({
         type: strings.FETCH_LOTTERY_TICKETS,
@@ -79,11 +74,18 @@ const LotteryMarkets = () => {
     }
   };
   const handlePageChange = (newPage) => {
-    setPagination((prev) => ({ ...prev, page: newPage }));
+    setState((prev) => ({
+      ...prev,
+
+      pagination: {
+        ...prev.pagination,
+        page: newPage,
+      },
+    }));
   };
 
   const handleOpenModal = () =>
-    setState((prev) => ({ ...prev, showModal: true }));
+    setState((prev) => ({ ...prev, showTicketModal: false, showModal: true }));
   const handleCloseModal = () => {
     setState((prev) => ({
       ...prev,
@@ -119,15 +121,14 @@ const LotteryMarkets = () => {
     }
   }
 
+  // Define your modal open/close handlers
+  const handleTicketOpenModal = () => {
+    setState((prev) => ({ ...prev, showTicketModal: true }));
+  };
 
-    // Define your modal open/close handlers
-    const handleTicketOpenModal = () => {
-      setState((prev) => ({ ...prev, showTicketModal: true }));
-    };
-  
-    const handleTicketCloseModal = () => {
-      setState((prev) => ({ ...prev, showTicketModal: false }));
-    };
+  const handleTicketCloseModal = () => {
+    setState((prev) => ({ ...prev, showTicketModal: false }));
+  };
   // post Api to generate lottery tickets with the provided fields
   async function handleCreateTicket() {
     if (state.inputs.sem > 0) {
@@ -172,19 +173,17 @@ const LotteryMarkets = () => {
 
     // Log the selected value to the console
     console.log("SEM selected:", value);
-
-    // Call the API using the imported getSelectSemInModal function
-    const response = await getSelectSemInModal({ sem: value });
-
-    // Log the API response
-    console.log("API response:", response);
   };
 
   // Function to handle delete confirmation
   const handleDeleteConfirm = async () => {
     const response = await unPurchasedLotteryTicketsDelete(true); // Call the delete API
     if (response) {
-      setShowDeleteModal(false); // Close the modal
+      // Update state to close the delete modal
+      setState((prev) => ({
+        ...prev,
+        showDeleteModal: false, // Close the delete modal
+      }));
       fetchLotteryTickets(); // Refresh tickets after deletion
     } else {
       console.error("Failed to delete all lotteries");
@@ -218,14 +217,14 @@ const LotteryMarkets = () => {
           <div className="card-header-pill text-bold d-flex">
             {/* Generate Ticket Number */}
             <div className="flex-grow-1  ml-4 mr-5">
-              {state.randomToken ? (
+              {/* {state.randomToken ? (
                 <span
                   style={{
                     cursor: "pointer",
                     color: "#4682B4",
                     fontWeight: "bold",
                     position: "relative",
-                    animation: "fadeIn 1s ease-in-out", // Fade-in animation
+                    animation: "fadeIn 1s ease-in-out",
                   }}
                   onClick={handleOpenModal}
                 >
@@ -240,49 +239,57 @@ const LotteryMarkets = () => {
                       padding: "5px 10px",
                       borderRadius: "5px",
                       boxShadow: "0px 2px 8px rgba(0,0,0,0.15)",
-                      animation: "pulse 2s infinite", // Pulse animation
+                      animation: "pulse 2s infinite",
                     }}
                   >
                     Click here to create a ticket with this number
                   </div>
                 </span>
-              ) : (
-                <div>
-                  <span
+              ) :  */}
+              <div>
+                <span
+                  style={{
+                    cursor: "pointer",
+                    color: "#4682B4",
+                    fontWeight: "bold",
+                  }}
+                  onClick={() =>
+                    handleGenerateTicketNumber(state.selectedTicketCount)
+                  }
+                >
+                  Generate Ticket Number To Create Lottery Ticket By SEM
+                </span>
+                <div style={{ display: "inline-block", marginLeft: "10px" }}>
+                  <select
                     style={{
+                      padding: "5px",
+                      borderRadius: "5px",
+                      border: "1px solid #ccc",
+                      backgroundColor: "#f1f1f1",
                       cursor: "pointer",
-                      color: "#4682B4",
-                      fontWeight: "bold",
                     }}
-                   onClick={() => handleGenerateTicketNumber(selectedTicketCount)}
+                    onChange={async (e) => {
+                      const selectedValue = e.target.value;
+                      console.log("Selected Value:", selectedValue);
+                      await handleGenerateTicketNumber(selectedValue);
+                      setState((prevState) => ({
+                        ...prevState,
+                        inputs: {
+                          ...prevState.inputs,
+                          sem: selectedValue, // Set SEM in state
+                        },
+                      }));
+                    }}
                   >
-                    Generate Ticket Number To Create Lottery Ticket By SEM
-                  </span>
-                  <div style={{ display: "inline-block", marginLeft: "10px" }}>
-                    <select
-                      style={{
-                        padding: "5px",
-                        borderRadius: "5px",
-                        border: "1px solid #ccc",
-                        backgroundColor: "#f1f1f1",
-                        cursor: "pointer",
-                      }}
-                      onChange={async (e) => {
-                        const selectedValue = e.target.value;
-                        console.log("Selected Value:", selectedValue);
-                        await handleGenerateTicketNumber(selectedValue);
-                      }}
-                    >
-                      <option value="5">5</option>
-                      <option value="10">10</option>
-                      <option value="25">25</option>
-                      <option value="50">50</option>
-                      <option value="100">100</option>
-                      <option value="200">200</option>
-                    </select>
-                  </div>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                  </select>
                 </div>
-              )}
+              </div>
             </div>
           </div>
           {/* Delete icon */}
@@ -298,7 +305,9 @@ const LotteryMarkets = () => {
                 top: "10px", // Adjusted positioning for better visibility
               }}
               title="Delete all unpurchased lottery tickets"
-              onClick={() => setShowDeleteModal(true)}
+              onClick={() =>
+                setState((prev) => ({ ...prev, showDeleteModal: true }))
+              }
             ></i>
           </div>
         </SingleCard>
@@ -351,12 +360,12 @@ const LotteryMarkets = () => {
         </div>
         <div style={{ marginTop: "20px" }}>
           <Pagination
-            currentPage={pagination.page}
-            totalPages={pagination.totalPages}
+            currentPage={state.pagination.page}
+            totalPages={state.pagination.totalPages}
             handlePageChange={handlePageChange}
             startIndex={startIndex}
             endIndex={endIndex}
-            totalData={pagination.totalItems}
+            totalData={state.pagination.totalItems}
           />
         </div>
 
@@ -409,19 +418,28 @@ const LotteryMarkets = () => {
             {
               id: "sem",
               label: "SEM",
+              // component: (
+              //   <select
+              //     className="form-control"
+              //     value={state.inputs.sem}
+              //     onChange={(e) => handleSemChange(e.target.value)} 
+              //   >
+              //     <option value="">Select SEM</option>
+              //     {[5, 10, 25, 50, 100, 200].map((option) => (
+              //       <option key={option} value={option}>
+              //         {option}
+              //       </option>
+              //     ))}
+              //   </select>
+              // ),
+
               component: (
-                <select
+                <input
                   className="form-control"
-                  value={state.inputs.sem}
-                  onChange={(e) => handleSemChange(e.target.value)} // Handle dropdown changes
-                >
-                  <option value="">Select SEM</option>
-                  {[5, 10, 25, 50, 100, 200].map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
+                  value={state.inputs.sem} // Display SEM value from state
+                  readOnly
+                  style={{ backgroundColor: "#e9ecef", cursor: "not-allowed" }} // Optional: Style to make it look disabled
+                />
               ),
             },
             {
@@ -438,8 +456,10 @@ const LotteryMarkets = () => {
 
         {/* Modal for confirming deletion */}
         <CustomModal
-          showModal={showDeleteModal}
-          onClose={() => setShowDeleteModal(false)}
+          showModal={state.showDeleteModal}
+          onClose={() =>
+            setState((prevState) => ({ ...prevState, showDeleteModal: false }))
+          }
           heading={
             <span
               className="text-danger "
@@ -466,12 +486,16 @@ const LotteryMarkets = () => {
 
         <CustomModal
           showModal={state.showTicketModal}
-          onClose={handleTicketCloseModal}
+          onClose={() =>
+            setState((prevState) => ({ ...prevState, showTicketModal: false }))
+          }
           heading="Generated Lottery Ticket Numbers"
-          inputs={state.inputs.tickets.map((ticket) => ({ label: ticket }))}
+          inputs={(state.inputs.tickets || []).map((ticket) => ({
+            label: ticket,
+          }))}
           textOnly={true} // Displays ticket numbers only
           buttonLabel="Create Tickets"
-          onButtonClick={handleCreateTicket}
+          onButtonClick={handleOpenModal}
           cancelButtonLabel="Cancel"
         />
       </div>
