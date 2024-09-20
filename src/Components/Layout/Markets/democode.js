@@ -1,126 +1,148 @@
-<div className="bg-white">
-  <div
-    className="card text-center mt-2 mr-5 ml-5"
-    style={{
-      backgroundColor: "#e6f7ff",
-      position: "relative",
-    }}
-  >
-    <SingleCard
-      style={{
-        backgroundColor: "#e6f7ff",
-        position: "relative",
-        width: "100%",
-      }}
-    >
-      <div className="card-header-pill text-bold d-flex">
-        <div className="flex-grow-1  ml-4 mr-5">
-          <input
-            type="search"
-            className="form-control rounded-pill shadow"
-            placeholder="Search User by Name..."
-            value={search}
-            onChange={handleSearch}
-          />
-        </div>
-      </div>
-    </SingleCard>
-    <div className="card-body  mt-2 mb-3">
-      <SingleCard className="mb-2 p-4">
-        <InfiniteScroll
-          style={{ overflowX: "hidden" }}
-          dataLength={adminList.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={
-            <div
-              className="d-flex justify-content-center align-items-center"
-              style={{ height: "80vh" }}
-            >
-              <Oval
-                height={40}
-                width={40}
-                color="#4fa94d"
-                wrapperStyle={{}}
-                wrapperClass=""
-                visible={true}
-                ariaLabel="oval-loading"
-                secondaryColor="#4fa94d"
-                strokeWidth={2}
-                strokeWidthSecondary={2}
-              />
-            </div>
-          }
-          height={600}
-          endMessage={
-            <p style={{ textAlign: "center" }}>
-              <b>No more data to load</b>
-            </p>
-          }
+import React, { useState } from 'react';
+import CustomModal from './CustomModal'; // Import your CustomModal component
+import { getSelectSemInModal } from './apiService'; // Import your API function
+
+// Define the initial state function
+export const getLotteryMarketsInitialState = (body = {}) => {
+  return {
+    currentPage: body.currentPage ?? 1,
+    totalPages: body.totalPages ?? 10,
+    entries: body.entries ?? 10,
+    randomToken: body.randomToken ?? "",
+    lotteryCards: body.lotteryCards ?? [],
+    lotteryId: body.lotteryId ?? "",
+    isModalOpen: body.isModalOpen ?? false,
+    inputs: body.inputs ?? {
+      name: "",
+      DateTime: "",
+      firstPrize: "",
+      sem: "",
+      tickets: [],
+      price: "",
+    },
+    showModal: body.showModal ?? false,
+    showTicketModal: body.showTicketModal ?? false
+  };
+};
+
+const YourComponent = () => {
+  const [state, setState] = useState(getLotteryMarketsInitialState());
+  const [selectedTicketCount, setSelectedTicketCount] = useState(5); // Default to 5
+
+  //GET api to generate the ticket number as by sem values from dropdown
+  async function handleGenerateTicketNumber(selectedValue) {
+    try {
+      const response = await getSelectSemInModal(selectedValue);
+      console.log("===>> get api response", response);
+
+      if (response && response.success) {
+        setState((prev) => ({
+          ...prev,
+          inputs: { ...prev.inputs, tickets: response.data.tickets },
+          showTicketModal: true, // Show the modal when tickets are fetched
+        }));
+      } else {
+        console.error("Failed to fetch ticket numbers");
+      }
+    } catch (error) {
+      console.error("Error fetching ticket numbers:", error);
+    }
+  }
+
+  // Define your modal open/close handlers
+  const handleOpenModal = () => {
+    setState((prev) => ({ ...prev, showModal: true }));
+  };
+
+  const handleCloseModal = () => {
+    setState((prev) => ({ ...prev, showModal: false }));
+  };
+
+  const handleCreateTicket = () => {
+    // Implement your ticket creation logic here
+    console.log("Creating tickets...");
+  };
+
+  return (
+    <div className="flex-grow-1 ml-4 mr-5">
+      {state.randomToken ? (
+        <span
+          style={{
+            cursor: "pointer",
+            color: "#4682B4",
+            fontWeight: "bold",
+            position: "relative",
+            animation: "fadeIn 1s ease-in-out", // Fade-in animation
+          }}
+          onClick={handleOpenModal}
         >
-          <GridCard columns={3}>
-            {adminList.map((data, i) => (
-              <div
-                key={data?._id}
-                className="col d-flex justify-content-center align-items-center "
-                onMouseEnter={() => setHoveredCard(data._id)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <div
-                  className={`card d-flex justify-content-between ${
-                    hoveredCard === data?._id ? "card-hover-shadow" : ""
-                  }`}
-                  style={{
-                    borderRadius: "20px",
-                    height: "200px",
-                    width: "95%",
-                    position: "relative",
-                  }}
-                  onClick={() => handleCardClick(data?._id)}
-                >
-                  <div className="card-body">
-                    <button
-                      type="button"
-                      className="btn btn-steel-blue btn-sm btn-hover-zoom fs-4"
-                      data-toggle="modal"
-                      data-target="#subadminProfile"
-                      onClick={() => {
-                        handleProfileView(data._id);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faUser} className="add-icon" />
-                    </button>
-                    <p
-                      className="font-weight-bold fs-4 text-truncate mt-3"
-                      style={{ color: "#708090" }}
-                    >
-                      {data?.userName}
-                    </p>
-                    <div className="container">
-                      <div>
-                        <button
-                          type="button"
-                          className="btn btn-steel-blue btn-sm btn-hover-zoom font-weight-bold "
-                          style={{
-                            fontFamily: "'Abril Fatface', serif ",
-                            textDecoration: "underline",
-                          }}
-                          onClick={(e) => {
-                            handelDetails(e, data._id);
-                          }}
-                        >
-                          Click here for more details
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </GridCard>
-        </InfiniteScroll>
-      </SingleCard>
+          Generated Ticket Number
+          <div
+            style={{
+              position: "absolute",
+              top: "20px",
+              left: "0",
+              backgroundColor: "#f8d7da",
+              color: "#721c24",
+              padding: "5px 10px",
+              borderRadius: "5px",
+              boxShadow: "0px 2px 8px rgba(0,0,0,0.15)",
+              animation: "pulse 2s infinite", // Pulse animation
+            }}
+          >
+            Click here to create a ticket with this number
+          </div>
+        </span>
+      ) : (
+        <div>
+          <span
+            style={{
+              cursor: "pointer",
+              color: "#4682B4",
+              fontWeight: "bold",
+            }}
+            onClick={() => handleGenerateTicketNumber(selectedTicketCount)}
+          >
+            Generate Ticket Number To Create Lottery Ticket By SEM
+          </span>
+          <div style={{ display: "inline-block", marginLeft: "10px" }}>
+            <select
+              style={{
+                padding: "5px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                backgroundColor: "#f1f1f1",
+                cursor: "pointer",
+              }}
+              onChange={(e) => {
+                const selectedValue = e.target.value;
+                console.log("Selected Value:", selectedValue);
+                handleGenerateTicketNumber(selectedValue);
+              }}
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="200">200</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      <CustomModal
+        showModal={state.showModal}
+        onClose={handleCloseModal}
+        heading="Generated Lottery Tickets"
+        inputs={state.inputs.tickets.map((ticket) => ({ label: ticket }))}
+        textOnly={true} // Displays ticket numbers only
+        buttonLabel="Create Tickets"
+        onButtonClick={handleCreateTicket}
+        cancelButtonLabel="Cancel"
+      />
     </div>
-  </div>
-  <SubAdminProfileView data={profileView} />
-</div>;
+  );
+};
+
+export default YourComponent;

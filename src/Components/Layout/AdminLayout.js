@@ -11,13 +11,13 @@ const AdminLayout = () => {
       style={{
         position: "sticky",
         top: 0,
-        zIndex: 1030, // Ensure NavTop is above sidebar and other elements
+        zIndex: 1030, 
       }}
     >
       <NavTop />
     </div>
   
-    <div className="d-flex flex-grow-1">
+    <div className="d-flex flex-grow-1  overflow-hidden">
       {/* Sidebar */}
       <div
         className="flex-shrink-0"
@@ -34,10 +34,10 @@ const AdminLayout = () => {
   
       {/* Main Content */}
       <div
-        className="flex-grow-1 p-3"
+        className="flex-grow-1 p-4"
         style={{
-          paddingTop: "100px", // Adjust gap between NavTop and Layout
-          overflowY: "auto", // Ensure scrolling for large content
+          // paddingTop: "100px", // Adjust gap between NavTop and Layout
+          overflowY: "auto",
         }}
       >
         <Layout />
