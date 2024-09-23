@@ -190,7 +190,6 @@ return (
         style={{
           fontSize: '14px',
           margin: '5px 0',
-          color:"white"
         }}
       >
         Draw Date: {drawDate}
@@ -199,7 +198,6 @@ return (
         style={{
           fontSize: '14px',
           margin: '5px 0',
-          color:"white"
         }}
       >
         Draw Time: {drawTime}
@@ -240,7 +238,7 @@ return (
       >
         Price: ₹{price}
       </p>
-      {/* <p
+      <p
         style={{
           fontSize: '12px',
           fontWeight: 'bold',
@@ -256,7 +254,7 @@ return (
               {ticketNumber}
             </li>
           ))}
-        </ul> */}
+        </ul>
 
 
         {/* Flipping Ticket Number */}
@@ -302,3 +300,52 @@ return (
 }
 
 export default DearLotteryCard;
+
+
+// css of above file 
+/* Flipping card styles */
+.flip-card {
+    background-color: transparent;
+    perspective: 1000px;
+    cursor: pointer;
+    display: inline-block;
+  }
+  
+  .flip-card-inner {
+    position: relative;
+    width: 200px;
+    height: 80px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+  
+  .flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+  
+  .flip-card-front,
+  .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+  }
+  
+  .flip-card-front {
+    background-color: #ff6347; /* Same background as ticket */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .flip-card-back {
+    background-color: #333;
+    color: white;
+    transform: rotateY(180deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
