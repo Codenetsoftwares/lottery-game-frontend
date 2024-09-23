@@ -150,7 +150,7 @@ const PurchasedLotteries = () => {
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {purchasedTickets.length > 0 ? (
+          {purchasedTickets && purchasedTickets?.length > 0 ? (
             purchasedTickets.map((ticket, index) => (
               <tr key={ticket.purchaseId}>
                 <td>{startIndex + index}</td>
