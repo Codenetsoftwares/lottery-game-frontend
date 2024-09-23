@@ -25,11 +25,11 @@ const LotteryMarkets = () => {
   // Fetch tickets when the component mounts
   useEffect(() => {
     fetchLotteryTickets();
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  }, [state.pagination.page]);
 
-  const startIndex = (state.page - 1) * state.pagination.limit + 1;
+  const startIndex = (state.pagination.page - 1) * state.pagination.limit + 1;
   const endIndex = Math.min(
-    state.pagination.page * state.pagination.limit,
+    startIndex + state.pagination.limit - 1,
     state.pagination.totalItems
   );
 
@@ -46,25 +46,13 @@ const LotteryMarkets = () => {
       setState((prev) => ({
         ...prev,
         lotteryCards: response.data,
+        pagination: {
+          ...prev.pagination,
+          totalPages: response.pagination ? response.pagination.totalPages : 0 ,
+          totalItems: response.pagination ? response.pagination.totalItems : 0,
+        },
       }));
 
-      // Conditionally update pagination if values have changed
-      if (
-        response?.pagination?.page !== state.pagination.page ||
-        response?.pagination?.limit !== state.pagination.limit ||
-        response?.pagination?.totalPages !== state.pagination.totalPages ||
-        response?.pagination?.totalItems !== state.pagination.totalItems
-      ) {
-        setState((prev) => ({
-          ...prev,
-          pagination: {
-            page: response?.pagination?.page || 1,
-            limit: response?.pagination?.limit || 10,
-            totalPages: response?.pagination?.totalPages || 0,
-            totalItems: response?.pagination?.totalItems || 0,
-          },
-        }));
-      }
       dispatch({
         type: strings.FETCH_LOTTERY_TICKETS,
         payload: response.data,
@@ -325,7 +313,7 @@ const LotteryMarkets = () => {
                         firstPrize={card.firstPrize}
                         sem={card.sem}
                         price={card.price}
-                        ticketNumber={card.ticketNumber}
+                        ticketNumbers={card.ticketNumber}
                       />
                     </div>
                   ))
@@ -422,7 +410,7 @@ const LotteryMarkets = () => {
               //   <select
               //     className="form-control"
               //     value={state.inputs.sem}
-              //     onChange={(e) => handleSemChange(e.target.value)} 
+              //     onChange={(e) => handleSemChange(e.target.value)}
               //   >
               //     <option value="">Select SEM</option>
               //     {[5, 10, 25, 50, 100, 200].map((option) => (
