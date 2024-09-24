@@ -1,148 +1,186 @@
 import React, { useState } from 'react';
-import CustomModal from './CustomModal'; // Import your CustomModal component
-import { getSelectSemInModal } from './apiService'; // Import your API function
+import './DearLotteryCard.css'; // Import CSS for animations
 
-// Define the initial state function
-export const getLotteryMarketsInitialState = (body = {}) => {
-  return {
-    currentPage: body.currentPage ?? 1,
-    totalPages: body.totalPages ?? 10,
-    entries: body.entries ?? 10,
-    randomToken: body.randomToken ?? "",
-    lotteryCards: body.lotteryCards ?? [],
-    lotteryId: body.lotteryId ?? "",
-    isModalOpen: body.isModalOpen ?? false,
-    inputs: body.inputs ?? {
-      name: "",
-      DateTime: "",
-      firstPrize: "",
-      sem: "",
-      tickets: [],
-      price: "",
-    },
-    showModal: body.showModal ?? false,
-    showTicketModal: body.showTicketModal ?? false
-  };
-};
+const DearLotteryCard = ({
+  lotteryName,
+  drawDate,
+  drawTime,
+  firstPrize,
+  sem,
+  price,
+  ticketNumbers,
+}) => {
+  const [currentTicket, setCurrentTicket] = useState(0);
 
-const YourComponent = () => {
-  const [state, setState] = useState(getLotteryMarketsInitialState());
-  const [selectedTicketCount, setSelectedTicketCount] = useState(5); // Default to 5
-
-  //GET api to generate the ticket number as by sem values from dropdown
-  async function handleGenerateTicketNumber(selectedValue) {
-    try {
-      const response = await getSelectSemInModal(selectedValue);
-      console.log("===>> get api response", response);
-
-      if (response && response.success) {
-        setState((prev) => ({
-          ...prev,
-          inputs: { ...prev.inputs, tickets: response.data.tickets },
-          showTicketModal: true, // Show the modal when tickets are fetched
-        }));
-      } else {
-        console.error("Failed to fetch ticket numbers");
-      }
-    } catch (error) {
-      console.error("Error fetching ticket numbers:", error);
-    }
-  }
-
-  // Define your modal open/close handlers
-  const handleOpenModal = () => {
-    setState((prev) => ({ ...prev, showModal: true }));
+  // Function to show the next ticket number
+  const showNextTicket = () => {
+    setCurrentTicket((prev) => (prev + 1) % ticketNumbers.length);
   };
 
-  const handleCloseModal = () => {
-    setState((prev) => ({ ...prev, showModal: false }));
-  };
-
-  const handleCreateTicket = () => {
-    // Implement your ticket creation logic here
-    console.log("Creating tickets...");
-  };
+  // Calculate total price
+  const totalPrice = price * sem;
 
   return (
-    <div className="flex-grow-1 ml-4 mr-5">
-      {state.randomToken ? (
-        <span
-          style={{
-            cursor: "pointer",
-            color: "#4682B4",
-            fontWeight: "bold",
-            position: "relative",
-            animation: "fadeIn 1s ease-in-out", // Fade-in animation
-          }}
-          onClick={handleOpenModal}
-        >
-          Generated Ticket Number
-          <div
-            style={{
-              position: "absolute",
-              top: "20px",
-              left: "0",
-              backgroundColor: "#f8d7da",
-              color: "#721c24",
-              padding: "5px 10px",
-              borderRadius: "5px",
-              boxShadow: "0px 2px 8px rgba(0,0,0,0.15)",
-              animation: "pulse 2s infinite", // Pulse animation
-            }}
-          >
-            Click here to create a ticket with this number
-          </div>
-        </span>
-      ) : (
-        <div>
-          <span
-            style={{
-              cursor: "pointer",
-              color: "#4682B4",
-              fontWeight: "bold",
-            }}
-            onClick={() => handleGenerateTicketNumber(selectedTicketCount)}
-          >
-            Generate Ticket Number To Create Lottery Ticket By SEM
-          </span>
-          <div style={{ display: "inline-block", marginLeft: "10px" }}>
-            <select
-              style={{
-                padding: "5px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-                backgroundColor: "#f1f1f1",
-                cursor: "pointer",
-              }}
-              onChange={(e) => {
-                const selectedValue = e.target.value;
-                console.log("Selected Value:", selectedValue);
-                handleGenerateTicketNumber(selectedValue);
-              }}
-            >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-              <option value="200">200</option>
-            </select>
+    <div className="dear-lottery-card" style={{ position: 'relative' }}>
+      <div
+        className="ticket-border"
+        style={{
+          border: '8px solid #FFD700', // Deep colored border
+          borderRadius: '20px',
+          padding: '20px',
+          backgroundColor: '#FF6347', // Background color
+          width: '400px', // Wider width
+          height: '180px', // Shorter height
+        }}
+      >
+        {/* Ticket Header */}
+        <div className="ticket-header">
+          <h5 className="lottery-name">{lotteryName}</h5>
+          <div className="ticket-number-container" onClick={showNextTicket}>
+            <div className="flip-card">
+              <div className="flip-card-inner">
+                <div className="flip-card-front">
+                  <p>Click for Ticket No</p>
+                </div>
+                <div className="flip-card-back">
+                  <p>Ticket No: {ticketNumbers[currentTicket]}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      )}
 
-      <CustomModal
-        showModal={state.showModal}
-        onClose={handleCloseModal}
-        heading="Generated Lottery Tickets"
-        inputs={state.inputs.tickets.map((ticket) => ({ label: ticket }))}
-        textOnly={true} // Displays ticket numbers only
-        buttonLabel="Create Tickets"
-        onButtonClick={handleCreateTicket}
-        cancelButtonLabel="Cancel"
-      />
+        {/* Draw Date and Time */}
+        <div className="draw-info" style={{ animation: 'blink 1s infinite' }}>
+          <p>Draw Date: {drawDate}</p>
+          <p>Draw Time: {drawTime}</p>
+        </div>
+
+        {/* Prize Information */}
+        <div className="prize-info">
+          <div className="first-prize">
+            <h2 className="first-prize-text">
+              1st PRIZE: ₹{firstPrize}
+            </h2>
+            <img src="path/to/animation.gif" alt="Celebration" />
+          </div>
+          <div className="price-info">
+            <p>
+              Ticket Price: ₹{price} x {sem} = ₹{totalPrice}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default YourComponent;
+export default DearLotteryCard;
+
+// css for this file
+/* Overall Card Styling */
+.dear-lottery-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Ticket Border */
+.ticket-border {
+  position: relative;
+  background-color: #FF6347; /* Background color of ticket */
+}
+
+/* Header Styling */
+.ticket-header {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Lottery Name */
+.lottery-name {
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+}
+
+/* Draw Info */
+.draw-info {
+  font-size: 12px;
+  color: white;
+}
+
+/* Blinking Effect */
+@keyframes blink {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Prize Information */
+.prize-info {
+  text-align: center;
+}
+
+/* First Prize */
+.first-prize {
+  font-weight: bold;
+  color: #FFD700; /* Gold */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Price Info */
+.price-info {
+  color: white;
+}
+
+/* Flipping Card Styles */
+.flip-card {
+  background-color: transparent;
+  perspective: 1000px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 150px;
+  height: 60px;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+  background-color: #FF6347;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flip-card-back {
+  background-color: #333;
+  color: white;
+  transform: rotateY(180deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

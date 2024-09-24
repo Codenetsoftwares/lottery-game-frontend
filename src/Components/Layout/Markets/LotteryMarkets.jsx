@@ -16,10 +16,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatISO } from "date-fns";
 import "./LotteryMarkets.css";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { Oval } from "react-loader-spinner";
 
 const LotteryMarkets = () => {
   const { dispatch } = useAppContext();
   const [state, setState] = useState(getLotteryMarketsInitialState);
+  const [hasMore, setHasMore] = useState(true);
   console.log("===>>> random token", state.inputs.tickets);
 
   // Fetch tickets when the component mounts
@@ -45,13 +48,15 @@ const LotteryMarkets = () => {
     if (response) {
       setState((prev) => ({
         ...prev,
-        lotteryCards: response.data,
+        lotteryCards: response.data || [],
+
         pagination: {
           ...prev.pagination,
-          totalPages: response.pagination ? response.pagination.totalPages : 0 ,
+          totalPages: response.pagination ? response.pagination.totalPages : 0,
           totalItems: response.pagination ? response.pagination.totalItems : 0,
         },
       }));
+      // setHasMore(state.pagination.page < response.pagination.totalPages) // for in
 
       dispatch({
         type: strings.FETCH_LOTTERY_TICKETS,
@@ -301,23 +306,34 @@ const LotteryMarkets = () => {
         </SingleCard>
         <div className="card-body  mt-2 mb-3">
           <SingleCard className="mb-2 p-4">
-            <div className="container">
-              <div className="row justify-content-center">
-                {state.lotteryCards ? (
-                  state.lotteryCards.map((card) => (
-                    <div className="col-md-4 mb-4" key={card.id}>
-                      <DearLotteryCard
-                        lotteryName={card.name}
-                        drawDate={new Date(card.date).toLocaleDateString()}
-                        drawTime={new Date(card.date).toLocaleTimeString()}
-                        firstPrize={card.firstPrize}
-                        sem={card.sem}
-                        price={card.price}
-                        ticketNumbers={card.ticketNumber}
-                      />
-                    </div>
-                  ))
-                ) : (
+            <InfiniteScroll
+              style={{ overflowX: "hidden" }}
+              dataLength={state.lotteryCards.length ?? 0}
+              next={fetchLotteryTickets}
+              hasMore={state.pagination.page < state.pagination.totalPages}
+              loader={
+                // Use the spinner here
+                <div
+                  className="d-flex justify-content-center align-items-center"
+                  style={{ height: "80vh" }}
+                >
+                  <Oval
+                    height={40}
+                    width={40}
+                    color="#4fa94d"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    visible={true}
+                    ariaLabel="oval-loading"
+                    secondaryColor="#4fa94d"
+                    strokeWidth={2}
+                    strokeWidthSecondary={2}
+                  />
+                </div>
+              }
+              height={600}
+              endMessage={
+                state.lotteryCards.length === 0 && (
                   <div className="text-center mt-5">
                     <img
                       src="https://media.giphy.com/media/jy6UhbChQ5dQ4/giphy.gif"
@@ -330,23 +346,59 @@ const LotteryMarkets = () => {
                     <p className="text-muted">
                       Seems like the lottery fairy hasn't visited yet. 🧚‍♀️
                       <br />
-                      Don’t worry, you can be the magician who creates the first
-                      one! 🎩✨
+                      Don’t worry, you can be the magician who creates the first one! 🎩✨
                     </p>
-                    {/* <button
+                  </div>
+                )
+              }
+            >
+              <div className="container">
+                <div className="row justify-content-center">
+                  {state.lotteryCards && state.lotteryCards ? (
+                    state.lotteryCards.map((card) => (
+                      <div className="col-md-4 mb-4" key={card.id}>
+                        <DearLotteryCard
+                          lotteryName={card.name}
+                          drawDate={new Date(card.date).toLocaleDateString()}
+                          drawTime={new Date(card.date).toLocaleTimeString()}
+                          firstPrize={card.firstPrize}
+                          sem={card.sem}
+                          price={card.price}
+                          ticketNumbers={card.ticketNumber}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center mt-5">
+                      <img
+                        src="https://media.giphy.com/media/jy6UhbChQ5dQ4/giphy.gif"
+                        alt="Funny no tickets"
+                        style={{ width: "200px" }}
+                      />
+                      <h4 className="text-warning mt-3">
+                        Oops! No Lottery Tickets found!
+                      </h4>
+                      <p className="text-muted">
+                        Seems like the lottery fairy hasn't visited yet. 🧚‍♀️
+                        <br />
+                        Don’t worry, you can be the magician who creates the
+                        first one! 🎩✨
+                      </p>
+                      {/* <button
                       className="btn btn-primary mt-3"
                       onClick={handleOpenModal}
                       style={{ animation: "shake 0.5s" }}
                     >
                       Create Your Magic Ticket Now!
                     </button> */}
-                  </div>
-                )}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            </InfiniteScroll>
           </SingleCard>
         </div>
-        <div style={{ marginTop: "20px" }}>
+        {/* <div style={{ marginTop: "20px" }}>
           <Pagination
             currentPage={state.pagination.page}
             totalPages={state.pagination.totalPages}
@@ -355,7 +407,7 @@ const LotteryMarkets = () => {
             endIndex={endIndex}
             totalData={state.pagination.totalItems}
           />
-        </div>
+        </div> */}
 
         {/* Custom Modal for creating a ticket */}
         <CustomModal

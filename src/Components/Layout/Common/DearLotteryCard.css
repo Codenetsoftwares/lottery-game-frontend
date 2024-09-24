@@ -42,3 +42,19 @@
   justify-content: center;
   align-items: center;
 }
+
+.dear-lottery-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* margin: 20px auto; */
+  font-family: 'Arial', sans-serif;
+  
+}
+
+/* Blinking Effect */
+@keyframes blink {
+  50% {
+    opacity: 0.5;
+  }
+}
