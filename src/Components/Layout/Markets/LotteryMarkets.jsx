@@ -20,15 +20,20 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Oval } from "react-loader-spinner";
 
 const LotteryMarkets = () => {
-  const { dispatch } = useAppContext();
+  const { store, dispatch } = useAppContext();
+  console.log("===>>> store", store.admin.accessToken);
   const [state, setState] = useState(getLotteryMarketsInitialState);
   const [hasMore, setHasMore] = useState(true);
   console.log("===>>> random token", state.inputs.tickets);
+  const accessToken = store?.admin?.accessToken;
+  console.log("--->>>Access token", accessToken);
 
   // Fetch tickets when the component mounts
   useEffect(() => {
-    fetchLotteryTickets();
-  }, [state.pagination.page]);
+    if (accessToken) {
+      fetchLotteryTickets();
+    }
+  }, [accessToken, state.pagination.page]);
 
   const startIndex = (state.pagination.page - 1) * state.pagination.limit + 1;
   const endIndex = Math.min(
@@ -83,6 +88,7 @@ const LotteryMarkets = () => {
     setState((prev) => ({
       ...prev,
       showModal: false,
+      showTicketModal: false,
       inputs: {
         name: "",
         DateTime: "",
@@ -159,15 +165,6 @@ const LotteryMarkets = () => {
     }));
   };
 
-  // Handle SEM dropdown change
-  const handleSemChange = async (value) => {
-    // Update the state with the selected SEM value
-    handleInputChange("sem", value);
-
-    // Log the selected value to the console
-    console.log("SEM selected:", value);
-  };
-
   // Function to handle delete confirmation
   const handleDeleteConfirm = async () => {
     const response = await unPurchasedLotteryTicketsDelete(true); // Call the delete API
@@ -242,18 +239,15 @@ const LotteryMarkets = () => {
               <div>
                 <span
                   style={{
-                    cursor: "pointer",
                     color: "#4682B4",
                     fontWeight: "bold",
                   }}
-                  onClick={() =>
-                    handleGenerateTicketNumber(state.selectedTicketCount)
-                  }
                 >
                   Generate Ticket Number To Create Lottery Ticket By SEM
                 </span>
                 <div style={{ display: "inline-block", marginLeft: "10px" }}>
                   <select
+                    value={state.inputs.sem || ""}
                     style={{
                       padding: "5px",
                       borderRadius: "5px",
@@ -274,6 +268,9 @@ const LotteryMarkets = () => {
                       }));
                     }}
                   >
+                    <option value="" disabled>
+                      Select SEM
+                    </option>
                     <option value="5">5</option>
                     <option value="10">10</option>
                     <option value="25">25</option>
@@ -526,9 +523,10 @@ const LotteryMarkets = () => {
 
         <CustomModal
           showModal={state.showTicketModal}
-          onClose={() =>
-            setState((prevState) => ({ ...prevState, showTicketModal: false }))
-          }
+          // onClose={() =>
+          //   setState((prevState) => ({ ...prevState, showTicketModal: false }))
+          // }
+          onClose={handleCloseModal}
           heading="Generated Lottery Ticket Numbers"
           inputs={(state.inputs.tickets || []).map((ticket) => ({
             label: ticket,

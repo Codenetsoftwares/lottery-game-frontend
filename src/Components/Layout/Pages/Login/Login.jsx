@@ -15,20 +15,51 @@ const Login = () => {
 
   console.log(dispatch);
 
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   setError(""); // Clear previous errors
+
+  //   const response = await adminLogin({
+  //     userName: username,
+  //     password: password,
+  //   });
+
+  //   if (response && response.success) {
+  //     dispatch({ type: "LOG_IN", payload: response.data });
+
+  //     navigate("/lottery-markets");
+  //     // window.location.reload();
+  //   }
+  // };
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(""); // Clear previous errors
-
+  
     const response = await adminLogin({
       userName: username,
       password: password,
     });
-
+    console.log('===>>> response',response)
+  
     if (response && response.success) {
-      dispatch({ type: "LOG_IN", payload: response.data });
-
+        // Immediately store the accessToken in local storage
+    localStorage.setItem(strings.LOCAL_STORAGE_KEY, JSON.stringify({
+      admin: {
+        accessToken: response.data.accessToken,
+        // Add other properties if needed
+      }
+    }));
+      // Dispatch the login action with accessToken as payload
+      dispatch({ 
+        type: strings.LOG_IN, 
+        payload: response.data // Assuming `response.data` contains the token and user details
+      });
+  
+      // Navigate to the desired route after successful login
       navigate("/lottery-markets");
-      window.location.reload();
+    } else {
+      // Handle login failure
+      setError(response?.errMessage || "Login failed");
     }
   };
   return (
