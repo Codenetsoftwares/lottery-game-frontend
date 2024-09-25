@@ -16,34 +16,21 @@ export function getNoAuthCallParams(methodType, body) {
   }
 }
 
-// export async function getHeaderObject(accessToken, contentType) {
-//   try {
-//     if (accessToken) {
-//       return {
-//         ...contentType,
-//         authorization: `Bearer ${accessToken}`,
-//       };
-//     }
-//     return null;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
-
-// getNoAuthCallParams private api call
-
 export async function getHeaderObject(accessToken, contentType) {
-  const headers = {
-    ...contentType,
-  };
-
-  if (accessToken) {
-    headers.authorization = `Bearer ${accessToken}`;
+  try {
+    if (accessToken) {
+      return {
+        ...contentType,
+        authorization: `Bearer ${accessToken}`,
+      };
+    }
+    return null;
+  } catch (error) {
+    throw error;
   }
-
-  return headers; // Ensure you return headers regardless of the token presence
 }
 
+// getNoAuthCallParams private api call
 export const getAuthCallParams = async (methodType, body) => {
   const store = JSON.parse(localStorage.getItem(strings.LOCAL_STORAGE_KEY));
   const accessToken = store?.admin?.accessToken;
@@ -63,7 +50,7 @@ export const getAuthCallParams = async (methodType, body) => {
       return params;
 
     default:
-   throw new Error(`Unsupported method type: ${methodType}`);
+      return false;
   }
 };
 
