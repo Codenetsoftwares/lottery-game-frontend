@@ -24,7 +24,7 @@ const PurchasedLotteries = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null); // State to manage modal data
   useEffect(() => {
-    fetchPurchasedLotteryTickets();
+    fetchPurchasedLotteryTickets(pagination.page, pagination.limit);
   }, [pagination.page, pagination.limit]);
 
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
@@ -44,10 +44,10 @@ const PurchasedLotteries = () => {
     if (response && response.success) {
       setPurchasedTickets(response.data);
       setPagination({
-        page: response?.pagination?.page,
-        limit: response?.pagination?.limit,
-        totalPages: response?.pagination?.totalPages,
-        totalItems: response?.pagination?.totalItems,
+        page: response?.pagination?.page || pagination.page,
+        limit: response?.pagination?.limit || pagination.limit,
+        totalPages: response?.pagination?.totalPages|| 0,
+        totalItems: response?.pagination?.totalItems|| 0,
       });
       dispatch({
         type: strings.PURCHASED_LOTTERY_TICKETS,
@@ -108,24 +108,11 @@ const PurchasedLotteries = () => {
     >
       {/* Header with delete icon */}
       <div
-        className="d-flex justify-content-between align-items-center mb-4"
+        className="d-flex justify-content-center  "
         style={{ position: "relative" }}
       >
         <h2 style={{ color: "#4682B4" }}>Purchased Lottery Tickets</h2>
-        <i
-          // className="fas fa-trash-alt"
-          className="fas fa-trash"
-          style={{
-            cursor: "pointer",
-            fontSize: "2rem",
-            // color: "#e74c3c",
-            position: "absolute",
-            right: "0",
-          }}
-          title="Delete all purchased history"
-          onClick={() => handleDelete()}
-          // onClick={handleDeleteAll} // Add your delete all logic here
-        ></i>
+      
       </div>
 
       <Table striped hover responsive bordered className="table-sm">
@@ -172,7 +159,7 @@ const PurchasedLotteries = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="text-center">
+              <td colSpan="8" className="text-center">
                 No tickets found.
               </td>
             </tr>
