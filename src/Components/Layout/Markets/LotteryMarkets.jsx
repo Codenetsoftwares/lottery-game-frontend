@@ -344,7 +344,7 @@ const LotteryMarkets = () => {
           </SingleCard>
         </div>
 
-        {state.lotteryCards.length > 0 && (
+        {Array.isArray(state.lotteryCards) && state.lotteryCards.length > 0 && (
           <div style={{ marginTop: "20px" }}>
             <Pagination
               currentPage={state.pagination.page}
