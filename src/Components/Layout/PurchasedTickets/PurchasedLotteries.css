@@ -1,5 +1,5 @@
 .table-sm td, .table-sm th {
-    padding: 0.75rem;
+    padding: 0.35rem;
   }
   
   .container {
@@ -31,5 +31,13 @@
   /* Optional: Add spacing and alignment adjustments for the action column */
   .table td {
     vertical-align: middle;
+  }
+  .custom-dropdown-menu {
+    max-height: 200px; /* Set a maximum height for the dropdown */
+    overflow-y: auto; /* Enable scrolling if there are many items */
+    background: white; /* Set background color to avoid transparency issues */
+    border: 1px solid #ccc; /* Optional: border to distinguish it */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect for depth */
   }
   
