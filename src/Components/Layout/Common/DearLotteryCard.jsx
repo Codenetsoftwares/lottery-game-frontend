@@ -9,6 +9,8 @@ const DearLotteryCard = ({
   sem,
   price,
   ticketNumbers,
+  onEdit,  
+  onDelete, 
 }) => {
   const [currentTicket, setCurrentTicket] = useState(0);
 
@@ -22,7 +24,7 @@ const DearLotteryCard = ({
       className="dear-lottery-card"
       style={{
         width: "100%",
-        maxWidth: "320px",
+        maxWidth: "520px",
         height: "auto",
         backgroundColor: "#FF6347", // Main background color of the ticket
         color: "#fff",
@@ -35,6 +37,7 @@ const DearLotteryCard = ({
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
       }}
     >
+    
       {/* Half-curved corners */}
       <div
         style={{
@@ -290,6 +293,82 @@ const DearLotteryCard = ({
           Click the ticket to see the next number!
         </p> */}
       </div>
+    
+ <div 
+  className="card-footer"
+  style={{
+    position: "relative",    // Make footer position relative for absolute positioning of icons
+    height: "40px",          // Ensure enough height for icons
+    padding: "0 20px",       // Padding to keep icons away from the edge
+    // borderTop: "2px solid #fff",  // Top border
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }}
+>
+  {/* Edit Icon - Left aligned */}
+  <div
+    className="icon-wrapper"
+    style={{
+      position: "absolute",   // Absolute positioning
+      left: "0",              // Stick to left edge
+      bottom: "10px",         // Keep a small gap from bottom
+      width: "40px",
+      height: "40px",
+      borderRadius: "50%",
+      backgroundColor: "#80CBC4", 
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      cursor: "pointer",
+      transition: "transform 0.2s",
+    }}
+    onClick={onEdit} // Trigger the edit function from props
+  >
+    <i 
+      className="fa fa-edit"
+      style={{
+        color: "black",
+        fontSize: "18px",
+      }}
+      title="Edit"
+    />
+  </div>
+
+  {/* Delete Icon - Right aligned */}
+  <div
+    className="icon-wrapper"
+    style={{
+      position: "absolute",   // Absolute positioning
+      right: "0",             // Stick to right edge
+      bottom: "10px",         // Keep a small gap from bottom
+      width: "40px",
+      height: "40px",
+      borderRadius: "50%",
+      backgroundColor: "#80CBC4", 
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      cursor: "pointer",
+      transition: "transform 0.2s",
+    }}
+    onClick={onDelete} // Trigger the delete function from props
+  >
+    <i 
+      className="fa fa-trash"
+      style={{
+        color: "black",
+        fontSize: "18px",
+      }}
+      title="Delete"
+    />
+  </div>
+</div>
+
+
+
     </div>
 </div>
   );

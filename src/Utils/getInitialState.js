@@ -25,6 +25,7 @@ export const getLotteryMarketsInitialState = (body = {}) => {
     },
     showModal: body.showModal ?? false,
     showTicketModal: body.showTicketModal ?? false,
+    isEditMode: body.isEditMode ?? false,
 
     // Additional fields integrated
     pagination: {

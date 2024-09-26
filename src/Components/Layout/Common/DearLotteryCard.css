@@ -58,3 +58,8 @@
     opacity: 0.5;
   }
 }
+
+.icon-wrapper:hover {
+  transform: scale(1.1); /* Grows slightly */
+}
+
