@@ -343,16 +343,19 @@ const LotteryMarkets = () => {
             </div>
           </SingleCard>
         </div>
-        <div style={{ marginTop: "20px" }}>
-          <Pagination
-            currentPage={state.pagination.page}
-            totalPages={state.pagination.totalPages}
-            handlePageChange={handlePageChange}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            totalData={state.pagination.totalItems}
-          />
-        </div>
+
+        {state.lotteryCards.length > 0 && (
+          <div style={{ marginTop: "20px" }}>
+            <Pagination
+              currentPage={state.pagination.page}
+              totalPages={state.pagination.totalPages}
+              handlePageChange={handlePageChange}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              totalData={state.pagination.totalItems}
+            />
+          </div>
+        )}
 
         {/* Custom Modal for creating a ticket */}
         <CustomModal

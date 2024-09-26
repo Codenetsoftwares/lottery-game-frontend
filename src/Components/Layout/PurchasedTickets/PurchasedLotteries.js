@@ -21,33 +21,29 @@ const PurchasedLotteries = () => {
     totalItems: 0,
   });
 
-  const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState(null); // State to manage modal data
-  useEffect(() => {
-    fetchPurchasedLotteryTickets(pagination.page, pagination.limit);
-  }, [pagination.page, pagination.limit]);
 
-  const startIndex = (pagination.page - 1) * pagination.limit + 1;
-  const endIndex = Math.min(
-    pagination.page * pagination.limit,
-    pagination.totalItems
-  );
+  const [dropdownOpen, setDropdownOpen] = useState(null);
+
+  const toggleDropdown = (id) => {
+    setDropdownOpen(dropdownOpen === id ? null : id);
+  };
+
+  useEffect(() => {
+    fetchPurchasedLotteryTickets();
+  }, [pagination.page, pagination.limit]);
 
   const fetchPurchasedLotteryTickets = async () => {
     const response = await getPurchasedLotteryTickets({
-      page: pagination.page || 1,
-      limit: pagination.limit || 10,
-      totalPages: pagination.totalPages || 0,
-      totalItems: pagination.totalItems || 0,
+      page: pagination.page,
+      limit: pagination.limit,
     });
-    console.log('line 43',response);
     if (response && response.success) {
-      setPurchasedTickets(response.data);
+      setPurchasedTickets(response.data|| []);
       setPagination({
         page: response?.pagination?.page || pagination.page,
         limit: response?.pagination?.limit || pagination.limit,
-        totalPages: response?.pagination?.totalPages|| 0,
-        totalItems: response?.pagination?.totalItems|| 0,
+        totalPages: response?.pagination?.totalPages || 0,
+        totalItems: response?.pagination?.totalItems || 0,
       });
       dispatch({
         type: strings.PURCHASED_LOTTERY_TICKETS,
@@ -56,38 +52,15 @@ const PurchasedLotteries = () => {
     } else {
       console.error("Failed to fetch purchased tickets");
     }
-    setLoading(false); // Set loading to false after the data is fetched
+    setLoading(false);
   };
 
   const handlePageChange = (newPage) => {
     setPagination((prev) => ({ ...prev, page: newPage }));
-    // Fetch or filter data based on the new page number here
   };
 
-  const handleDelete = (ticket) => {
-    console.log(`Delete ticket with id: ${ticket}`);
 
-    setModalData(ticket); // Set the ticket data to be used in the modal
-    setShowModal(true); //
-  };
 
-  const handleConfirmDelete = async () => {
-    if (modalData) {
-      const response = await PurchasedLotteryTicketsDelete(
-        modalData.purchaseId
-      );
-      if (response && response.success) {
-        // Remove deleted ticket from the list
-        setPurchasedTickets((prev) =>
-          prev.filter((ticket) => ticket.purchaseId !== modalData.purchaseId)
-        );
-        setShowModal(false); // Hide the modal
-        console.log(`Deleted ticket with id: ${modalData.purchaseId}`);
-      } else {
-        console.error("Failed to delete ticket");
-      }
-    }
-  };
 
   if (loading) {
     return (
@@ -97,33 +70,21 @@ const PurchasedLotteries = () => {
       </div>
     );
   }
+
+  const startIndex = (pagination.page - 1) * pagination.limit + 1;
+  const endIndex = Math.min(
+    pagination.page * pagination.limit,
+    pagination.totalItems
+  );
+
   return (
-    <div
-      className="container mt-4 p-3"
-      style={{
-        background: "#e6f7ff",
-        borderRadius: "10px",
-        boxShadow: "0 0 15px rgba(0,0,0,0.1)",
-      }}
-    >
-      {/* Header with delete icon */}
-      <div
-        className="d-flex justify-content-center  "
-        style={{ position: "relative" }}
-      >
+    <div className="container mt-4 p-3" style={{ background: "#e6f7ff", borderRadius: "10px", boxShadow: "0 0 15px rgba(0,0,0,0.1)" }}>
+      <div className="d-flex justify-content-center">
         <h2 style={{ color: "#4682B4" }}>Purchased Lottery Tickets</h2>
-      
       </div>
 
       <Table striped hover responsive bordered className="table-sm">
-        <thead
-          style={{
-            backgroundColor: "#4682B4",
-            color: "#fff",
-            fontWeight: "bold",
-            textAlign: "center",
-          }}
-        >
+        <thead style={{ backgroundColor: "#4682B4", color: "#fff", fontWeight: "bold", textAlign: "center" }}>
           <tr>
             <th>Serial Number</th>
             <th>Lottery Name</th>
@@ -133,11 +94,10 @@ const PurchasedLotteries = () => {
             <th>SEM</th>
             <th>Ticket Number</th>
             <th>User Name</th>
-            {/* <th>Action</th> */}
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {purchasedTickets && purchasedTickets?.length > 0 ? (
+          {purchasedTickets && purchasedTickets.length > 0 ? (
             purchasedTickets.map((ticket, index) => (
               <tr key={ticket.purchaseId}>
                 <td>{startIndex + index}</td>
@@ -146,61 +106,55 @@ const PurchasedLotteries = () => {
                 <td>{new Date(ticket.drawTime).toLocaleTimeString()}</td>
                 <td>{ticket.purchaseAmount}</td>
                 <td>{ticket.sem}</td>
-                <td>{ticket.ticketNumber}</td>
+                <td>
+                  <div className="dropdown" style={{ position: "relative" }}>
+                    <button
+                      className="btn btn-link dropdown-toggle"
+                      type="button"
+                      onClick={() => toggleDropdown(ticket.purchaseId)}
+                    >
+                      View Ticket Numbers
+                    </button>
+                    {dropdownOpen === ticket.purchaseId && (
+                      <div className="custom-dropdown-menu">
+                        <span className="dropdown-item-text">Ticket Numbers:</span>
+                        <div className="dropdown-divider" />
+                        {ticket.ticketNumber && ticket.ticketNumber.length > 0 ? (
+                          ticket.ticketNumber.map((number, i) => (
+                            <span key={i} className="dropdown-item">
+                              {number}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="dropdown-item text-muted">No ticket numbers available</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </td>
                 <td>{ticket.userName}</td>
-                {/* <td>
-                  <i
-                    className="fas fa-trash"
-                    onClick={() => handleDelete(ticket)}
-                    // style={{ cursor: 'pointer', color: '#e74c3c' }}
-                  />
-                </td> */}
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="8" className="text-center">
-                No tickets found.
-              </td>
+              <td colSpan="8" className="text-center">No tickets found.</td>
             </tr>
           )}
         </tbody>
       </Table>
-      <Pagination
-        currentPage={pagination.page}
-        totalPages={pagination.totalPages}
-        handlePageChange={handlePageChange}
-        startIndex={startIndex}
-        endIndex={endIndex}
-        totalData={pagination.totalItems}
-      />
+      {purchasedTickets.length > 0 && (
+         <Pagination
+         currentPage={pagination.page}
+         totalPages={pagination.totalPages}
+         handlePageChange={handlePageChange}
+         startIndex={startIndex}
+         endIndex={endIndex}
+         totalData={pagination.totalItems}
+       />
 
-      <CustomModal
-        showModal={showModal}
-        onClose={() => setShowModal(false)}
-        heading={
-          <span
-            className="text-danger "
-            style={{ fontWeight: "900", fontSize: "1.5rem" }}
-          >
-            Alert !
-          </span>
-        }
-        inputs={[
-          {
-            label: (
-              <>
-                Are you sure you want to delete all the purchase history of
-                users?
-              </>
-            ),
-          },
-        ]}
-        buttonLabel="Delete"
-        onButtonClick={handleConfirmDelete}
-        cancelButtonLabel="Cancel"
-        textOnly={true}
-      />
+      )}
+     
+
     </div>
   );
 };
