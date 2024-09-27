@@ -19,6 +19,8 @@ const DearLotteryCard = ({
     setCurrentTicket((prev) => (prev + 1) % ticketNumbers.length);
   };
 
+
+
   return (
     <div
       className="dear-lottery-card"
@@ -257,7 +259,8 @@ const DearLotteryCard = ({
           marginBottom: "15px",
         }}
       >
-        <p
+        <p 
+        className="text-truncate"
           style={{
             fontSize: "24px",
             fontWeight: "bold",

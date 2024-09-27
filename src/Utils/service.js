@@ -59,11 +59,11 @@ export const getAuthCallParams = async (methodType, body) => {
       return { ...params, body: JSON.stringify(body) };
     case "PUT":
       return { ...params, body: JSON.stringify(body) };
-      case "DELETE":  
+    case "DELETE":
       return params;
 
     default:
-   throw new Error(`Unsupported method type: ${methodType}`);
+      throw new Error(`Unsupported method type: ${methodType}`);
   }
 };
 
@@ -78,31 +78,27 @@ export async function makeCall(callName, callParams, isToast) {
 
     const json = await response.json();
 
-    
     if (json.responseCode === 401) {
       localStorage.clear();
       sessionStorage.setItem("sessionExpierd", true);
       window.location.href = "/";
     }
 
-       // Handle 400: Bad Request - Centralized error
-       if (json.responseCode === 400) {
-        toast.error(json.errMessage || "Bad request. Please try again.");
-        return null; // Optionally, return null to stop further processing
-      }
-
+    // Handle 400: Bad Request - Centralized error
+    if (json.responseCode === 400) {
+      toast.error(json.errMessage || "Bad request. Please try again.");
+      return null; // Optionally, return null to stop further processing
+    }
 
     if (json.success === false) {
-      toast.error(json.errMessage|| "An error occurred");
+      toast.error(json.errMessage || "An error occurred");
       return null;
     } else if (isToast && (json.success === true || json.successCode === 200)) {
-   
       toast.success(json.message || "Operation successful");
     }
-   
+
     return json;
   } catch (error) {
- 
     toast.error(error.message || "An error occurred");
     return null;
   }

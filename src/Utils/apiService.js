@@ -37,7 +37,7 @@ export async function getLotteryTickets(body, isToast = true) {
   try {
     const callParams = await getAuthCallParams(strings.GET, null, isToast);
     const response = await makeCall(
-      `${urls.getLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`,
+      `${urls.getLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}&searchBySem=${body.searchBySem}`,
 
       callParams,
       isToast
@@ -134,13 +134,11 @@ export async function singleLotteryDelete(lotteryId, isToast = true) {
   }
 }
 
-
-
-export async function singleLotteryEdit(lotteryId, isToast = true) {
+export async function singleLotteryEdit(body, isToast = true) {
   try {
-    const callParams = await getAuthCallParams(strings.PUT, null, isToast);
+    const callParams = await getAuthCallParams(strings.PUT,body);
     const response = await makeCall(
-      `${urls.SingleEditCard}/${lotteryId}`,
+      `${urls.SingleEditCard}/${body.lotteryId}`,
       callParams,
       isToast
     );
@@ -149,4 +147,3 @@ export async function singleLotteryEdit(lotteryId, isToast = true) {
     throw error;
   }
 }
-

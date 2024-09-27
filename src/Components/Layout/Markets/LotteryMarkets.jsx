@@ -26,16 +26,18 @@ const LotteryMarkets = () => {
   console.log("===>>> store", store.admin.accessToken);
   const [state, setState] = useState(getLotteryMarketsInitialState);
   const [hasMore, setHasMore] = useState(true);
-  console.log("===>>> random token", state.inputs.tickets);
+  console.log("===>>> random token", state.lotteryId);
   const accessToken = store?.admin?.accessToken;
   console.log("--->>>Access token", accessToken);
+  console.log("Search By SEM:", state.search);
+
 
   // Fetch tickets when the component mounts
   useEffect(() => {
     if (accessToken) {
       fetchLotteryTickets();
     }
-  }, [accessToken, state.pagination.page]);
+  }, [accessToken, state.pagination.page,state.search]);
 
   const startIndex = (state.pagination.page - 1) * state.pagination.limit + 1;
   const endIndex = Math.min(
@@ -47,6 +49,7 @@ const LotteryMarkets = () => {
   const fetchLotteryTickets = async (currentPage = state.pagination.page) => {
     console.log("Fetching Lottery Tickets for page", currentPage);
     const response = await getLotteryTickets({
+      searchBySem: state.search || "",
       page: currentPage,
       limit: state.pagination.limit || 10,
       totalPages: state.pagination.totalPages || 0,
@@ -100,50 +103,16 @@ const LotteryMarkets = () => {
     }));
   };
 
-  // const handleOpenModal = () =>
-  //   setState((prev) => ({ ...prev, showTicketModal: false, showModal: true }));
+  const handleOpenModal = () =>
+    setState((prev) => ({ ...prev, showTicketModal: false, showModal: true }));
 
-  // Modal Handlers
-  const handleOpenModal = (ticket = null) => {
-    if (ticket) {
-      // Editing mode
-      setState((prev) => ({
-        ...prev,
-        showModal: true,
-        inputs: {
-          name: ticket.name,
-          DateTime: ticket.date,
-          firstPrize: ticket.firstPrize,
-          price: ticket.price,
-          sem: ticket.sem,
-          id: ticket.id, // Include the ID for editing
-        
-        },
-        isEditMode: true, // Set to true for editing
-      }));
-    } else {
-      // Creating new ticket
-      setState((prev) => ({
-        ...prev,
-        showModal: true,
-        showTicketModal: false,
-        inputs: getLotteryMarketsInitialState.inputs, // Reset to initial state for a new ticket
-        isEditMode: false, // Set to false for creating
-      }));
-    }
-  };
   const handleCloseModal = () => {
     setState((prev) => ({
       ...prev,
       showModal: false,
-      isEditMode: false,
-      inputs: {
-        name: "",
-        DateTime: "",
-        firstPrize: "",
-        sem: "",
-        price: "",
-      },
+      showTicketModal: false,
+      isModalOpen: false,
+      inputs: getLotteryMarketsInitialState().inputs, // Reset inputs when closing
     }));
   };
 
@@ -168,80 +137,30 @@ const LotteryMarkets = () => {
     }
   }
 
-  // Define your modal open/close handlers
-  const handleTicketOpenModal = () => {
-    setState((prev) => ({ ...prev, showTicketModal: true }));
-  };
-
-  const handleTicketCloseModal = () => {
-    setState((prev) => ({ ...prev, showTicketModal: false }));
-  };
   // post Api to generate lottery tickets with the provided fields
-  // async function handleCreateTicket() {
-  //   if (state.inputs.sem > 0) {
-  //     const response = await generateLotteryTicket({
-  //       name: state.inputs.name,
-  //       date: state.inputs.DateTime,
-  //       firstPrize: state.inputs.firstPrize,
-  //       sem: state.inputs.sem,
-  //       price: state.inputs.price,
-  //     });
-
-  //     if (response) {
-  //       // Dispatch to global state
-  //       dispatch({
-  //         type: strings.GENERATE_LOTTERY,
-  //         payload: response.data, // assuming response.data contains the created ticket info
-  //       });
-
-  //       handleCloseModal();
-  //       setState((prev) => ({ ...prev, randomToken: "" }));
-  //       fetchLotteryTickets();
-  //     } else {
-  //       console.error("Failed to create ticket");
-  //     }
-  //   }
-  // }
-  async function handleSubmitTicket() {
+  async function handleCreateTicket() {
     if (state.inputs.sem > 0) {
-      if (state.isEditMode) {
-        const response = await singleLotteryEdit({
-          id: state.inputs.id, // Assuming each ticket has an ID
-          name: state.inputs.name,
-          date: state.inputs.DateTime,
-          firstPrize: state.inputs.firstPrize,
-          sem: state.inputs.sem,
-          price: state.inputs.price,
+      const response = await generateLotteryTicket({
+        name: state.inputs.name,
+        date: state.inputs.DateTime,
+        firstPrize: state.inputs.firstPrize,
+        sem: state.inputs.sem,
+        price: state.inputs.price,
+      });
+
+      if (response) {
+        // Dispatch to global state
+        dispatch({
+          type: strings.GENERATE_LOTTERY,
+          payload: response.data, // assuming response.data contains the created ticket info
         });
 
-        if (response) {
-          dispatch({
-            type: strings.EDIT_LOTTERY,
-            payload: response.data,
-          });
-        } else {
-          console.error("Failed to edit ticket");
-        }
+        handleCloseModal();
+        setState((prev) => ({ ...prev, randomToken: "" }));
+        fetchLotteryTickets();
       } else {
-        const response = await generateLotteryTicket({
-          name: state.inputs.name,
-          date: state.inputs.DateTime,
-          firstPrize: state.inputs.firstPrize,
-          sem: state.inputs.sem,
-          price: state.inputs.price,
-        });
-
-        if (response) {
-          dispatch({
-            type: strings.GENERATE_LOTTERY,
-            payload: response.data,
-          });
-        } else {
-          console.error("Failed to create ticket");
-        }
+        console.error("Failed to create ticket");
       }
-      handleCloseModal(); // Close the modal after submission
-      fetchLotteryTickets();
     }
   }
 
@@ -271,23 +190,40 @@ const LotteryMarkets = () => {
   };
 
   //seperately for each single lottery card
-  const handleEdit = async (id) => {
-    console.log(`Edit clicked for card ID: ${id}`);
-    const editData = {
-      name: state.inputs.name,
-      date: state.inputs.DateTime,
-      firstPrize: state.inputs.firstPrize,
-      price: state.inputs.price,
-    };
-    const response = await singleLotteryEdit(id);
-    console.log("====>>> response for edit", response);
-    if (response && response.success) {
-      console.log("Lottery details updated successfully", response.data);
+  const handleEdit = async (lotteryId) => {
+    console.log("====>>> onclick id", lotteryId);
 
-      fetchLotteryTickets();
-    } else {
-      console.error("Failed to update lottery details");
-    }
+    const lotteryToEdit = state.lotteryCards.find(
+      (card) => card.lotteryId === lotteryId
+    );
+
+    // Update the inputs state with the current lottery data
+    setState((prev) => ({
+      ...prev,
+      inputs: {
+        id: lotteryToEdit.lotteryId,
+        name: lotteryToEdit.name,
+        DateTime: lotteryToEdit.date,
+        firstPrize: lotteryToEdit.firstPrize,
+        sem: lotteryToEdit.sem,
+        price: lotteryToEdit.price,
+        tickets: lotteryToEdit.ticketNumbers || [], // Assuming ticket numbers are available
+      },
+      isModalOpen: true, // Open the modal
+    }));
+  };
+
+  const handleSave = async () => {
+    const { id, name, DateTime, firstPrize, sem, price } = state.inputs;
+    const response = await singleLotteryEdit({
+      lotteryId: id,
+      name: name,
+      date: DateTime,
+      firstPrize: firstPrize,
+      price: price,
+    });
+    console.log("====>>> response from the edit api", response);
+    handleCloseModal();
   };
 
   const handleDelete = async (id) => {
@@ -325,38 +261,32 @@ const LotteryMarkets = () => {
             width: "100%",
           }}
         >
-          <div className="card-header-pill text-bold d-flex">
+          <div className="card-header-pill text-bold d-flex  align-items-center justify-content-between">
+            {/* Left side: Search Input */}
+            <div className="flex-grow-1">
+              <input
+                type="text"
+                placeholder="Search Lottery Tickets by SEM"
+                value={state.search}
+                onChange={async (e) => {
+                  const searchValue = e.target.value;
+                  setState((prevState) => ({
+                    ...prevState,
+                    search: searchValue, // Update search term in state
+                  }));
+                  await fetchLotteryTickets(1); // Fetch tickets with search
+                }}
+                style={{
+                  padding: "5px",
+                  borderRadius: "5px",
+                  border: "1px solid #ccc",
+                  marginRight: "15px",
+                  width: "250px", // Adjust width if needed
+                }}
+              />
+            </div>
             {/* Generate Ticket Number */}
             <div className="flex-grow-1  ml-4 mr-5">
-              {/* {state.randomToken ? (
-                <span
-                  style={{
-                    cursor: "pointer",
-                    color: "#4682B4",
-                    fontWeight: "bold",
-                    position: "relative",
-                    animation: "fadeIn 1s ease-in-out",
-                  }}
-                  onClick={handleOpenModal}
-                >
-                  Generated Ticket Number
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "20px",
-                      left: "0",
-                      backgroundColor: "#f8d7da",
-                      color: "#721c24",
-                      padding: "5px 10px",
-                      borderRadius: "5px",
-                      boxShadow: "0px 2px 8px rgba(0,0,0,0.15)",
-                      animation: "pulse 2s infinite",
-                    }}
-                  >
-                    Click here to create a ticket with this number
-                  </div>
-                </span>
-              ) :  */}
               <div>
                 <span
                   style={{
@@ -509,94 +439,133 @@ const LotteryMarkets = () => {
         </div>
 
         {/* Custom Modal for creating a ticket */}
-        {state.showModal && (
-            <CustomModal
-            showModal={state.showModal}
-            onClose={handleCloseModal}
-            heading={state.isEditMode ? "Edit Lottery Ticket" : "Create Lottery Ticket"}
-            inputs={[
-              {
-                id: "name",
-                label: "Name",
-                value:
-                  state.inputs.name ??
-                  (state?.lotteryCards ? state?.lotteryCards[0]?.card?.name : ""),
-                onChange: (value) => handleInputChange("name", value),
-              },
-              {
-                id: "DateTime",
-                label: "Date and Time",
-                component: (
-                  <div className="date-time-picker-container text-center">
-                    <DatePicker
-                      selected={
-                        state.inputs.DateTime
-                          ? new Date(state.inputs.DateTime)
-                          : new Date() // Fallback to current date if DateTime is invalid
-                      }
-                      onChange={handleDateChange}
-                      showTimeSelect
-                      dateFormat="yyyy-MM-dd'T'HH:mm:ss.SSSXXX" // Format as ISO
-                      className="form-control"
-                    />
-                  </div>
-                ),
-              },
-              {
-                id: "firstPrize",
-                label: "First Prize",
-                value:
-                  state.inputs.firstPrize ??
-                  (state?.lotteryCards
-                    ? state?.lotteryCards[0]?.card?.firstPrize
-                    : ""),
-                onChange: (value) => handleInputChange("firstPrize", value),
-              },
-  
-              {
-                id: "sem",
-                label: "SEM",
-                // component: (
-                //   <select
-                //     className="form-control"
-                //     value={state.inputs.sem}
-                //     onChange={(e) => handleSemChange(e.target.value)}
-                //   >
-                //     <option value="">Select SEM</option>
-                //     {[5, 10, 25, 50, 100, 200].map((option) => (
-                //       <option key={option} value={option}>
-                //         {option}
-                //       </option>
-                //     ))}
-                //   </select>
-                // ),
-  
-                component: (
-                  <input
+
+        <CustomModal
+          showModal={state.showModal}
+          onClose={handleCloseModal}
+          heading="Create Lottery Ticket"
+          inputs={[
+            {
+              id: "name",
+              label: "Name",
+              value:
+                state.inputs.name ??
+                (state?.lotteryCards ? state?.lotteryCards[0]?.card?.name : ""),
+              onChange: (value) => handleInputChange("name", value),
+            },
+            {
+              id: "DateTime",
+              label: "Date and Time",
+              component: (
+                <div className="date-time-picker-container text-center">
+                  <DatePicker
+                    selected={
+                      state.inputs.DateTime
+                        ? new Date(state.inputs.DateTime)
+                        : new Date() // Fallback to current date if DateTime is invalid
+                    }
+                    onChange={handleDateChange}
+                    showTimeSelect
+                    dateFormat="yyyy-MM-dd'T'HH:mm:ss.SSSXXX" // Format as ISO
                     className="form-control"
-                    value={state.inputs.sem} // Display SEM value from state
-                    readOnly
-                    style={{ backgroundColor: "#e9ecef", cursor: "not-allowed" }} // Optional: Style to make it look disabled
                   />
-                ),
-              },
-              {
-                id: "price",
-                label: "Price",
-                value: state.inputs.price,
-                onChange: (value) => handleInputChange("price", value),
-              },
-            ]}
-            buttonLabel="Create Ticket"
-            onButtonClick={handleSubmitTicket}
-            textOnly={false} // Ensures inputs are rendered
-          />
+                </div>
+              ),
+            },
+            {
+              id: "firstPrize",
+              label: "First Prize",
+              value:
+                state.inputs.firstPrize ??
+                (state?.lotteryCards
+                  ? state?.lotteryCards[0]?.card?.firstPrize
+                  : ""),
+              onChange: (value) => handleInputChange("firstPrize", value),
+            },
 
+            {
+              id: "sem",
+              label: "SEM",
+              // component: (
+              //   <select
+              //     className="form-control"
+              //     value={state.inputs.sem}
+              //     onChange={(e) => handleSemChange(e.target.value)}
+              //   >
+              //     <option value="">Select SEM</option>
+              //     {[5, 10, 25, 50, 100, 200].map((option) => (
+              //       <option key={option} value={option}>
+              //         {option}
+              //       </option>
+              //     ))}
+              //   </select>
+              // ),
 
-        )
-
-        }
-      
+              component: (
+                <input
+                  className="form-control"
+                  value={state.inputs.sem} // Display SEM value from state
+                  readOnly
+                  style={{
+                    backgroundColor: "#e9ecef",
+                    cursor: "not-allowed",
+                  }} // Optional: Style to make it look disabled
+                />
+              ),
+            },
+            {
+              id: "price",
+              label: "Price",
+              value: state.inputs.price,
+              onChange: (value) => handleInputChange("price", value),
+            },
+          ]}
+          buttonLabel="Create Ticket"
+          onButtonClick={handleCreateTicket}
+          textOnly={false} // Ensures inputs are rendered
+        />
+        <CustomModal
+          showModal={state.isModalOpen}
+          onClose={handleCloseModal}
+          heading="Edit Lottery Details"
+          inputs={[
+            {
+              id: "name",
+              label: "Lottery Name",
+              value: state.inputs.name || "",
+              onChange: (value) => handleInputChange("name", value),
+            },
+            {
+              id: "date",
+              label: "Draw Date",
+              value: state.inputs.DateTime || "",
+              onChange: (value) => handleInputChange("DateTime", value),
+              readOnly: true,
+            },
+            {
+              id: "firstPrize",
+              label: "First Prize",
+              value: state.inputs.firstPrize || "",
+              onChange: (value) => handleInputChange("firstPrize", value),
+            },
+            {
+              id: "sem",
+              label: "SEM",
+              value: state.inputs.sem || "",
+              onChange: (value) => handleInputChange("sem", value),
+              readOnly: true,
+            },
+            {
+              id: "price",
+              label: "Price",
+              value: state.inputs.price || "",
+              onChange: (value) => handleInputChange("price", value),
+            },
+          ]}
+          buttonLabel="Save"
+          onButtonClick={handleSave}
+          cancelButtonLabel="Cancel"
+        />
 
         {/* Modal for confirming deletion */}
         <CustomModal

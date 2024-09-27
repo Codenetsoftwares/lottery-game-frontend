@@ -15,6 +15,7 @@ export const getLotteryMarketsInitialState = (body = {}) => {
     lotteryCards: body.lotteryCards ?? [],
     lotteryId: body.lotteryId ?? "",
     isModalOpen: body.isModalOpen ?? false,
+    search: body.search??"",
     inputs: body.inputs ?? {
       name: "",
       DateTime: "",
@@ -25,7 +26,7 @@ export const getLotteryMarketsInitialState = (body = {}) => {
     },
     showModal: body.showModal ?? false,
     showTicketModal: body.showTicketModal ?? false,
-    isEditMode: body.isEditMode ?? false,
+    showEditTicketModal: body.showEditTicketModal ?? false,
 
     // Additional fields integrated
     pagination: {
