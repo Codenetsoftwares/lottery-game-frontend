@@ -13,7 +13,7 @@ export async function adminLogin(body, isToast = true) {
   }
 }
 
-export async function generateTicketNumber(body, isToast=true) {
+export async function generateTicketNumber(body, isToast = true) {
   try {
     const callParams = await getAuthCallParams(strings.POST, body, isToast);
     const response = await makeCall(urls.generateTicketId, callParams, isToast);
@@ -23,8 +23,7 @@ export async function generateTicketNumber(body, isToast=true) {
   }
 }
 
-
-export async function generateLotteryTicket(body, isToast=true) {
+export async function generateLotteryTicket(body, isToast = true) {
   try {
     const callParams = await getAuthCallParams(strings.POST, body, isToast);
     const response = await makeCall(urls.generateLottery, callParams, isToast);
@@ -34,27 +33,29 @@ export async function generateLotteryTicket(body, isToast=true) {
   }
 }
 
-
-export async function getLotteryTickets (body, isToast=true) {
+export async function getLotteryTickets(body, isToast = true) {
   try {
-    const callParams = await getAuthCallParams(strings.GET,null, isToast);
+    const callParams = await getAuthCallParams(strings.GET, null, isToast);
     const response = await makeCall(
-      
-      `${urls.getLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`, 
-      
-      callParams, isToast);
+      `${urls.getLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}&searchBySem=${body.searchBySem}`,
+
+      callParams,
+      isToast
+    );
     return response;
   } catch (error) {
     throw error;
   }
 }
 
-export async function getPurchasedLotteryTickets ( body, isToast=true) {
+export async function getPurchasedLotteryTickets(body, isToast = true) {
   try {
-    const callParams = await getAuthCallParams(strings.GET,null,  isToast);
+    const callParams = await getAuthCallParams(strings.GET, null, isToast);
     const response = await makeCall(
-      `${urls.getPurchasedLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`, 
-      callParams, isToast);
+      `${urls.getPurchasedLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`,
+      callParams,
+      isToast
+    );
     return response;
   } catch (error) {
     throw error;
@@ -62,50 +63,87 @@ export async function getPurchasedLotteryTickets ( body, isToast=true) {
   }
 }
 
-
-export async function CreatedLotteryTicketsDelete (  isToast=true) {
+export async function CreatedLotteryTicketsDelete(isToast = true) {
   try {
-    const callParams = await getAuthCallParams(strings.DELETE, null,  isToast);
-    const response = await makeCall(urls.removeCreatedLottery, callParams, isToast);
+    const callParams = await getAuthCallParams(strings.DELETE, null, isToast);
+    const response = await makeCall(
+      urls.removeCreatedLottery,
+      callParams,
+      isToast
+    );
     return response;
   } catch (error) {
     throw error;
   }
 }
-
 
 // not in use anymore
-export async function PurchasedLotteryTicketsDelete (  isToast=true) {
+export async function PurchasedLotteryTicketsDelete(isToast = true) {
   try {
-    const callParams = await getAuthCallParams(strings.DELETE, null,  isToast);
-    const response = await makeCall(urls.deletePurchasedLottery, callParams, isToast);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function unPurchasedLotteryTicketsDelete ( isToast=true) {
-  try {
-    const callParams = await getAuthCallParams(strings.DELETE, null,  isToast);
-    const response = await makeCall(urls.UnPurchasedLotteryDelete, callParams, isToast);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-}
-
-
-
-export async function getSelectSemInModal (sem, isToast=true) {
-  try {
-    const callParams = await getAuthCallParams(strings.GET,null,  isToast);
+    const callParams = await getAuthCallParams(strings.DELETE, null, isToast);
     const response = await makeCall(
-      `${urls.getSelectSem}/${sem}`, 
-      callParams, isToast);
+      urls.deletePurchasedLottery,
+      callParams,
+      isToast
+    );
     return response;
   } catch (error) {
     throw error;
-    // console.log(error)
+  }
+}
+
+export async function unPurchasedLotteryTicketsDelete(isToast = true) {
+  try {
+    const callParams = await getAuthCallParams(strings.DELETE, null, isToast);
+    const response = await makeCall(
+      urls.UnPurchasedLotteryDelete,
+      callParams,
+      isToast
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getSelectSemInModal(sem, isToast = true) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, null, isToast);
+    const response = await makeCall(
+      `${urls.getSelectSem}/${sem}`,
+      callParams,
+      isToast
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function singleLotteryDelete(lotteryId, isToast = true) {
+  try {
+    const callParams = await getAuthCallParams(strings.DELETE, null, isToast);
+    const response = await makeCall(
+      `${urls.SingleDeleteCard}/${lotteryId}`,
+      callParams,
+      isToast
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function singleLotteryEdit(body, isToast = true) {
+  try {
+    const callParams = await getAuthCallParams(strings.PUT,body);
+    const response = await makeCall(
+      `${urls.SingleEditCard}/${body.lotteryId}`,
+      callParams,
+      isToast
+    );
+    return response;
+  } catch (error) {
+    throw error;
   }
 }

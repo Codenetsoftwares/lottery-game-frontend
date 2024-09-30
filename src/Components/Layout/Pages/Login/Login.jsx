@@ -28,7 +28,7 @@ const Login = () => {
   //     dispatch({ type: "LOG_IN", payload: response.data });
 
   //     navigate("/lottery-markets");
-  //     // window.location.reload();
+      // window.location.reload();
   //   }
   // };
   const handleLogin = async (e) => {
