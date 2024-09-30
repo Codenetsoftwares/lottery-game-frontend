@@ -30,9 +30,10 @@ const Pagination = ({ currentPage, totalPages, handlePageChange, startIndex, end
       <div className="white_box mb_30">
         <nav aria-label="Page navigation example">
           <div className="d-flex justify-content-between">
-            <p>
-              Showing {startIndex} to {endIndex} of {totalData} entries
-            </p>
+          <p>
+           Showing {startIndex ? startIndex : 0} to {endIndex ? endIndex : 0} of {totalData ? totalData : 0} entries
+        </p>
+
             <ul className="pagination justify-content-end">
               <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                 <button className="page-link" onClick={() => handlePageChange(1)} disabled={currentPage === 1}>

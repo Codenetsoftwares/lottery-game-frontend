@@ -5,7 +5,7 @@ import {
   PurchasedLotteryTicketsDelete,
 } from "../../../Utils/apiService";
 import strings from "../../../Utils/constant/stringConstant";
-import { Table, Spinner } from "react-bootstrap";
+import { Table, Spinner ,Form,Button} from "react-bootstrap";
 import "./PurchasedLotteries.css";
 import Pagination from "../Common/Pagination";
 import CustomModal from "../Common/modal";
@@ -19,6 +19,11 @@ const PurchasedLotteries = () => {
     limit: 10,
     totalPages: 0,
     totalItems: 0,
+  });
+  const [searchParams, setSearchParams] = useState({
+    purchaseDate: "",
+    sem: "",
+    
   });
 
   const [showModal, setShowModal] = useState(false);
@@ -34,11 +39,14 @@ const PurchasedLotteries = () => {
   );
 
   const fetchPurchasedLotteryTickets = async () => {
-    const response = await getPurchasedLotteryTickets({
+    setLoading(true);
+    const response = await getPurchasedLotteryTickets({     ///api/allPurchase-Lotteries
       page: pagination.page || 1,
       limit: pagination.limit || 10,
       totalPages: pagination.totalPages || 0,
       totalItems: pagination.totalItems || 0,
+      sem: searchParams.sem,
+     purchaseDate: searchParams.purchaseDate,
     });
     console.log('line 43',response);
     if (response && response.success) {
@@ -89,6 +97,37 @@ const PurchasedLotteries = () => {
     }
   };
 
+  useEffect(() => {
+    if (searchParams.sem || searchParams.purchaseDate) {
+      fetchPurchasedLotteryTickets(); // Call the API when either sem or date has a value
+    }
+  }, [searchParams.sem, searchParams.purchaseDate]);
+
+  const handleSearchInputChange = (e) => {
+    const { name, value } = e.target;
+    setSearchParams((prev) => ({ ...prev, [name]: value }));
+   
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setPurchasedTickets([]);  // Clear the old data
+    setPagination((prev) => ({ ...prev, page: 1 }));  // Reset to first page on search
+   fetchPurchasedLotteryTickets();  // Fetch new data
+  // window.location.reload();
+  };
+  const inputStyle = {
+    width: "150px",
+    border: searchParams.sem ? "2px solid blue" : "1px solid #ccc", // Change border color when input is not empty
+    backgroundColor: searchParams.sem ? "#e6ffe6" : "white", // Change background color when input has value
+    padding: "10px",
+    borderRadius: "4px",
+    boxShadow: searchParams.sem ? "0 0 10px rgba(0, 255, 0, 0.5)" : "none", // Add box-shadow when input is not empty
+    transition: "all 0.3s ease", // Smooth transition when styles change
+  };
+ 
+  
+
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -111,8 +150,66 @@ const PurchasedLotteries = () => {
         className="d-flex justify-content-between align-items-center mb-4"
         style={{ position: "relative" }}
       >
-        <h2 style={{ color: "#4682B4" }}>Purchased Lottery Tickets</h2>
-        <i
+          <div className="d-flex justify-content-center w-100">
+      <h2 style={{ color: "#4682B4",  }}>Purchased Lottery Tickets</h2>
+      </div>
+     {/* Only show the search dropdown when no search type is selected */}
+     <div>
+        {!searchParams.searchType && (
+          <Form onSubmit={handleSearch} className="mb-4">
+            <Form.Group className="d-flex">
+              {/* Search Criteria Dropdown */}
+              <Form.Control
+                as="select"
+                name="searchType"
+                value={searchParams.searchType}
+                onChange={handleSearchInputChange}
+                className="mr-2"
+                style={{ width: "200px" }}
+              >
+                <option value="">Select Criteria</option>
+                <option value="sem">Search by SEM</option>
+                <option value="purchaseDate">Search by Purchase Date</option>
+              </Form.Control>
+              
+            </Form.Group>
+          </Form>
+        )}
+
+        {/* Conditionally Render the Input based on Selected Criteria */}
+        {searchParams.searchType === "sem" && (
+          <Form onSubmit={handleSearch} className="mb-4">
+            <Form.Group className="d-flex">
+              <Form.Control
+                type="text"
+                name="sem"
+                value={searchParams.sem}
+                onChange={handleSearchInputChange}
+                placeholder="Enter SEM"
+                className="mr-2"
+                style={inputStyle}
+              />
+             
+            </Form.Group>
+          </Form>
+        )}
+
+        {searchParams.searchType === "purchaseDate" && (
+          <Form onSubmit={handleSearch} className="mb-4">
+            <Form.Group className="d-flex">
+              <Form.Control
+                type="date"
+                name="purchaseDate"
+                value={searchParams.purchaseDate}
+                onChange={handleSearchInputChange}
+                className="mr-2"
+                style={inputStyle} 
+              />
+              
+            </Form.Group>
+          </Form>
+        )} 
+        </div>    {/* <i
           // className="fas fa-trash-alt"
           className="fas fa-trash"
           style={{
@@ -125,7 +222,7 @@ const PurchasedLotteries = () => {
           title="Delete all purchased history"
           onClick={() => handleDelete()}
           // onClick={handleDeleteAll} // Add your delete all logic here
-        ></i>
+        ></i> */}
       </div>
 
       <Table striped hover responsive bordered className="table-sm">
@@ -150,7 +247,7 @@ const PurchasedLotteries = () => {
           </tr>
         </thead>
         <tbody style={{ textAlign: "center" }}>
-          {purchasedTickets && purchasedTickets?.length > 0 ? (
+          {purchasedTickets && purchasedTickets?.length > 0? (
             purchasedTickets.map((ticket, index) => (
               <tr key={ticket.purchaseId}>
                 <td>{startIndex + index}</td>
@@ -159,20 +256,32 @@ const PurchasedLotteries = () => {
                 <td>{new Date(ticket.drawTime).toLocaleTimeString()}</td>
                 <td>{ticket.purchaseAmount}</td>
                 <td>{ticket.sem}</td>
-                <td>{ticket.ticketNumber}</td>
+                <td>
+           
+            <select>
+              {Array.isArray(ticket.ticketNumber)  //if ticketno is array
+                ? ticket.ticketNumber.map((ticketNum, idx) => (
+                    <option key={idx} value={ticketNum}>
+                      {ticketNum}
+                    </option>
+                  ))
+                : ticket.ticketNumber
+                    ?.split(" ") // Split if it's a string(split is nt work wth array)
+                    .map((ticketNum, idx) => (
+                      <option key={idx} value={ticketNum}>
+                        {ticketNum}
+                      </option>
+                    ))}
+            </select>
+          </td>
                 <td>{ticket.userName}</td>
-                {/* <td>
-                  <i
-                    className="fas fa-trash"
-                    onClick={() => handleDelete(ticket)}
-                    // style={{ cursor: 'pointer', color: '#e74c3c' }}
-                  />
-                </td> */}
+                
+               
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="text-center">
+              <td colSpan="8" className="text-center">
                 No tickets found.
               </td>
             </tr>

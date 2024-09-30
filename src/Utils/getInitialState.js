@@ -19,7 +19,7 @@ export const getLotteryMarketsInitialState = (body = {}) => {
       name: "",
       DateTime: "",
       firstPrize: "",
-      sem: "",
+      sem: " ",
       tickets: [],
       price: "",
     },

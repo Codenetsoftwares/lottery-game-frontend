@@ -3,6 +3,7 @@ import SingleCard from "../Common/SingleCard";
 import Pagination from "../Common/Pagination";
 import DearLotteryCard from "../Common/DearLotteryCard";
 import { useAppContext } from "../../../contextApi/context";
+import { Form,Button} from "react-bootstrap";
 import CustomModal from "../Common/modal";
 import {
   generateLotteryTicket,
@@ -20,12 +21,26 @@ import "./LotteryMarkets.css";
 const LotteryMarkets = () => {
   const { dispatch } = useAppContext();
   const [state, setState] = useState(getLotteryMarketsInitialState);
+  const [lotteryCards, setLotteryCards] = useState([]); // State to hold fetched lottery tickets
+  
   console.log("===>>> random token", state.inputs.tickets);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    totalPages: 0,
+    totalItems: 0,
+  });
 
   // Fetch tickets when the component mounts
   useEffect(() => {
     fetchLotteryTickets();
   }, [state.pagination.page]);
+
+  const [searchParams, setSearchParams] = useState({
+    searchType: "",
+    sem: "",
+    
+  });
 
   const startIndex = (state.pagination.page - 1) * state.pagination.limit + 1;
   const endIndex = Math.min(
@@ -35,15 +50,20 @@ const LotteryMarkets = () => {
 
   // get lottery tickets in the admin panel
   const fetchLotteryTickets = async () => {
-    console.log("Fetching Lottery Tickets");
+    
     const response = await getLotteryTickets({
       page: state.pagination.page || 1,
       limit: state.pagination.limit || 10,
       totalPages: state.pagination.totalPages || 0,
       totalItems: state.pagination.totalItems || 0,
+      sem: searchParams.sem || 0
+    
     });
+    console.log(response)
     if (response) {
-      setState((prev) => ({
+      // Save current cards to backup before updating
+         setLotteryCards(response.data);
+         setState((prev) => ({
         ...prev,
         lotteryCards: response.data,
         pagination: {
@@ -61,6 +81,33 @@ const LotteryMarkets = () => {
       console.error("Failed to fetch tickets");
     }
   };
+  
+
+  const handleSearchInputChange = (e) => {
+    const { name, value } = e.target;
+  
+    // Update the sem value
+    setSearchParams((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+   
+  
+  if (name === "sem" && value === "") {  // If SEM is cleared, reset pagination to the first page
+    setState((prev) => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        page: 1, // Reset to the first page
+      },
+    }));
+  }
+};
+useEffect(() => {
+  fetchLotteryTickets(); // Fetch tickets whenever pagination or SEM changes
+}, [searchParams.sem, state.pagination.page]);
+
+ 
   const handlePageChange = (newPage) => {
     setState((prev) => ({
       ...prev,
@@ -92,9 +139,12 @@ const LotteryMarkets = () => {
     const formattedDate = formatISO(date); // Format date as ISO string
     handleInputChange("DateTime", formattedDate);
   };
+  
+
 
   //GET api to generate the ticket number as by sem values from dropdown
   async function handleGenerateTicketNumber(selectedValue) {
+    console.log("Fetching tickets for SEM:", selectedValue);
     const response = await getSelectSemInModal(selectedValue);
     console.log("===>> get api response", response);
 
@@ -108,6 +158,7 @@ const LotteryMarkets = () => {
       console.error("Failed to fetch ticket numbers");
     }
   }
+ 
 
   // Define your modal open/close handlers
   const handleTicketOpenModal = () => {
@@ -177,7 +228,15 @@ const LotteryMarkets = () => {
       console.error("Failed to delete all lotteries");
     }
   };
-
+  const inputStyle = {
+    width: "150px",
+    border: searchParams.sem ? "2px solid blue" : "1px solid #ccc", // Change border color when input is not empty
+    backgroundColor: searchParams.sem ? "#e6ffe6" : "white", // Change background color when input has value
+    padding: "10px",
+    borderRadius: "4px",
+    boxShadow: searchParams.sem ? "0 0 10px rgba(0, 255, 0, 0.5)" : "none", // Add box-shadow when input is not empty
+    transition: "all 0.3s ease", // Smooth transition when styles change
+  };
   return (
     <div
       className="bg-white"
@@ -234,21 +293,34 @@ const LotteryMarkets = () => {
                   </div>
                 </span>
               ) :  */}
-              <div>
+                <div>
+                  <Form.Group className="d-flex mb-4">
+                  <Form.Control
+                    type="text"
+                     name="sem"
+                    value={searchParams.sem}
+                    onChange={handleSearchInputChange} // Update the state
+                    placeholder="Search by SEM"
+                    className="mr-2"
+                     style={inputStyle}
+                    />
+             </Form.Group>
+                </div>   
+ 
+               <div>              
                 <span
                   style={{
                     cursor: "pointer",
                     color: "#4682B4",
                     fontWeight: "bold",
                   }}
-                  onClick={() =>
-                    handleGenerateTicketNumber(state.selectedTicketCount)
-                  }
+                 
                 >
                   Generate Ticket Number To Create Lottery Ticket By SEM
                 </span>
                 <div style={{ display: "inline-block", marginLeft: "10px" }}>
                   <select
+                   value={state.inputs.sem || ""}  //set the default value = "slct sem ",whenever state chnges
                     style={{
                       padding: "5px",
                       borderRadius: "5px",
@@ -256,6 +328,7 @@ const LotteryMarkets = () => {
                       backgroundColor: "#f1f1f1",
                       cursor: "pointer",
                     }}
+                    
                     onChange={async (e) => {
                       const selectedValue = e.target.value;
                       console.log("Selected Value:", selectedValue);
@@ -265,10 +338,15 @@ const LotteryMarkets = () => {
                         inputs: {
                           ...prevState.inputs,
                           sem: selectedValue, // Set SEM in state
+                          
                         },
+                       
                       }));
+                      
                     }}
                   >
+                     
+                    <option value="">Select SEM</option>
                     <option value="5">5</option>
                     <option value="10">10</option>
                     <option value="25">25</option>
@@ -376,6 +454,7 @@ const LotteryMarkets = () => {
             {
               id: "DateTime",
               label: "Date and Time",
+             
               component: (
                 <div className="date-time-picker-container text-center">
                   <DatePicker
@@ -475,7 +554,10 @@ const LotteryMarkets = () => {
         <CustomModal
           showModal={state.showTicketModal}
           onClose={() =>
-            setState((prevState) => ({ ...prevState, showTicketModal: false }))
+            setState((prevState) => ({ ...prevState, 
+              showTicketModal: false,
+              inputs: { ...prevState.inputs, sem: "Select SEM" },
+            }))
           }
           heading="Generated Lottery Ticket Numbers"
           inputs={(state.inputs.tickets || []).map((ticket) => ({

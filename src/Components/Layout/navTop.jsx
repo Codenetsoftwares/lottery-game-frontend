@@ -10,17 +10,22 @@ const NavTop = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Dispatch the logout action
-    dispatch({ type: strings.LOG_OUT });
-
-    window.confirm("Are you sure you want to log out");
-    // Show a toast message
-    toast.success("Logged out successfully!");
-
-    // Redirect to the login page
-
-    navigate("/");
+    // Show confirmation dialog
+    const isConfirmed = window.confirm("Are you sure you want to log out?");
+    
+    // If the user confirms, proceed with logout
+    if (isConfirmed) {
+      // Dispatch the logout action
+      dispatch({ type: strings.LOG_OUT });
+  
+      // Show a toast message
+      toast.success("Logged out successfully!");
+  
+      // Redirect to the login page
+      navigate("/");
+    }
   };
+  
 
   return (
     <div className="container-fluid g-0">

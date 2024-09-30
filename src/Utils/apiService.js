@@ -40,7 +40,8 @@ export async function getLotteryTickets (body, isToast=true) {
     const callParams = await getAuthCallParams(strings.GET,null, isToast);
     const response = await makeCall(
       
-      `${urls.getLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`, 
+      `${urls.getLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`
+      + (body.sem ? `&sem=${body.sem}` : ''),
       
       callParams, isToast);
     return response;
@@ -49,18 +50,26 @@ export async function getLotteryTickets (body, isToast=true) {
   }
 }
 
-export async function getPurchasedLotteryTickets ( body, isToast=true) {
+export async function getPurchasedLotteryTickets (body, isToast=true) {
   try {
-    const callParams = await getAuthCallParams(strings.GET,null,  isToast);
+    const callParams = await getAuthCallParams(strings.GET, null, isToast);
+    
+    
     const response = await makeCall(
-      `${urls.getPurchasedLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`, 
-      callParams, isToast);
+      `${urls.getPurchasedLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}`
+      + (body.purchaseDate ? `&purchaseDate=${body.purchaseDate}` : '')
+      + (body.sem ? `&sem=${body.sem}` : ''),
+      callParams, 
+      isToast
+    );
+    
+    
     return response;
   } catch (error) {
     throw error;
-    // console.log(error)
   }
 }
+
 
 
 export async function CreatedLotteryTicketsDelete (  isToast=true) {
