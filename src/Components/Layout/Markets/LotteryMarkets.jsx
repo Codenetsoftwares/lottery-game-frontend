@@ -25,31 +25,29 @@ const LotteryMarkets = () => {
   const { store, dispatch } = useAppContext();
   console.log("===>>> store", store.admin.accessToken);
   const [state, setState] = useState(getLotteryMarketsInitialState);
+  const [debouncedSearch, setDebouncedSearch] = useState(state.search);
   const [hasMore, setHasMore] = useState(true);
+  const [refresh, setRefesh] = useState(false);
   console.log("===>>> random token", state.lotteryId);
   const accessToken = store?.admin?.accessToken;
   console.log("--->>>Access token", accessToken);
   console.log("Search By SEM:", state.search);
-
-
+console.log("refresh",refresh)
   // Fetch tickets when the component mounts
-  useEffect(() => {
-    if (accessToken) {
-      fetchLotteryTickets();
-    }
-  }, [accessToken, state.pagination.page,state.search]);
-
-  const startIndex = (state.pagination.page - 1) * state.pagination.limit + 1;
-  const endIndex = Math.min(
-    startIndex + state.pagination.limit - 1,
-    state.pagination.totalItems
-  );
+  // useEffect(() => {
+  //   if (accessToken) {
+  //     fetchLotteryTickets();
+  //   }
+  // }, [accessToken, state.pagination.page,state.search]);
 
   // get lottery tickets in the admin panel
-  const fetchLotteryTickets = async (currentPage = state.pagination.page) => {
+  const fetchLotteryTickets = async (
+    currentPage = state.pagination.page,
+    search = state.search
+  ) => {
     console.log("Fetching Lottery Tickets for page", currentPage);
     const response = await getLotteryTickets({
-      searchBySem: state.search || "",
+      searchBySem: search || "",
       page: currentPage,
       limit: state.pagination.limit || 10,
       totalPages: state.pagination.totalPages || 0,
@@ -59,14 +57,9 @@ const LotteryMarkets = () => {
       setState((prev) => ({
         ...prev,
         lotteryCards:
-          currentPage === 1
+          state.search.length > 0
             ? response.data
             : [...prev.lotteryCards, ...response.data],
-        pagination: {
-          ...prev.pagination,
-          totalPages: response.pagination ? response.pagination.totalPages : 0,
-          totalItems: response.pagination ? response.pagination.totalItems : 0,
-        },
       }));
       setHasMore(currentPage < (response.pagination?.totalPages || 0));
 
@@ -80,18 +73,25 @@ const LotteryMarkets = () => {
     }
   };
 
+  console.log("data=========>", state);
+
   // Function to fetch more data when user scrolls
   const fetchMoreData = () => {
     if (hasMore) {
-      setState((prevState) => ({
-        ...prevState,
-        pagination: {
-          ...prevState.pagination,
-          page: prevState.pagination.page + 1,
-        },
-      }));
+      setState((prevState) => {
+        const newPage = prevState.pagination.page + 1;
+        fetchLotteryTickets(newPage, prevState.search); // Call fetch here
+        return {
+          ...prevState,
+          pagination: {
+            ...prevState.pagination,
+            page: newPage,
+          },
+        };
+      });
     }
   };
+
   const handlePageChange = (newPage) => {
     setState((prev) => ({
       ...prev,
@@ -182,8 +182,10 @@ const LotteryMarkets = () => {
       setState((prev) => ({
         ...prev,
         showDeleteModal: false, // Close the delete modal
+        lotteryCards:[]
       }));
-      fetchLotteryTickets(); // Refresh tickets after deletion
+      setRefesh(true);
+       // Refresh tickets after deletion
     } else {
       console.error("Failed to delete all lotteries");
     }
@@ -237,6 +239,44 @@ const LotteryMarkets = () => {
     }
   };
 
+  const handleSearch = (event) => {
+    const searchValue = event.target.value;
+
+    // Update the search state and reset pagination to 1
+    setState((prevState) => ({
+      ...prevState,
+      search: searchValue,
+      lotteryCards: [],
+      pagination: {
+        ...prevState.pagination,
+        page: 1, // Reset to the first page
+      },
+    }));
+
+    // Set the debounced search value after a delay
+    setDebouncedSearch(searchValue);
+  };
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      fetchLotteryTickets();
+    }, 300); // Adjust the delay as necessary (300ms in this example)
+
+    // Cleanup function to clear the timeout if the component unmounts or search term changes
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [debouncedSearch]); // Use debounced search for effect dependency
+
+  useEffect(() => {
+    if (state.page > 1) {
+      fetchLotteryTickets(); // Fetch more data when page changes
+    }
+  }, [state.page, refresh]);
+  useEffect(() => {
+    fetchLotteryTickets();
+  }, [refresh]);
+
   return (
     <div
       className="bg-white"
@@ -268,14 +308,17 @@ const LotteryMarkets = () => {
                 type="text"
                 placeholder="Search Lottery Tickets by SEM"
                 value={state.search}
-                onChange={async (e) => {
-                  const searchValue = e.target.value;
-                  setState((prevState) => ({
-                    ...prevState,
-                    search: searchValue, // Update search term in state
-                  }));
-                  await fetchLotteryTickets(1); // Fetch tickets with search
-                }}
+                onChange={
+                  handleSearch
+                  //   async (e) => {
+                  //   const searchValue = e.target.value;
+                  //   setState((prevState) => ({
+                  //     ...prevState,
+                  //     search: searchValue, // Update search term in state
+                  //   }));
+                  //   await fetchLotteryTickets(1); // Fetch tickets with search
+                  // }
+                }
                 style={{
                   padding: "5px",
                   borderRadius: "5px",
@@ -356,7 +399,7 @@ const LotteryMarkets = () => {
           <SingleCard className="mb-2 p-4">
             <InfiniteScroll
               style={{ overflowX: "hidden" }}
-              dataLength={state.lotteryCards}
+              dataLength={state.lotteryCards.length}
               next={fetchMoreData}
               hasMore={hasMore}
               loader={
@@ -391,7 +434,7 @@ const LotteryMarkets = () => {
             >
               <div className="container">
                 <div className="row justify-content-center">
-                  {state.lotteryCards && state.lotteryCards ? (
+                  {state.lotteryCards.length > 0 ? (
                     state.lotteryCards.map((card) => (
                       <div className="col-md-4 mb-4" key={card.id}>
                         <DearLotteryCard
@@ -437,7 +480,6 @@ const LotteryMarkets = () => {
             </InfiniteScroll>
           </SingleCard>
         </div>
-
 
         {/* Custom Modal for creating a ticket */}
 
