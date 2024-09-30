@@ -438,6 +438,7 @@ const LotteryMarkets = () => {
           </SingleCard>
         </div>
 
+
         {/* Custom Modal for creating a ticket */}
 
         <CustomModal
