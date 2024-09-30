@@ -29,7 +29,7 @@ const LotteryMarkets = () => {
   console.log("===>>> random token", state.lotteryId);
   const accessToken = store?.admin?.accessToken;
   console.log("--->>>Access token", accessToken);
-  console.log("Search By SEM:", state.search);
+  console.log("Search By SEM:", state);
 
 
   // Fetch tickets when the component mounts
@@ -39,11 +39,7 @@ const LotteryMarkets = () => {
     }
   }, [accessToken, state.pagination.page,state.search]);
 
-  const startIndex = (state.pagination.page - 1) * state.pagination.limit + 1;
-  const endIndex = Math.min(
-    startIndex + state.pagination.limit - 1,
-    state.pagination.totalItems
-  );
+ 
 
   // get lottery tickets in the admin panel
   const fetchLotteryTickets = async (currentPage = state.pagination.page) => {
@@ -58,15 +54,9 @@ const LotteryMarkets = () => {
     if (response) {
       setState((prev) => ({
         ...prev,
-        lotteryCards:
-          currentPage === 1
+        lotteryCards:state.search.length > 0
             ? response.data
             : [...prev.lotteryCards, ...response.data],
-        pagination: {
-          ...prev.pagination,
-          totalPages: response.pagination ? response.pagination.totalPages : 0,
-          totalItems: response.pagination ? response.pagination.totalItems : 0,
-        },
       }));
       setHasMore(currentPage < (response.pagination?.totalPages || 0));
 
@@ -79,6 +69,7 @@ const LotteryMarkets = () => {
       setHasMore(false);
     }
   };
+  console.log("data===>",state)
 
   // Function to fetch more data when user scrolls
   const fetchMoreData = () => {
@@ -356,7 +347,7 @@ const LotteryMarkets = () => {
           <SingleCard className="mb-2 p-4">
             <InfiniteScroll
               style={{ overflowX: "hidden" }}
-              dataLength={state.lotteryCards}
+              dataLength={state.lotteryCards.length}
               next={fetchMoreData}
               hasMore={hasMore}
               loader={
@@ -382,7 +373,7 @@ const LotteryMarkets = () => {
               height={600}
               endMessage={
                 !hasMore &&
-                state.lotteryCards > 0 && (
+                state.lotteryCards.length > 0 && (
                   <p className="text-center mt-3">
                     You have seen all the tickets!
                   </p>
@@ -391,7 +382,7 @@ const LotteryMarkets = () => {
             >
               <div className="container">
                 <div className="row justify-content-center">
-                  {state.lotteryCards && state.lotteryCards ? (
+                  {state.lotteryCards.length > 0 ? (
                     state.lotteryCards.map((card) => (
                       <div className="col-md-4 mb-4" key={card.id}>
                         <DearLotteryCard
