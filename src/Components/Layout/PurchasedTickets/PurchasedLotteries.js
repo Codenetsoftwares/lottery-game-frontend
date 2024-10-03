@@ -133,7 +133,7 @@ const PurchasedLotteries = () => {
                 <td>{startIndex + index}</td>
                 <td>{ticket.name}</td>
                 <td>{new Date(ticket.purchaseDate).toLocaleDateString()}</td>
-                <td>{new Date(ticket.drawTime).toLocaleTimeString()}</td>
+                <td>{ticket.drawTime}</td>
                 <td>{ticket.purchaseAmount}</td>
                 <td>{ticket.sem}</td>
                 <td>
