@@ -25,12 +25,17 @@ const PurchasedLotteries = () => {
     sem: "",
     
   });
+  const [debouncedParams, setDebouncedParams] = useState({
+    sem: searchParams.sem,
+    purchaseDate: searchParams.purchaseDate,
+  });
 
   const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState(null); // State to manage modal data
-  useEffect(() => {
-    fetchPurchasedLotteryTickets();
-  }, [pagination.page, pagination.limit]);
+  const [modalData, setModalData] = useState(null); 
+  
+  
+  
+  
 
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
   const endIndex = Math.min(
@@ -45,8 +50,8 @@ const PurchasedLotteries = () => {
       limit: pagination.limit || 10,
       totalPages: pagination.totalPages || 0,
       totalItems: pagination.totalItems || 0,
-      sem: searchParams.sem,
-     purchaseDate: searchParams.purchaseDate,
+      sem: debouncedParams.sem,  // Use debounced SEM
+      purchaseDate: debouncedParams.purchaseDate,  // Use debounced purchaseDate
     });
     console.log('line 43',response);
     if (response && response.success) {
@@ -61,6 +66,7 @@ const PurchasedLotteries = () => {
         type: strings.PURCHASED_LOTTERY_TICKETS,
         payload: response.data,
       });
+       
     } else {
       console.error("Failed to fetch purchased tickets");
     }
@@ -98,24 +104,38 @@ const PurchasedLotteries = () => {
   };
 
   useEffect(() => {
-    if (searchParams.sem || searchParams.purchaseDate) {
-      fetchPurchasedLotteryTickets(); // Call the API when either sem or date has a value
-    }
+    const handler = setTimeout(() => {
+      setDebouncedParams({
+        sem: searchParams.sem,
+        purchaseDate: searchParams.purchaseDate,
+      });
+    }, 2000);  // Debounce duration of 2 seconds
+
+    return () => clearTimeout(handler); // Clear the timeout when input changes
   }, [searchParams.sem, searchParams.purchaseDate]);
+
+  // Fetch tickets when debounced params change or page changes
+  useEffect(() => {
+    fetchPurchasedLotteryTickets();
+  }, [debouncedParams, pagination.page]);
 
   const handleSearchInputChange = (e) => {
     const { name, value } = e.target;
-    setSearchParams((prev) => ({ ...prev, [name]: value }));
-   
-  };
+    setSearchParams((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setPurchasedTickets([]);  // Clear the old data
-    setPagination((prev) => ({ ...prev, page: 1 }));  // Reset to first page on search
-   fetchPurchasedLotteryTickets();  // Fetch new data
-  // window.location.reload();
+    // Reset pagination to page 1 when search criteria changes
+    if (name === "sem" || name === "purchaseDate") {
+      setPagination((prev) => ({
+        ...prev,
+        page: 1,  // Reset to first page
+      }));
+      
+    }
   };
+  
   const inputStyle = {
     width: "150px",
     border: searchParams.sem ? "2px solid blue" : "1px solid #ccc", // Change border color when input is not empty
@@ -156,7 +176,7 @@ const PurchasedLotteries = () => {
      {/* Only show the search dropdown when no search type is selected */}
      <div>
         {!searchParams.searchType && (
-          <Form onSubmit={handleSearch} className="mb-4">
+          <Form  className="mb-4">
             <Form.Group className="d-flex">
               {/* Search Criteria Dropdown */}
               <Form.Control
@@ -178,7 +198,7 @@ const PurchasedLotteries = () => {
 
         {/* Conditionally Render the Input based on Selected Criteria */}
         {searchParams.searchType === "sem" && (
-          <Form onSubmit={handleSearch} className="mb-4">
+          <Form  className="mb-4">
             <Form.Group className="d-flex">
               <Form.Control
                 type="text"
@@ -195,7 +215,7 @@ const PurchasedLotteries = () => {
         )}
 
         {searchParams.searchType === "purchaseDate" && (
-          <Form onSubmit={handleSearch} className="mb-4">
+          <Form  className="mb-4">
             <Form.Group className="d-flex">
               <Form.Control
                 type="date"
@@ -288,6 +308,7 @@ const PurchasedLotteries = () => {
           )}
         </tbody>
       </Table>
+      {pagination.totalItems > 0 && (
       <Pagination
         currentPage={pagination.page}
         totalPages={pagination.totalPages}
@@ -296,6 +317,7 @@ const PurchasedLotteries = () => {
         endIndex={endIndex}
         totalData={pagination.totalItems}
       />
+      )}
 
       <CustomModal
         showModal={showModal}

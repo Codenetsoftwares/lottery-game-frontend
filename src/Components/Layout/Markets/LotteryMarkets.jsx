@@ -18,10 +18,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import { formatISO } from "date-fns";
 import "./LotteryMarkets.css";
 
+
 const LotteryMarkets = () => {
   const { dispatch } = useAppContext();
   const [state, setState] = useState(getLotteryMarketsInitialState);
   const [lotteryCards, setLotteryCards] = useState([]); // State to hold fetched lottery tickets
+  const [searchParams, setSearchParams] = useState({
+    searchType: "",
+    sem: "",
+    
+  });
+  const [debouncedSem, setDebouncedSem] = useState(searchParams.sem);
   
   console.log("===>>> random token", state.inputs.tickets);
   const [pagination, setPagination] = useState({
@@ -31,16 +38,9 @@ const LotteryMarkets = () => {
     totalItems: 0,
   });
 
-  // Fetch tickets when the component mounts
-  useEffect(() => {
-    fetchLotteryTickets();
-  }, [state.pagination.page]);
-
-  const [searchParams, setSearchParams] = useState({
-    searchType: "",
-    sem: "",
-    
-  });
+  
+  
+  
 
   const startIndex = (state.pagination.page - 1) * state.pagination.limit + 1;
   const endIndex = Math.min(
@@ -56,7 +56,7 @@ const LotteryMarkets = () => {
       limit: state.pagination.limit || 10,
       totalPages: state.pagination.totalPages || 0,
       totalItems: state.pagination.totalItems || 0,
-      sem: searchParams.sem || 0
+      sem: debouncedSem || 0,
     
     });
     console.log(response)
@@ -81,6 +81,8 @@ const LotteryMarkets = () => {
       console.error("Failed to fetch tickets");
     }
   };
+
+  
   
 
   const handleSearchInputChange = (e) => {
@@ -103,10 +105,20 @@ const LotteryMarkets = () => {
     }));
   }
 };
-useEffect(() => {
-  fetchLotteryTickets(); // Fetch tickets whenever pagination or SEM changes
-}, [searchParams.sem, state.pagination.page]);
+   useEffect(() => {
+   const handler = setTimeout(() => {
+    setDebouncedSem(searchParams.sem); //update the setDebouncesem after 2sec
+  }, 2000); 
 
+  return () => {
+    clearTimeout(handler); //remove previous input take last 2sec input
+  };
+}, [searchParams.sem]); 
+
+
+   useEffect(() => {
+   fetchLotteryTickets();
+}, [debouncedSem, state.pagination.page]);
  
   const handlePageChange = (newPage) => {
     setState((prev) => ({
@@ -244,9 +256,10 @@ useEffect(() => {
         minHeight: "100vh",
         // width:"100",
         margin: "0 auto", // Center the div horizontally
-        overflowX: "hidden", // Ensure no horizontal overflow
+        overflowX: "hidden",
       }}
     >
+
       <div
         className="card text-center mt-2 mr-5 ml-5"
         style={{
@@ -261,39 +274,25 @@ useEffect(() => {
             width: "100%",
           }}
         >
-          <div className="card-header-pill text-bold d-flex">
+          <div className="card-header-pill text-bold d-flex"
+          style={{
+            display: "flex", // Align items horizontally
+            alignItems: "center", // Vertically center items
+            justifyContent: "space-between", // Space between for delete icon alignment
+            padding: "10px",
+          }}
+          >
             {/* Generate Ticket Number */}
-            <div className="flex-grow-1  ml-4 mr-5">
-              {/* {state.randomToken ? (
-                <span
-                  style={{
-                    cursor: "pointer",
-                    color: "#4682B4",
-                    fontWeight: "bold",
-                    position: "relative",
-                    animation: "fadeIn 1s ease-in-out",
-                  }}
-                  onClick={handleOpenModal}
-                >
-                  Generated Ticket Number
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "20px",
-                      left: "0",
-                      backgroundColor: "#f8d7da",
-                      color: "#721c24",
-                      padding: "5px 10px",
-                      borderRadius: "5px",
-                      boxShadow: "0px 2px 8px rgba(0,0,0,0.15)",
-                      animation: "pulse 2s infinite",
-                    }}
-                  >
-                    Click here to create a ticket with this number
-                  </div>
-                </span>
-              ) :  */}
-                <div>
+            <div
+            className="flex-grow-1 d-flex"
+            style={{
+              display: "flex",
+              alignItems: "center", // Align items vertically in the center
+            }}
+          >
+              
+            
+                <div >
                   <Form.Group className="d-flex mb-4">
                   <Form.Control
                     type="text"
@@ -307,18 +306,23 @@ useEffect(() => {
              </Form.Group>
                 </div>   
  
-               <div>              
+               <div 
+               style={{
+                marginTop: "0px", // Decreased margin at the top
+              }}
+            >             
                 <span
                   style={{
                     cursor: "pointer",
                     color: "#4682B4",
                     fontWeight: "bold",
+                   marginLeft: "100px"
                   }}
                  
                 >
                   Generate Ticket Number To Create Lottery Ticket By SEM
                 </span>
-                <div style={{ display: "inline-block", marginLeft: "10px" }}>
+                <div style={{ display: "inline-block", marginLeft: "10px", marginTop: "0px"}}>
                   <select
                    value={state.inputs.sem || ""}  //set the default value = "slct sem ",whenever state chnges
                     style={{
@@ -327,6 +331,7 @@ useEffect(() => {
                       border: "1px solid #ccc",
                       backgroundColor: "#f1f1f1",
                       cursor: "pointer",
+                      marginRight: "10px",
                     }}
                     
                     onChange={async (e) => {
@@ -359,7 +364,7 @@ useEffect(() => {
             </div>
           </div>
           {/* Delete icon */}
-          <div className="mr-4">
+          <div >
             <i
               className="fas fa-trash-alt"
               style={{
@@ -376,8 +381,11 @@ useEffect(() => {
               }
             ></i>
           </div>
+          
+         
         </SingleCard>
-        <div className="card-body  mt-2 mb-3">
+        <div className="card-body  mt-2 mb-3"
+         style={{ overflowY: "auto", maxHeight: "500px" }}>
           <SingleCard className="mb-2 p-4">
             <div className="container">
               <div className="row justify-content-center">
@@ -424,6 +432,7 @@ useEffect(() => {
             </div>
           </SingleCard>
         </div>
+        {state.pagination.totalItems> 0 &&(
         <div style={{ marginTop: "20px" }}>
           <Pagination
             currentPage={state.pagination.page}
@@ -434,6 +443,7 @@ useEffect(() => {
             totalData={state.pagination.totalItems}
           />
         </div>
+        )}
 
         {/* Custom Modal for creating a ticket */}
         <CustomModal
