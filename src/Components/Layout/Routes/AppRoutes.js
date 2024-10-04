@@ -7,6 +7,8 @@ import { AppProvider } from "../../../contextApi/context";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import PurchasedLotteries from "../PurchasedTickets/PurchasedLotteries";
+import DashBoard from "../../Dashboard/DashBoard";
+
 
 const AppRoutes = () => {
   return (
@@ -27,7 +29,8 @@ const AppRoutes = () => {
         <Routes>
           <Route index element={<Login />} />
           {/* to commit */}
-          <Route path="/" element={<AdminLayout />}>
+          <Route path="/" element={<AdminLayout />}>.
+          <Route path="/Dashboard" element={<DashBoard />} />
             <Route path="/lottery-markets" element={<LotteryMarkets />} />
             <Route path="/Purchased-tickets" element={<PurchasedLotteries />} />
           </Route>
