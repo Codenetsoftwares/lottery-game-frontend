@@ -26,6 +26,7 @@ const AppRoutes = () => {
       <BrowserRouter>
         <Routes>
           <Route index element={<Login />} />
+          {/* to commit */}
           <Route path="/" element={<AdminLayout />}>
             <Route path="/lottery-markets" element={<LotteryMarkets />} />
             <Route path="/Purchased-tickets" element={<PurchasedLotteries />} />
