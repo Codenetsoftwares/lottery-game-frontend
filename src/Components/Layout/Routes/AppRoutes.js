@@ -27,9 +27,9 @@ const AppRoutes = () => {
       <BrowserRouter>
         <Routes>
           <Route index element={<Login />} />
-          
+
           <Route path="/" element={<AdminLayout />}>
-          <Route path="/dashboard" element={<DashBoard />}></Route>
+            <Route path="/dashboard" element={<DashBoard />}></Route>
             <Route path="/lottery-markets" element={<LotteryMarkets />} />
             <Route path="/Purchased-tickets" element={<PurchasedLotteries />} />
           </Route>

@@ -1,24 +1,19 @@
 import React from "react";
 import { useAppContext } from "../../contextApi/context";
 import strings from "../../Utils/constant/stringConstant";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import "./navTop.css"; // Import your custom CSS for additional styling
 
 const NavTop = () => {
   const { dispatch, store } = useAppContext();
-  console.log("==== Auth from Navtop", store);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
-    // Only proceed with logout if the user confirms
     if (confirmLogout) {
-      // Dispatch the logout action
       dispatch({ type: strings.LOG_OUT });
-
       toast.success("Logged out successfully!");
-
-      // Redirect to the login page
       navigate("/");
     } else {
       toast.info("Logout cancelled.");
@@ -26,18 +21,36 @@ const NavTop = () => {
   };
 
   return (
-    <div className="container-fluid g-0">
+    <div className="container-fluid g-0 navtop-container">
       <div className="row">
         <div className="col-lg-12 p-0">
-          <div className="header_iner d-flex justify-content-between align-items-center">
-            <div className="sidebar_icon d-lg-none">
-              <i className="ti-menu" />
-            </div>
-            <div className="line_icon open_miniSide d-none d-lg-block">
-              <img src="img/line_img.png" alt="Sidebar Icon" />
+          {/* Nav Wrapper to center items */}
+          <div className="nav-wrapper">
+            {/* Centered Navigation Options */}
+            <div className="nav-options">
+              <Link to="/dashboard" className="nav-link dashboard">
+                <i className="fas fa-tachometer-alt nav-icon" />
+                <span>Dashboard</span>
+              </Link>
+              <Link to="/create-lottery" className="nav-link create-lottery">
+                <i className="fas fa-ticket-alt nav-icon" />
+                <span>Create Lottery</span>
+              </Link>
+              <Link to="/results" className="nav-link results blink">
+                <i className="fas fa-trophy nav-icon"   style={{ textDecoration:"none"}} />
+                <span>Results</span>
+              </Link>
+              <Link to="/win" className="nav-link win">
+                <i className="fas fa-money-bill-wave nav-icon" />
+                <span>Win</span>
+              </Link>
+              <Link to="/purchase-history" className="nav-link purchase-history">
+                <i className="fas fa-history nav-icon" />
+                <span>Purchase History</span>
+              </Link>
             </div>
 
-            <div className="header_right d-flex justify-content-between align-items-center"></div>
+            {/* Profile and Logout */}
             <div className="profile_info d-flex align-items-center">
               <i
                 className="fas fa-user-circle"
@@ -46,7 +59,7 @@ const NavTop = () => {
               />
               <div className="profile_info_iner">
                 <div className="profile_author_name">
-                  <p> Role: {store.admin.roles}</p>
+                  <p>Role: {store.admin.roles}</p>
                   <h5>{store.admin.userName}</h5>
                 </div>
                 <div className="profile_info_details">
