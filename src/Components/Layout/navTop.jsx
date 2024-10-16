@@ -54,6 +54,11 @@ const NavTop = () => {
                 <i className="fas fa-history nav-icon" />
                 <span>Purchase History</span>
               </Link>
+              {/* New "Search Lottery" menu item */}
+              <Link to="/search-lottery" className="nav-link search-lottery">
+                <i className="fas fa-search nav-icon" />
+                <span>Search Lottery</span>
+              </Link>
             </div>
 
             {/* Profile and Logout */}

@@ -1,50 +1,51 @@
 import React from "react";
 import NavTop from "./NavTop";
-import NavSide from "./NavSide";
+import Footer from "./Footer";
 import Layout from "./Layout";
 
 const AdminLayout = () => {
   return (
     <div className="d-flex flex-column vh-100">
-    {/* Sticky Top Navigation */}
-    <div
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 1030, 
-      }}
-    >
-      <NavTop/>
-    </div>
-  
-    <div className="d-flex flex-grow-1  overflow-hidden">
-      {/* Sidebar */}
-      {/* <div
-        className="flex-shrink-0"
-        style={{
-          width: "250px",
-          maxWidth: "250px",
-          height: "100%", // Ensure full vertical height for the sidebar
-          overflowY: "auto",
-          zIndex: 1040, // NavTop still remains above
-        }}
-      >
-        <NavSide />
-      </div> */}
-  
-      {/* Main Content */}
+      {/* Sticky Top Navigation */}
       <div
-        className="flex-grow-1 p-4"
         style={{
-          // paddingTop: "100px", // Adjust gap between NavTop and Layout
-          overflowY: "auto",
+          position: "sticky",
+          top: 0,
+          zIndex: 1030,
         }}
       >
-        <Layout />
+        <NavTop />
+      </div>
+
+      {/* Main Content Area */}
+      <div
+        className="flex-grow-1"
+        style={{
+          overflow: "hidden", // Disable scrolling on the parent div
+        }}
+      >
+        <div
+          className="p-4"
+          style={{
+            height: "100%", // Fill available height for the main content
+            overflowY: "auto", // Only allow scrolling inside the Layout if necessary
+          }}
+        >
+          <Layout />
+        </div>
+      </div>
+
+      {/* Footer Component */}
+      <div
+        style={{
+          position: 'sticky',
+          bottom: 0,
+          width: '100%',
+        }}
+      >
+        <Footer />
       </div>
     </div>
-  </div>
-  
   );
 };
 

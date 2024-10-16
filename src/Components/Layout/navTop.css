@@ -33,15 +33,20 @@
   transition: color 0.3s ease;
 }
 
+/* Only underline the text, not the icon */
+.nav-options .nav-link span {
+  text-decoration: none;
+}
+
+.nav-options .nav-link:hover span {
+  text-decoration: underline; /* Underline only the text on hover */
+}
+
+/* Styling for the icons */
 .nav-options .nav-link .nav-icon {
   font-size: 32px;
   margin-bottom: 5px;
-}
-
-/* Hover effect: Add underline and color change */
-.nav-options .nav-link:hover {
-  color: #ffd700; /* Gold for a winning feel */
-  text-decoration: underline;
+  text-decoration: none; /* Ensure no underline on icons */
 }
 
 /* Different colors for each option */
@@ -65,6 +70,11 @@
   color: #20b2aa; /* Light sea green */
 }
 
+/* New color for Search Lottery menu item */
+.nav-options .nav-link.search-lottery {
+  color: #8a2be2; /* Blue-violet for a distinctive look */
+}
+
 /* Blinking effect for Results */
 .blink {
   animation: colorChange 1.5s linear infinite;
@@ -73,15 +83,18 @@
 
 @keyframes colorChange {
   0% {
-    color: #ff4500; /* Orange-red */
+    color: #DF73FF; /* Vibrant Heliotrope */
   }
   50% {
-    color: #ffd700; /* Gold */
+    color: #FFBF00; /* Luminous Amber */
   }
   100% {
-    color: #4682B4; /* Steel blue */
+    color: #B0FF00; /* Electric Mint */
   }
 }
+
+
+
 
 /* Profile Info */
 .profile_info {
