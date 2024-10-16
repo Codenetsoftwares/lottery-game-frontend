@@ -32,19 +32,25 @@ const NavTop = () => {
                 <i className="fas fa-tachometer-alt nav-icon" />
                 <span>Dashboard</span>
               </Link>
-              <Link to="/create-lottery" className="nav-link create-lottery">
+              <Link to="/lottery-markets" className="nav-link create-lottery">
                 <i className="fas fa-ticket-alt nav-icon" />
                 <span>Create Lottery</span>
               </Link>
               <Link to="/results" className="nav-link results blink">
-                <i className="fas fa-trophy nav-icon"   style={{ textDecoration:"none"}} />
+                <i
+                  className="fas fa-trophy nav-icon"
+                  style={{ textDecoration: "none" }}
+                />
                 <span>Results</span>
               </Link>
               <Link to="/win" className="nav-link win">
                 <i className="fas fa-money-bill-wave nav-icon" />
                 <span>Win</span>
               </Link>
-              <Link to="/purchase-history" className="nav-link purchase-history">
+              <Link
+                to="/purchase-history"
+                className="nav-link purchase-history"
+              >
                 <i className="fas fa-history nav-icon" />
                 <span>Purchase History</span>
               </Link>

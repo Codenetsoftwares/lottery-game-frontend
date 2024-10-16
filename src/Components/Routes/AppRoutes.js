@@ -1,13 +1,13 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AdminLayout from "../AdminLayout";
+import AdminLayout from "../Layout/AdminLayout";
 import LotteryMarkets from "../Markets/LotteryMarkets";
 import Login from "../Pages/Login/Login";
-import { AppProvider } from "../../../contextApi/context";
+import { AppProvider } from "../../contextApi/context";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import PurchasedLotteries from "../PurchasedTickets/PurchasedLotteries";
-import DashBoard from "../Pages/Login/Dashboard/dashBoard";
+import PurchasedLotteries from "../Pages/PurchasedTickets/PurchasedLotteries";
+import DashBoard from "../Pages/Dashboard/dashBoard";
 
 const AppRoutes = () => {
   return (

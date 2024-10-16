@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
-import backgroundimage from "../../../../Assets/backgroundImage.jpg";
+import backgroundimage from "../../.././Assets/backgroundImage.jpg";
 import { useNavigate } from "react-router-dom";
-import { adminLogin, login } from "../../../../Utils/apiService";
-import { useAppContext } from "../../../../contextApi/context";
-import strings from "../../../../Utils/constant/stringConstant";
+import { adminLogin, login } from "../../../Utils/apiService";
+import { useAppContext } from "../../../contextApi/context";
+import strings from "../../../Utils/constant/stringConstant";
 
 const Login = () => {
   const { dispatch } = useAppContext();
@@ -28,33 +28,36 @@ const Login = () => {
   //     dispatch({ type: "LOG_IN", payload: response.data });
 
   //     navigate("/lottery-markets");
-      // window.location.reload();
+  // window.location.reload();
   //   }
   // };
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(""); // Clear previous errors
-  
+
     const response = await adminLogin({
       userName: username,
       password: password,
     });
-    console.log('===>>> response',response)
-  
+    console.log("===>>> response", response);
+
     if (response && response.success) {
-        // Immediately store the accessToken in local storage
-    localStorage.setItem(strings.LOCAL_STORAGE_KEY, JSON.stringify({
-      admin: {
-        accessToken: response.data.accessToken,
-        // Add other properties if needed
-      }
-    }));
+      // Immediately store the accessToken in local storage
+      localStorage.setItem(
+        strings.LOCAL_STORAGE_KEY,
+        JSON.stringify({
+          admin: {
+            accessToken: response.data.accessToken,
+            // Add other properties if needed
+          },
+        })
+      );
       // Dispatch the login action with accessToken as payload
-      dispatch({ 
-        type: strings.LOG_IN, 
-        payload: response.data // Assuming `response.data` contains the token and user details
+      dispatch({
+        type: strings.LOG_IN,
+        payload: response.data, // Assuming `response.data` contains the token and user details
       });
-  
+
       // Navigate to the desired route after successful login
       navigate("/lottery-markets");
     } else {

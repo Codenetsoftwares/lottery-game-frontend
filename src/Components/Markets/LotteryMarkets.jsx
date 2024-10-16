@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import SingleCard from "../Common/SingleCard";
 import Pagination from "../Common/Pagination";
 import DearLotteryCard from "../Common/DearLotteryCard";
-import { useAppContext } from "../../../contextApi/context";
+import { useAppContext } from "../../contextApi/context";
 import CustomModal from "../Common/modal";
 import {
   generateLotteryTicket,
@@ -11,9 +11,9 @@ import {
   singleLotteryDelete,
   singleLotteryEdit,
   unPurchasedLotteryTicketsDelete,
-} from "../../../Utils/apiService";
-import strings from "../../../Utils/constant/stringConstant";
-import { getLotteryMarketsInitialState } from "../../../Utils/getInitialState";
+} from "../../Utils/apiService";
+import strings from "../../Utils/constant/stringConstant";
+import { getLotteryMarketsInitialState } from "../../Utils/getInitialState";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatISO } from "date-fns";
@@ -32,7 +32,12 @@ const LotteryMarkets = () => {
   const accessToken = store?.admin?.accessToken;
   console.log("--->>>Access token", accessToken);
   console.log("Search By SEM:", state);
-  const allowedDrawTimes = ['10:00 A.M.', '1:00 P.M.', '6:00 P.M.', '8:00 P.M.'];
+  const allowedDrawTimes = [
+    "10:00 A.M.",
+    "1:00 P.M.",
+    "6:00 P.M.",
+    "8:00 P.M.",
+  ];
 
   // Fetch tickets when the component mounts
   useEffect(() => {
@@ -495,11 +500,18 @@ const LotteryMarkets = () => {
               component: (
                 <div className="date-picker-container text-center">
                   <DatePicker
-                    selected={state.inputs.drawDate ? new Date(state.inputs.drawDate) : new Date()} // Default to today if no date selected
+                    selected={
+                      state.inputs.drawDate
+                        ? new Date(state.inputs.drawDate)
+                        : new Date()
+                    } // Default to today if no date selected
                     onChange={(date) => {
                       setState((prev) => ({
                         ...prev,
-                        inputs: { ...prev.inputs, drawDate: date.toISOString() }, // Store date in ISO format
+                        inputs: {
+                          ...prev.inputs,
+                          drawDate: date.toISOString(),
+                        }, // Store date in ISO format
                       }));
                     }}
                     minDate={new Date()} // Disable past dates
@@ -524,15 +536,19 @@ const LotteryMarkets = () => {
                     }}
                     className="form-control"
                   >
-                    <option value="" disabled>Select Draw Time</option>
+                    <option value="" disabled>
+                      Select Draw Time
+                    </option>
                     {allowedDrawTimes.map((time) => (
-                      <option key={time} value={time}>{time}</option>
+                      <option key={time} value={time}>
+                        {time}
+                      </option>
                     ))}
                   </select>
                 </div>
               ),
             },
-            
+
             {
               id: "firstPrize",
               label: "First Prize",

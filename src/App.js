@@ -1,12 +1,8 @@
-import AppRoutes from "./Components/Layout/Routes/AppRoutes";
+import AppRoutes from "./Components/Routes/AppRoutes";
 import React from "react";
 
 function App() {
-  return (
-    <React.Fragment>
-      <AppRoutes/>
-    </React.Fragment>
-  );
+  return <AppRoutes />;
 }
 
 export default App;

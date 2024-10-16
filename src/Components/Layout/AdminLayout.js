@@ -1,6 +1,6 @@
 import React from "react";
-import NavTop from "./navTop";
-import NavSide from "./navSide";
+import NavTop from "./NavTop";
+import NavSide from "./NavSide";
 import Layout from "./Layout";
 
 const AdminLayout = () => {

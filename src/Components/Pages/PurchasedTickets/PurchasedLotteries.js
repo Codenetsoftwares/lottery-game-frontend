@@ -7,7 +7,7 @@ import {
 import strings from "../../../Utils/constant/stringConstant";
 import { Table, Spinner } from "react-bootstrap";
 import "./PurchasedLotteries.css";
-import Pagination from "../Common/Pagination";
+import Pagination from "../../Common/Pagination";
 
 const PurchasedLotteries = () => {
   const { dispatch } = useAppContext();
@@ -36,7 +36,7 @@ const PurchasedLotteries = () => {
       page: pagination.page,
       limit: pagination.limit,
     });
-    console.log('====>>> response from purchased tickets',response)
+    console.log('====>>> response from purchased tickets', response)
     if (response && response.success) {
       setPurchasedTickets(response.data || []);
       setPagination({
@@ -101,7 +101,7 @@ const PurchasedLotteries = () => {
             placeholder="Search purchased tickets by sem.."
             aria-label="Search tickets" // Bind the input value to the state
             value={searchTerm} // Bind the input value to the state
-            onChange={handleSearchChange} 
+            onChange={handleSearchChange}
           />
         </div>
       </div>
@@ -152,7 +152,7 @@ const PurchasedLotteries = () => {
                         </span>
                         <div className="dropdown-divider" />
                         {ticket.ticketNumber &&
-                        ticket.ticketNumber.length > 0 ? (
+                          ticket.ticketNumber.length > 0 ? (
                           ticket.ticketNumber.map((number, i) => (
                             <span key={i} className="dropdown-item">
                               {number}
