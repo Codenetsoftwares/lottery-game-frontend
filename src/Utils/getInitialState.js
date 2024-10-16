@@ -1,3 +1,5 @@
+import { formatISO } from 'date-fns'; // Import date-fns to format dates
+
 export const getAdminInitialState = (body = {}) => {
   return {
     accessToken: body.accessToken ?? "",
@@ -9,6 +11,13 @@ export const getAdminInitialState = (body = {}) => {
 };
 
 export const getLotteryMarketsInitialState = (body = {}) => {
+  const formatDateToFixedMilliseconds = (date) => {
+    // Format the date to ISO string and ensure .000 for milliseconds
+    return date.toISOString().replace(/\.\d{3}Z$/, '.000Z');
+  };
+  const now = new Date(); // Get current date
+  const drawDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 30, 0, 0); // Set to 12:30 PM today
+  const formattedDrawDate = formatDateToFixedMilliseconds(drawDate); // Format to the correct ISO string
   return {
 
     randomToken: body.randomToken ?? "",
@@ -19,6 +28,8 @@ export const getLotteryMarketsInitialState = (body = {}) => {
     inputs: body.inputs ?? {
       name: "",
       DateTime: "",
+      drawDate: formattedDrawDate, // Set the formatted drawDate 
+      drawTime: "",  // Added drawTime
       firstPrize: "",
       sem: "",
       tickets: [],

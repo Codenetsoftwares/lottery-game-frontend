@@ -14,12 +14,12 @@ const AdminLayout = () => {
         zIndex: 1030, 
       }}
     >
-      <NavTop />
+      <NavTop/>
     </div>
   
     <div className="d-flex flex-grow-1  overflow-hidden">
       {/* Sidebar */}
-      <div
+      {/* <div
         className="flex-shrink-0"
         style={{
           width: "250px",
@@ -30,7 +30,7 @@ const AdminLayout = () => {
         }}
       >
         <NavSide />
-      </div>
+      </div> */}
   
       {/* Main Content */}
       <div
