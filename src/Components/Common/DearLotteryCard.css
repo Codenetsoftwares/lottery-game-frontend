@@ -49,7 +49,6 @@
   align-items: center;
   /* margin: 20px auto; */
   font-family: 'Arial', sans-serif;
-  
 }
 
 /* Blinking Effect */
@@ -62,4 +61,3 @@
 .icon-wrapper:hover {
   transform: scale(1.1); /* Grows slightly */
 }
-

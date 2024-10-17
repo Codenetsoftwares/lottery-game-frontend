@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import SingleCard from "../Common/SingleCard";
-import Pagination from "../Common/Pagination";
-import DearLotteryCard from "../Common/DearLotteryCard";
-import { useAppContext } from "../../contextApi/context";
-import CustomModal from "../Common/modal";
+import React, { useEffect, useState } from 'react';
+import SingleCard from '../Common/SingleCard';
+import Pagination from '../Common/Pagination';
+import DearLotteryCard from '../Common/DearLotteryCard';
+import { useAppContext } from '../../contextApi/context';
+import CustomModal from '../Common/modal';
 import {
   generateLotteryTicket,
   getLotteryTickets,
@@ -11,33 +11,28 @@ import {
   singleLotteryDelete,
   singleLotteryEdit,
   unPurchasedLotteryTicketsDelete,
-} from "../../Utils/apiService";
-import strings from "../../Utils/constant/stringConstant";
-import { getLotteryMarketsInitialState } from "../../Utils/getInitialState";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { formatISO } from "date-fns";
-import "./LotteryMarkets.css";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { Oval } from "react-loader-spinner";
+} from '../../Utils/apiService';
+import strings from '../../Utils/constant/stringConstant';
+import { getLotteryMarketsInitialState } from '../../Utils/getInitialState';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { formatISO } from 'date-fns';
+import './LotteryMarkets.css';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { Oval } from 'react-loader-spinner';
 // import DatePicker from 'react-datepicker'; // Make sure you have this imported
 // import "react-datepicker/dist/react-datepicker.css"; // Include CSS for styling
 
 const LotteryMarkets = () => {
   const { store, dispatch } = useAppContext();
-  console.log("===>>> store", store.admin.accessToken);
+  console.log('===>>> store', store.admin.accessToken);
   const [state, setState] = useState(getLotteryMarketsInitialState);
   const [hasMore, setHasMore] = useState(true);
-  console.log("===>>> random token", state.lotteryId);
+  console.log('===>>> random token', state.lotteryId);
   const accessToken = store?.admin?.accessToken;
-  console.log("--->>>Access token", accessToken);
-  console.log("Search By SEM:", state);
-  const allowedDrawTimes = [
-    "10:00 A.M.",
-    "1:00 P.M.",
-    "6:00 P.M.",
-    "8:00 P.M.",
-  ];
+  console.log('--->>>Access token', accessToken);
+  console.log('Search By SEM:', state);
+  const allowedDrawTimes = ['10:00 A.M.', '1:00 P.M.', '6:00 P.M.', '8:00 P.M.'];
 
   // Fetch tickets when the component mounts
   useEffect(() => {
@@ -48,9 +43,9 @@ const LotteryMarkets = () => {
 
   // get lottery tickets in the admin panel
   const fetchLotteryTickets = async (currentPage = state.pagination.page) => {
-    console.log("Fetching Lottery Tickets for page", currentPage);
+    console.log('Fetching Lottery Tickets for page', currentPage);
     const response = await getLotteryTickets({
-      searchBySem: state.search || "",
+      searchBySem: state.search || '',
       page: currentPage,
       limit: state.pagination.limit || 10,
       totalPages: state.pagination.totalPages || 0,
@@ -59,10 +54,7 @@ const LotteryMarkets = () => {
     if (response) {
       setState((prev) => ({
         ...prev,
-        lotteryCards:
-          state.search.length > 0
-            ? response.data
-            : [...prev.lotteryCards, ...response.data],
+        lotteryCards: state.search.length > 0 ? response.data : [...prev.lotteryCards, ...response.data],
       }));
       setHasMore(currentPage < (response.pagination?.totalPages || 0));
 
@@ -71,11 +63,11 @@ const LotteryMarkets = () => {
         payload: response.data,
       });
     } else {
-      console.error("Failed to fetch tickets");
+      console.error('Failed to fetch tickets');
       setHasMore(false);
     }
   };
-  console.log("data===>", state);
+  console.log('data===>', state);
 
   // Function to fetch more data when user scrolls
   const fetchMoreData = () => {
@@ -100,8 +92,7 @@ const LotteryMarkets = () => {
     }));
   };
 
-  const handleOpenModal = () =>
-    setState((prev) => ({ ...prev, showTicketModal: false, showModal: true }));
+  const handleOpenModal = () => setState((prev) => ({ ...prev, showTicketModal: false, showModal: true }));
 
   const handleCloseModal = () => {
     setState((prev) => ({
@@ -115,13 +106,13 @@ const LotteryMarkets = () => {
 
   const handleDateChange = (date) => {
     const formattedDate = formatISO(date); // Format date as ISO string
-    handleInputChange("DateTime", formattedDate);
+    handleInputChange('DateTime', formattedDate);
   };
 
   //GET api to generate the ticket number as by sem values from dropdown
   async function handleGenerateTicketNumber(selectedValue) {
     const response = await getSelectSemInModal(selectedValue);
-    console.log("===>> get api response", response);
+    console.log('===>> get api response', response);
 
     if (response && response.success) {
       setState((prev) => ({
@@ -130,7 +121,7 @@ const LotteryMarkets = () => {
         showTicketModal: true, // Show the modal when tickets are fetched
       }));
     } else {
-      console.error("Failed to fetch ticket numbers");
+      console.error('Failed to fetch ticket numbers');
     }
   }
 
@@ -155,10 +146,10 @@ const LotteryMarkets = () => {
         });
 
         handleCloseModal();
-        setState((prev) => ({ ...prev, randomToken: "" }));
+        setState((prev) => ({ ...prev, randomToken: '' }));
         fetchLotteryTickets();
       } else {
-        console.error("Failed to create ticket");
+        console.error('Failed to create ticket');
       }
     }
   }
@@ -184,17 +175,15 @@ const LotteryMarkets = () => {
       }));
       fetchLotteryTickets(); // Refresh tickets after deletion
     } else {
-      console.error("Failed to delete all lotteries");
+      console.error('Failed to delete all lotteries');
     }
   };
 
   //seperately for each single lottery card
   const handleEdit = async (lotteryId) => {
-    console.log("====>>> onclick id", lotteryId);
+    console.log('====>>> onclick id', lotteryId);
 
-    const lotteryToEdit = state.lotteryCards.find(
-      (card) => card.lotteryId === lotteryId
-    );
+    const lotteryToEdit = state.lotteryCards.find((card) => card.lotteryId === lotteryId);
 
     // Update the inputs state with the current lottery data
     setState((prev) => ({
@@ -221,7 +210,7 @@ const LotteryMarkets = () => {
       firstPrize: firstPrize,
       price: price,
     });
-    console.log("====>>> response from the edit api", response);
+    console.log('====>>> response from the edit api', response);
     handleCloseModal();
   };
 
@@ -229,10 +218,10 @@ const LotteryMarkets = () => {
     const response = await singleLotteryDelete(id);
 
     if (response) {
-      console.log("Delete successful:", response);
+      console.log('Delete successful:', response);
       fetchLotteryTickets();
     } else {
-      console.log("Error deleting the card");
+      console.log('Error deleting the card');
     }
   };
 
@@ -240,31 +229,28 @@ const LotteryMarkets = () => {
     <div
       className="bg-white"
       style={{
-        minHeight: "100vh",
+        minHeight: '100vh',
         // width:"100",
-        margin: "0 auto", // Center the div horizontally
-        overflowX: "hidden", // Ensure no horizontal overflow
+        margin: '0 auto', // Center the div horizontally
+        overflowX: 'hidden', // Ensure no horizontal overflow
       }}
     >
       <div
         className="card text-center mt-2 mr-5 ml-5"
         style={{
-          backgroundColor: "#e6f7ff",
-          position: "relative",
+          backgroundColor: '#e6f7ff',
+          position: 'relative',
         }}
       >
         <SingleCard
           style={{
-            position: "relative",
-            width: "100%",
+            position: 'relative',
+            width: '100%',
           }}
         >
           <div className="card-header-pill text-bold d-flex align-items-center justify-content-between">
             {/* Left side: Search Input */}
-            <div
-              className="flex-fill d-flex align-items-center"
-              style={{ flexBasis: "33%" }}
-            >
+            <div className="flex-fill d-flex align-items-center" style={{ flexBasis: '33%' }}>
               <input
                 type="text"
                 placeholder="Search Lottery Tickets by SEM"
@@ -278,41 +264,38 @@ const LotteryMarkets = () => {
                   await fetchLotteryTickets(1); // Fetch tickets with search
                 }}
                 style={{
-                  padding: "5px",
-                  borderRadius: "5px",
-                  border: "1px solid #ccc",
-                  marginRight: "15px",
-                  width: "100%", // Adjust width to occupy available space
+                  padding: '5px',
+                  borderRadius: '5px',
+                  border: '1px solid #ccc',
+                  marginRight: '15px',
+                  width: '100%', // Adjust width to occupy available space
                 }}
               />
             </div>
 
             {/* Middle section: Generate Ticket Number */}
-            <div
-              className="flex-fill d-flex align-items-center justify-content-center"
-              style={{ flexBasis: "33%" }}
-            >
+            <div className="flex-fill d-flex align-items-center justify-content-center" style={{ flexBasis: '33%' }}>
               <span
                 style={{
-                  color: "#4682B4",
-                  fontWeight: "bold",
+                  color: '#4682B4',
+                  fontWeight: 'bold',
                 }}
               >
                 Generate Ticket Number To Create Lottery Ticket By SEM
               </span>
-              <div style={{ display: "inline-block", marginLeft: "10px" }}>
+              <div style={{ display: 'inline-block', marginLeft: '10px' }}>
                 <select
-                  value={state.inputs.sem || ""}
+                  value={state.inputs.sem || ''}
                   style={{
-                    padding: "5px",
-                    borderRadius: "5px",
-                    border: "1px solid #ccc",
-                    backgroundColor: "#f1f1f1",
-                    cursor: "pointer",
+                    padding: '5px',
+                    borderRadius: '5px',
+                    border: '1px solid #ccc',
+                    backgroundColor: '#f1f1f1',
+                    cursor: 'pointer',
                   }}
                   onChange={async (e) => {
                     const selectedValue = e.target.value;
-                    console.log("Selected Value:", selectedValue);
+                    console.log('Selected Value:', selectedValue);
                     await handleGenerateTicketNumber(selectedValue);
                     setState((prevState) => ({
                       ...prevState,
@@ -337,21 +320,16 @@ const LotteryMarkets = () => {
             </div>
 
             {/* Right side: Delete icon */}
-            <div
-              className="flex-fill d-flex align-items-center justify-content-end"
-              style={{ flexBasis: "33%" }}
-            >
+            <div className="flex-fill d-flex align-items-center justify-content-end" style={{ flexBasis: '33%' }}>
               <i
                 className="fas fa-trash-alt"
                 style={{
-                  cursor: "pointer",
-                  fontSize: "2rem",
-                  color: "#4682B4",
+                  cursor: 'pointer',
+                  fontSize: '2rem',
+                  color: '#4682B4',
                 }}
                 title="Delete all unpurchased lottery tickets"
-                onClick={() =>
-                  setState((prev) => ({ ...prev, showDeleteModal: true }))
-                }
+                onClick={() => setState((prev) => ({ ...prev, showDeleteModal: true }))}
               ></i>
             </div>
           </div>
@@ -359,16 +337,13 @@ const LotteryMarkets = () => {
         <div className="card-body  mt-2 mb-3">
           <SingleCard className="mb-2 p-4">
             <InfiniteScroll
-              style={{ overflowX: "hidden" }}
+              style={{ overflowX: 'hidden' }}
               dataLength={state.lotteryCards.length}
               next={fetchMoreData}
               hasMore={hasMore}
               loader={
                 // Use the spinner here
-                <div
-                  className="d-flex justify-content-center align-items-center"
-                  style={{ height: "80vh" }}
-                >
+                <div className="d-flex justify-content-center align-items-center" style={{ height: '80vh' }}>
                   <Oval
                     height={40}
                     width={40}
@@ -386,11 +361,7 @@ const LotteryMarkets = () => {
               height={600}
               endMessage={
                 !hasMore &&
-                state.lotteryCards.length > 0 && (
-                  <p className="text-center mt-3">
-                    You have seen all the tickets!
-                  </p>
-                )
+                state.lotteryCards.length > 0 && <p className="text-center mt-3">You have seen all the tickets!</p>
               }
             >
               <div className="container">
@@ -416,16 +387,13 @@ const LotteryMarkets = () => {
                       <img
                         src="https://media.giphy.com/media/jy6UhbChQ5dQ4/giphy.gif"
                         alt="Funny no tickets"
-                        style={{ width: "200px" }}
+                        style={{ width: '200px' }}
                       />
-                      <h4 className="text-warning mt-3">
-                        Oops! No Lottery Tickets found!
-                      </h4>
+                      <h4 className="text-warning mt-3">Oops! No Lottery Tickets found!</h4>
                       <p className="text-muted">
                         Seems like the lottery fairy hasn't visited yet. 🧚‍♀️
                         <br />
-                        Don’t worry, you can be the magician who creates the
-                        first one! 🎩✨
+                        Don’t worry, you can be the magician who creates the first one! 🎩✨
                       </p>
                       {/* <button
                       className="btn btn-primary mt-3"
@@ -450,12 +418,10 @@ const LotteryMarkets = () => {
           heading="Create Lottery Ticket"
           inputs={[
             {
-              id: "name",
-              label: "Name",
-              value:
-                state.inputs.name ??
-                (state?.lotteryCards ? state?.lotteryCards[0]?.card?.name : ""),
-              onChange: (value) => handleInputChange("name", value),
+              id: 'name',
+              label: 'Name',
+              value: state.inputs.name ?? (state?.lotteryCards ? state?.lotteryCards[0]?.card?.name : ''),
+              onChange: (value) => handleInputChange('name', value),
             },
             // {
             //   id: "DateTime",
@@ -495,16 +461,12 @@ const LotteryMarkets = () => {
             //   ),
             // },
             {
-              id: "drawDate",
-              label: "Draw Date",
+              id: 'drawDate',
+              label: 'Draw Date',
               component: (
                 <div className="date-picker-container text-center">
                   <DatePicker
-                    selected={
-                      state.inputs.drawDate
-                        ? new Date(state.inputs.drawDate)
-                        : new Date()
-                    } // Default to today if no date selected
+                    selected={state.inputs.drawDate ? new Date(state.inputs.drawDate) : new Date()} // Default to today if no date selected
                     onChange={(date) => {
                       setState((prev) => ({
                         ...prev,
@@ -522,8 +484,8 @@ const LotteryMarkets = () => {
               ),
             },
             {
-              id: "drawTime",
-              label: "Draw Time",
+              id: 'drawTime',
+              label: 'Draw Time',
               component: (
                 <div className="time-picker-container text-center">
                   <select
@@ -550,19 +512,15 @@ const LotteryMarkets = () => {
             },
 
             {
-              id: "firstPrize",
-              label: "First Prize",
-              value:
-                state.inputs.firstPrize ??
-                (state?.lotteryCards
-                  ? state?.lotteryCards[0]?.card?.firstPrize
-                  : ""),
-              onChange: (value) => handleInputChange("firstPrize", value),
+              id: 'firstPrize',
+              label: 'First Prize',
+              value: state.inputs.firstPrize ?? (state?.lotteryCards ? state?.lotteryCards[0]?.card?.firstPrize : ''),
+              onChange: (value) => handleInputChange('firstPrize', value),
             },
 
             {
-              id: "sem",
-              label: "SEM",
+              id: 'sem',
+              label: 'SEM',
               // component: (
               //   <select
               //     className="form-control"
@@ -584,17 +542,17 @@ const LotteryMarkets = () => {
                   value={state.inputs.sem} // Display SEM value from state
                   readOnly
                   style={{
-                    backgroundColor: "#e9ecef",
-                    cursor: "not-allowed",
+                    backgroundColor: '#e9ecef',
+                    cursor: 'not-allowed',
                   }} // Optional: Style to make it look disabled
                 />
               ),
             },
             {
-              id: "price",
-              label: "Price",
+              id: 'price',
+              label: 'Price',
               value: state.inputs.price,
-              onChange: (value) => handleInputChange("price", value),
+              onChange: (value) => handleInputChange('price', value),
             },
           ]}
           buttonLabel="Create Ticket"
@@ -607,36 +565,36 @@ const LotteryMarkets = () => {
           heading="Edit Lottery Details"
           inputs={[
             {
-              id: "name",
-              label: "Lottery Name",
-              value: state.inputs.name || "",
-              onChange: (value) => handleInputChange("name", value),
+              id: 'name',
+              label: 'Lottery Name',
+              value: state.inputs.name || '',
+              onChange: (value) => handleInputChange('name', value),
             },
             {
-              id: "date",
-              label: "Draw Date",
-              value: state.inputs.DateTime || "",
-              onChange: (value) => handleInputChange("DateTime", value),
+              id: 'date',
+              label: 'Draw Date',
+              value: state.inputs.DateTime || '',
+              onChange: (value) => handleInputChange('DateTime', value),
               readOnly: true,
             },
             {
-              id: "firstPrize",
-              label: "First Prize",
-              value: state.inputs.firstPrize || "",
-              onChange: (value) => handleInputChange("firstPrize", value),
+              id: 'firstPrize',
+              label: 'First Prize',
+              value: state.inputs.firstPrize || '',
+              onChange: (value) => handleInputChange('firstPrize', value),
             },
             {
-              id: "sem",
-              label: "SEM",
-              value: state.inputs.sem || "",
-              onChange: (value) => handleInputChange("sem", value),
+              id: 'sem',
+              label: 'SEM',
+              value: state.inputs.sem || '',
+              onChange: (value) => handleInputChange('sem', value),
               readOnly: true,
             },
             {
-              id: "price",
-              label: "Price",
-              value: state.inputs.price || "",
-              onChange: (value) => handleInputChange("price", value),
+              id: 'price',
+              label: 'Price',
+              value: state.inputs.price || '',
+              onChange: (value) => handleInputChange('price', value),
             },
           ]}
           buttonLabel="Save"
@@ -647,25 +605,15 @@ const LotteryMarkets = () => {
         {/* Modal for confirming deletion */}
         <CustomModal
           showModal={state.showDeleteModal}
-          onClose={() =>
-            setState((prevState) => ({ ...prevState, showDeleteModal: false }))
-          }
+          onClose={() => setState((prevState) => ({ ...prevState, showDeleteModal: false }))}
           heading={
-            <span
-              className="text-danger "
-              style={{ fontWeight: "900", fontSize: "1.5rem" }}
-            >
+            <span className="text-danger " style={{ fontWeight: '900', fontSize: '1.5rem' }}>
               Alert !
             </span>
           }
           inputs={[
             {
-              label: (
-                <>
-                  Are you sure you want to delete all the unpurchased lottery
-                  tickets?
-                </>
-              ),
+              label: <>Are you sure you want to delete all the unpurchased lottery tickets?</>,
             },
           ]}
           buttonLabel="Delete"

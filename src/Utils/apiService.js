@@ -1,6 +1,6 @@
-import strings from "./constant/stringConstant";
-import { getAuthCallParams, getNoAuthCallParams, makeCall } from "./service";
-import urls from "./UrlConstant";
+import strings from './constant/stringConstant';
+import { getAuthCallParams, getNoAuthCallParams, makeCall } from './service';
+import urls from './UrlConstant';
 
 // Admin login
 export async function adminLogin(body, isToast = true) {
@@ -40,7 +40,7 @@ export async function getLotteryTickets(body, isToast = true) {
       `${urls.getLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}&Sem=${body.sem}`,
 
       callParams,
-      isToast
+      isToast,
     );
     return response;
   } catch (error) {
@@ -54,7 +54,7 @@ export async function getPurchasedLotteryTickets(body, isToast = true) {
     const response = await makeCall(
       `${urls.getPurchasedLotteryTicket}?page=${body.page}&limitPerPage=${body.limit}&totalPages=${body.totalPages}&totalData=${body.totalItems}&Sem=${body.searchBySem}`,
       callParams,
-      isToast
+      isToast,
     );
     return response;
   } catch (error) {
@@ -66,11 +66,7 @@ export async function getPurchasedLotteryTickets(body, isToast = true) {
 export async function CreatedLotteryTicketsDelete(isToast = true) {
   try {
     const callParams = await getAuthCallParams(strings.DELETE, null, isToast);
-    const response = await makeCall(
-      urls.removeCreatedLottery,
-      callParams,
-      isToast
-    );
+    const response = await makeCall(urls.removeCreatedLottery, callParams, isToast);
     return response;
   } catch (error) {
     throw error;
@@ -81,11 +77,7 @@ export async function CreatedLotteryTicketsDelete(isToast = true) {
 export async function PurchasedLotteryTicketsDelete(isToast = true) {
   try {
     const callParams = await getAuthCallParams(strings.DELETE, null, isToast);
-    const response = await makeCall(
-      urls.deletePurchasedLottery,
-      callParams,
-      isToast
-    );
+    const response = await makeCall(urls.deletePurchasedLottery, callParams, isToast);
     return response;
   } catch (error) {
     throw error;
@@ -95,11 +87,7 @@ export async function PurchasedLotteryTicketsDelete(isToast = true) {
 export async function unPurchasedLotteryTicketsDelete(isToast = true) {
   try {
     const callParams = await getAuthCallParams(strings.DELETE, null, isToast);
-    const response = await makeCall(
-      urls.UnPurchasedLotteryDelete,
-      callParams,
-      isToast
-    );
+    const response = await makeCall(urls.UnPurchasedLotteryDelete, callParams, isToast);
     return response;
   } catch (error) {
     throw error;
@@ -109,11 +97,7 @@ export async function unPurchasedLotteryTicketsDelete(isToast = true) {
 export async function getSelectSemInModal(sem, isToast = true) {
   try {
     const callParams = await getAuthCallParams(strings.GET, null, isToast);
-    const response = await makeCall(
-      `${urls.getSelectSem}/${sem}`,
-      callParams,
-      isToast
-    );
+    const response = await makeCall(`${urls.getSelectSem}/${sem}`, callParams, isToast);
     return response;
   } catch (error) {
     throw error;
@@ -123,11 +107,7 @@ export async function getSelectSemInModal(sem, isToast = true) {
 export async function singleLotteryDelete(lotteryId, isToast = true) {
   try {
     const callParams = await getAuthCallParams(strings.DELETE, null, isToast);
-    const response = await makeCall(
-      `${urls.SingleDeleteCard}/${lotteryId}`,
-      callParams,
-      isToast
-    );
+    const response = await makeCall(`${urls.SingleDeleteCard}/${lotteryId}`, callParams, isToast);
     return response;
   } catch (error) {
     throw error;
@@ -136,12 +116,8 @@ export async function singleLotteryDelete(lotteryId, isToast = true) {
 
 export async function singleLotteryEdit(body, isToast = true) {
   try {
-    const callParams = await getAuthCallParams(strings.PUT,body);
-    const response = await makeCall(
-      `${urls.SingleEditCard}/${body.lotteryId}`,
-      callParams,
-      isToast
-    );
+    const callParams = await getAuthCallParams(strings.PUT, body);
+    const response = await makeCall(`${urls.SingleEditCard}/${body.lotteryId}`, callParams, isToast);
     return response;
   } catch (error) {
     throw error;

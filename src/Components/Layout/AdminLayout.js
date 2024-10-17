@@ -1,7 +1,7 @@
-import React from "react";
-import NavTop from "./NavTop";
-import Footer from "./Footer";
-import Layout from "./Layout";
+import React from 'react';
+import Footer from './Footer';
+import Layout from './Layout';
+import NavTop from './NavTop';
 
 const AdminLayout = () => {
   return (
@@ -9,7 +9,7 @@ const AdminLayout = () => {
       {/* Sticky Top Navigation */}
       <div
         style={{
-          position: "sticky",
+          position: 'sticky',
           top: 0,
           zIndex: 1030,
         }}
@@ -21,16 +21,10 @@ const AdminLayout = () => {
       <div
         className="flex-grow-1"
         style={{
-          overflow: "hidden", // Disable scrolling on the parent div
+          overflow: 'hidden', // Disable scrolling on the parent div
         }}
       >
-        <div
-          className="p-4"
-          style={{
-            height: "100%", // Fill available height for the main content
-            overflowY: "auto", // Only allow scrolling inside the Layout if necessary
-          }}
-        >
+        <div className="p-4">
           <Layout />
         </div>
       </div>

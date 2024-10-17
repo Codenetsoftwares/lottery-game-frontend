@@ -2,7 +2,7 @@ class UrlConstant {
   constructor() {}
 
   //  url_dev = "https://lottery.server.dummydoma.in/api";
-  url_dev = "http://localhost:8080/api";
+  url_dev = 'http://localhost:8080/api';
 
   // admin api
 

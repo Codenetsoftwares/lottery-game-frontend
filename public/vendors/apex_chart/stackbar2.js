@@ -1,37 +1,43 @@
 var options = {
-    colors : ['#DBAFFF', '#AFD7FF','#AFFFB7'],
-    series: [{
-    name: 'PRODUCT A',
-    data: [44, 55, 41]
-  }, {
-    name: 'PRODUCT B',
-    data: [13, 23, 20]
-  },{
-    name: 'PRODUCT c',
-    data: [13, 23, 20]
-  }],
-    chart: {
+  colors: ['#DBAFFF', '#AFD7FF', '#AFFFB7'],
+  series: [
+    {
+      name: 'PRODUCT A',
+      data: [44, 55, 41],
+    },
+    {
+      name: 'PRODUCT B',
+      data: [13, 23, 20],
+    },
+    {
+      name: 'PRODUCT c',
+      data: [13, 23, 20],
+    },
+  ],
+  chart: {
     type: 'bar',
     height: 350,
     stacked: true,
     columnWidth: '10%',
     toolbar: {
-      show: false
+      show: false,
     },
     zoom: {
-      enabled: true
-    }
+      enabled: true,
+    },
   },
-  responsive: [{
-    breakpoint: 480,
-    options: {
-      legend: {
-        position: 'bottom',
-        offsetX: 0,
-        offsetY: 0
-      }
-    }
-  }],
+  responsive: [
+    {
+      breakpoint: 480,
+      options: {
+        legend: {
+          position: 'bottom',
+          offsetX: 0,
+          offsetY: 0,
+        },
+      },
+    },
+  ],
   plotOptions: {
     bar: {
       horizontal: false,
@@ -39,18 +45,17 @@ var options = {
   },
   xaxis: {
     type: 'category',
-    categories: ['Q 1', 'Q 1', 'Q 1',
-    ],
+    categories: ['Q 1', 'Q 1', 'Q 1'],
   },
   legend: {
-      show: false,
+    show: false,
     position: 'right',
-    offsetY: 10
+    offsetY: 10,
   },
   fill: {
-    opacity: 1
-  }
-  };
+    opacity: 1,
+  },
+};
 
-  var chart = new ApexCharts(document.querySelector("#stackbar_active"), options);
-  chart.render();
+var chart = new ApexCharts(document.querySelector('#stackbar_active'), options);
+chart.render();
