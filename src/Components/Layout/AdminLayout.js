@@ -1,7 +1,7 @@
-import React from "react";
-import NavTop from "./NavTop";
-import NavSide from "./NavSide";
-import Layout from "./Layout";
+import React from 'react';
+import Footer from './Footer';
+import Layout from './Layout';
+import NavTop from './NavTop';
 
 const AdminLayout = () => {
   return (
@@ -9,42 +9,45 @@ const AdminLayout = () => {
     {/* Sticky Top Navigation */}
     <div
       style={{
-        position: "sticky",
+        position: 'sticky',
         top: 0,
-        zIndex: 1030, 
+        zIndex: 1030,
       }}
     >
-      <NavTop/>
+      <NavTop />
     </div>
   
-    <div className="d-flex flex-grow-1  overflow-hidden">
-      {/* Sidebar */}
-      {/* <div
-        className="flex-shrink-0"
-        style={{
-          width: "250px",
-          maxWidth: "250px",
-          height: "100%", // Ensure full vertical height for the sidebar
-          overflowY: "auto",
-          zIndex: 1040, // NavTop still remains above
-        }}
-      >
-        <NavSide />
-      </div> */}
-  
-      {/* Main Content */}
-      <div
-        className="flex-grow-1 p-4"
-        style={{
-          // paddingTop: "100px", // Adjust gap between NavTop and Layout
-          overflowY: "auto",
-        }}
-      >
+    {/* Main Content Area */}
+    <div
+      className="flex-grow-1"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between', // Ensures space between header and footer
+      }}
+    >
+      <div className="p-4" style={{ flex: 1 }}>
+        {/* This is where your Layout or main content goes */}
         <Layout />
       </div>
     </div>
+  
+    {/* Footer Component */}
+    <div
+      style={{
+        position: 'sticky',
+        bottom: 0,
+        width: '100%',
+        marginTop: 'auto', // Ensures the footer is pushed to the bottom and stays there
+        paddingTop: '20px', // Ensures space between the body content and the footer
+        backgroundColor: '#f8f9fa', // Give footer a background color for visibility
+      }}
+    >
+      <Footer />
+    </div>
   </div>
   
+
   );
 };
 

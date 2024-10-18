@@ -1,66 +1,63 @@
 //reset css
-@import "variables";
+@import 'variables';
 
 //reset css
-@import "mixins";
+@import 'mixins';
 
 //reset css
-@import "_extends";
+@import '_extends';
 
 //reset css
-@import "reset";
+@import 'reset';
 
 //reset css
-@import "button";
+@import 'button';
 
 //header css
-@import "header";
+@import 'header';
 
 //sidebar css
-@import "sidebar";
+@import 'sidebar';
 
 //body content css
-@import "body_content";
+@import 'body_content';
 
 //main content css
-@import "main_content";
+@import 'main_content';
 
 //dashboard content css
-@import "dashboard_part";
+@import 'dashboard_part';
 
 //form style css
-@import "form_style";
+@import 'form_style';
 
 //revenue part css
-@import "revenue_part";
+@import 'revenue_part';
 
 //payment setting part css
-@import "payment_setting";
+@import 'payment_setting';
 
 //footer css
-@import "footer";
+@import 'footer';
 
 //breadcrumb css
-@import "breadcrumb";
+@import 'breadcrumb';
 
+// chart
+@import 'bar-chart.scss';
 
-// chart 
-@import "bar-chart.scss";
+// lms_category
+@import 'lms_category';
 
+// lms_category
+@import '_summer_note';
+// lms_category
+@import 'common_component';
 
-
-// lms_category 
-@import "lms_category";
-
-// lms_category 
-@import "_summer_note";
-// lms_category 
-@import "common_component";
-
-// CRM SCSS 
+// CRM SCSS
 @import '_projects';
 
-// CRM SCSS 
+// CRM SCSS
 @import '_pie';
 @import '_profilebox';
 @import '_chart_box';
@@ -78,11 +75,11 @@
 @import '_loadsers';
 
 @import 'typographi';
-// chart 
-@import "predefine";
-@import "board";
-@import "product";
-@import "todo";
-@import "mini_menu";
-@import "profilebox_new";
-@import "crm";
+// chart
+@import 'predefine';
+@import 'board';
+@import 'product';
+@import 'todo';
+@import 'mini_menu';
+@import 'profilebox_new';
+@import 'crm';

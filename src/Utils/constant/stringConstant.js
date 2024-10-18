@@ -1,30 +1,26 @@
 export class StringConstants {
-    LOGIN = 'login';
-  
-    //others
-    LOCAL_STORAGE_KEY = 'my_app_state';
-    applicationJSON = { 'Content-Type': 'application/json' };
-  
-    // http methods
-    GET = 'GET';
-    POST = 'POST';
-    PUT = 'PUT';
-    DELETE="DELETE";
-  
-    // reducer type
-  
-    LOG_IN = 'LOG_IN';
-    LOG_OUT = 'LOG_OUT';
-    GENERATE_TICKET_NUMBER= 'GENERATE_TICKET_NUMBER';
-    GENERATE_LOTTERY= 'GENERATE_LOTTERY';
-    FETCH_LOTTERY_TICKETS = 'FETCH_LOTTERY_TICKETS';
-    PURCHASED_LOTTERY_TICKETS = 'PURCHASED_LODTERY_TICKETS';
-    EDIT_LOTTERY=`EDIT_LOTTERY`
+  LOGIN = 'login';
 
+  //others
+  LOCAL_STORAGE_KEY = 'my_app_state';
+  applicationJSON = { 'Content-Type': 'application/json' };
 
-   
-  }
-  
-  let strings = new StringConstants();
-  export default strings;
-  
+  // http methods
+  GET = 'GET';
+  POST = 'POST';
+  PUT = 'PUT';
+  DELETE = 'DELETE';
+
+  // reducer type
+
+  LOG_IN = 'LOG_IN';
+  LOG_OUT = 'LOG_OUT';
+  GENERATE_TICKET_NUMBER = 'GENERATE_TICKET_NUMBER';
+  GENERATE_LOTTERY = 'GENERATE_LOTTERY';
+  FETCH_LOTTERY_TICKETS = 'FETCH_LOTTERY_TICKETS';
+  PURCHASED_LOTTERY_TICKETS = 'PURCHASED_LODTERY_TICKETS';
+  EDIT_LOTTERY = `EDIT_LOTTERY`;
+}
+
+let strings = new StringConstants();
+export default strings;
