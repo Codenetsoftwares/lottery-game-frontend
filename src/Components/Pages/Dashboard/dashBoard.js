@@ -1,9 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import DashCard from '../../../Utils/constant/DashCard';
+
+
+
 
 const Dashboard = () => {
+  const cardStyle = {
+    minHeight: '250px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  };
+
   return (
-    <div className="container-fluid d-flex flex-column  " style={{ backgroundColor: '#f0f4f8' }}>
+    <div className="container-fluid d-flex flex-column" style={{ backgroundColor: '#f0f4f8' }}>
       <div className="flex-grow-1 p-4">
         <div className="text-center mb-4">
           <h1 style={{ color: '#2A4058', fontWeight: 'bold', fontSize: '2.5rem' }}>
@@ -15,125 +26,26 @@ const Dashboard = () => {
         </div>
 
         <div className="row justify-content-center">
-          <div className="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div
-              className="card"
-              style={{
-                borderRadius: '20px',
-                backgroundColor: '#FFB7B2',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-              }}
-            >
-              <div className="card-body text-center">
-                <i className="fas fa-ticket-alt fa-3x" style={{ color: '#fff' }} />
-                <h5 className="card-title mt-2" style={{ color: '#fff', fontSize: '1.5em' }}>
-                  Create Lottery
-                </h5>
-                <p className="card-text" style={{ color: '#fff' }}>
-                  Easily create new lotteries with different timings.
-                </p>
-                <Link to="/lottery-markets" className="btn btn-light" style={{ borderRadius: '50px' }}>
-                  Go to Create
-                </Link>
+          {DashCard.map((card, index) => (
+            <div className="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex" key={index}>
+              <div className="card w-100" style={card.cardstyle}>
+                <div className="card-body text-center d-flex flex-column align-items-center justify-content-center">
+                  <i className={`${card.icon} fa-3x`} style={{ color: '#fff' }} aria-label={card.name} />
+                  <h5 className="card-title mt-2" style={{ color: '#fff', fontSize: '1.5em' }}>
+                    {card.name}
+                  </h5>
+                  <p className="card-text" style={{ color: '#fff' }}>
+                    {card.description}
+                  </p>
+                </div>
+                <div className="text-center mb-3">
+                  <Link to={card.buttonLink} className="btn btn-light" style={{ borderRadius: '50px' }}>
+                    {card.buttonName}
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div
-              className="card"
-              style={{
-                borderRadius: '20px',
-                backgroundColor: '#FF677D',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-              }}
-            >
-              <div className="card-body text-center">
-                <i className="fas fa-history fa-3x" style={{ color: '#fff' }} />
-                <h5 className="card-title mt-2" style={{ color: '#fff', fontSize: '1.5em' }}>
-                  Purchased History
-                </h5>
-                <p className="card-text" style={{ color: '#fff' }}>
-                  View the purchase history of all users.
-                </p>
-                <Link to="/purchase-history" className="btn btn-light" style={{ borderRadius: '50px' }}>
-                  View History
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div
-              className="card"
-              style={{
-                borderRadius: '20px',
-                backgroundColor: '#FF9AA2',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-              }}
-            >
-              <div className="card-body text-center">
-                <i className="fas fa-search fa-3x" style={{ color: '#fff' }} />
-                <h5 className="card-title mt-2" style={{ color: '#fff', fontSize: '1.5em' }}>
-                  Search Lottery
-                </h5>
-                <p className="card-text" style={{ color: '#fff' }}>
-                  Search for created lotteries quickly.
-                </p>
-                <Link to="/search-lottery" className="btn btn-light" style={{ borderRadius: '50px' }}>
-                  Search
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div
-              className="card"
-              style={{
-                borderRadius: '20px',
-                backgroundColor: '#D4A5A5',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-              }}
-            >
-              <div className="card-body text-center">
-                <i className="fas fa-trophy fa-3x" style={{ color: '#fff' }} />
-                <h5 className="card-title mt-2" style={{ color: '#fff', fontSize: '1.5em' }}>
-                  View Results
-                </h5>
-                <p className="card-text" style={{ color: '#fff' }}>
-                  Check results for today and the past 3 months.
-                </p>
-                <Link to="/results" className="btn btn-light" style={{ borderRadius: '50px' }}>
-                  View Results
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div
-              className="card"
-              style={{
-                borderRadius: '20px',
-                backgroundColor: '#B9FBC0',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-              }}
-            >
-              <div className="card-body text-center">
-                <i className="fas fa-money-bill-wave fa-3x" style={{ color: '#fff' }} />
-                <h5 className="card-title mt-2" style={{ color: '#fff', fontSize: '1.5em' }}>
-                  Authorize Win
-                </h5>
-                <p className="card-text" style={{ color: '#fff' }}>
-                  Authorize winning options for lotteries.
-                </p>
-                <Link to="/win" className="btn btn-light" style={{ borderRadius: '50px' }}>
-                  Authorize
-                </Link>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
 
         <div className="text-center mt-5">
