@@ -17,6 +17,7 @@ class UrlConstant {
   getSelectSem = `${this.url_dev}/generate-tickets`;
   SingleDeleteCard = `${this.url_dev}/delete-particularLottery`;
   SingleEditCard = `${this.url_dev}/edit-particularLottery`;
+  generateNumber= `${this.url_dev}/generate-ticket`
 }
 
 const urls = new UrlConstant();

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import './CreateMarket.css'; // Import custom styles
-import { generateLotteryNumber } from "../../Utils/apiService";
 
 const CreateMarket = () => {
   const [groupFrom, setGroupFrom] = useState('');
@@ -48,55 +47,55 @@ const CreateMarket = () => {
     }
   };
 
-   // Function to handle form submission
-
-   const handleSubmit = async () => {
+  // Function to handle form submission
+  const handleSubmit = async () => {
     // Prepare the data to send
     const requestBody = {
-      group: {
-        min: parseInt(groupFrom), // Convert string to integer
-        max: parseInt(groupTo) // Convert string to integer
-      },
-      series: {
-        start: seriesFrom,
-        end: seriesTo
-      },
-      number: {
-        min: parseInt(numberFrom), // Convert string to integer
-        max: parseInt(numberTo) // Convert string to integer
-      }
+      groupRange: `${groupFrom}-${groupTo}`,
+      seriesRange: `${seriesFrom}-${seriesTo}`,
+      numberRange: `${numberFrom}-${numberTo}`
     };
-  
-    console.log("Request Body:", requestBody); // Log the request body
-  
+
     try {
-      const response = await generateLotteryNumber(requestBody); // Call your API function
-      console.log('Success:', response);
+      const response = await fetch('YOUR_API_ENDPOINT_HERE', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Success:', data);
       // Handle success (e.g., show a success message or redirect)
-  
+
     } catch (error) {
       console.error('Error:', error);
       // Handle error (e.g., show an error message)
     }
   };
 
-    // Group Grid (38 to 99)
-    const renderGroupGrid = (type) => {
-      const groups = Array.from({ length: 62 }, (_, i) => (i + 38).toString()); // Generate groups from 38 to 99
-      return (
-        <div className="calendar-grid group-grid">
-          {groups.map((group) => (
-            <button
-              key={group}
-              className="calendar-cell"
-              onClick={() => handleGroupSelect(group, type)}
-            >
-              {group}
-            </button>
-          ))}
-        </div>
-      );
-    };
+  // Group Grid (38 to 99)
+  const renderGroupGrid = (type) => {
+    const groups = Array.from({ length: 62 }, (_, i) => (i + 38).toString()); // Generate groups from 38 to 99
+    return (
+      <div className="calendar-grid group-grid">
+        {groups.map((group) => (
+          <button
+            key={group}
+            className="calendar-cell"
+            onClick={() => handleGroupSelect(group, type)}
+          >
+            {group}
+          </button>
+        ))}
+      </div>
+    );
+  };
 
   // Series Grid (A to L, excluding I and F)
   const renderSeriesGrid = (type) => {
@@ -212,7 +211,7 @@ const CreateMarket = () => {
                   )}
                 </div>
               </div>
-              {/* <small className="text-muted mb-4">Group range from 38 to 99</small> */}
+              <small className="text-muted mb-4">Group range from 38 to 99</small>
             </div>
 
             {/* Series From and To */}
@@ -250,7 +249,7 @@ const CreateMarket = () => {
                   )}
                 </div>
               </div>
-              {/* <small className="text-muted mb-4">Series range from A to L (excluding I & F)</small> */}
+              <small className="text-muted mb-4">Series range from A to L (excluding I and F)</small>
             </div>
 
             {/* Number From and To */}
@@ -267,7 +266,7 @@ const CreateMarket = () => {
                   />
                   {isNumberFromPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderNumberGrid('from', 0, 99999, true)} {/* Display range 0 to 99999 with formatting */}
+                      {renderNumberGrid('from')}
                     </div>
                   )}
                 </div>
@@ -283,47 +282,20 @@ const CreateMarket = () => {
                   />
                   {isNumberToPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderNumberGrid('to', 0, 99999, true)} {/* Display range 0 to 99999 with formatting */}
+                      {renderNumberGrid('to')}
                     </div>
                   )}
                 </div>
               </div>
-              {/* <small className="text-muted mb-4">Number range from 00000 to 99999</small> */}
+              <small className="text-muted mb-4">Number range from 0 to 99999</small>
             </div>
 
-            {/* Submit Button */}
-            <button
-              type="button"
-              className="btn btn-primary btn-block mt-4"
-              style={{ backgroundColor: "#4682B4", border: "none" }}
-              onClick={handleSubmit}
-            >
+            {/* Create Market Button */}
+            <button className="btn btn-primary" onClick={handleSubmit}>
               Create Market
             </button>
-            
           </div>
-
-
-
-
-         
         </div>
-      </div>
-        {/* Footer with Marquee */}
-        <div
-        style={{
-          backgroundColor: "#4682B4",
-          padding: "10px",
-          color: "#ffffff",
-        }}
-      >
-        <marquee
-          behavior="scroll"
-          direction="left"
-          style={{ fontSize: "1.2rem", whiteSpace: "nowrap" }}
-        >
-          🎉 Exciting updates are on the way! Stay connected for the latest news on our lottery market! 🎉
-        </marquee>
       </div>
     </div>
   );
