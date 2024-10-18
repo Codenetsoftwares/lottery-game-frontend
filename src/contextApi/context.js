@@ -1,7 +1,7 @@
-import { createContext, useContext, useReducer, useEffect, useState } from "react";
-import { reducer } from "./reducer";
-import { getAdminInitialState } from "../Utils/getInitialState";
-import strings from "../Utils/constant/stringConstant";
+import { createContext, useContext, useReducer, useEffect, useState } from 'react';
+import { reducer } from './reducer';
+import { getAdminInitialState } from '../Utils/getInitialState';
+import strings from '../Utils/constant/stringConstant';
 
 const AppContext = createContext();
 
@@ -33,11 +33,7 @@ const AppProvider = ({ children }) => {
     return <div>Loading...</div>; // Show a loading state until the state is ready
   }
 
-  return (
-    <AppContext.Provider value={{ store, dispatch }}>
-      {children}
-    </AppContext.Provider>
-  );
+  return <AppContext.Provider value={{ store, dispatch }}>{children}</AppContext.Provider>;
 };
 
 const useAppContext = () => {

@@ -1,15 +1,12 @@
 <SingleCard
   style={{
-    position: "relative",
-    width: "100%",
+    position: 'relative',
+    width: '100%',
   }}
 >
   <div className="card-header-pill text-bold d-flex  align-items-center justify-content-between">
     {/* Left side: Search Input */}
-    <div
-      className="flex-fill d-flex align-items-center"
-      style={{ flexBasis: "33%" }}
-    >
+    <div className="flex-fill d-flex align-items-center" style={{ flexBasis: '33%' }}>
       <input
         type="text"
         placeholder="Search Lottery Tickets by SEM"
@@ -23,41 +20,38 @@
           await fetchLotteryTickets(1); // Fetch tickets with search
         }}
         style={{
-          padding: "5px",
-          borderRadius: "5px",
-          border: "3px solid #ccc",
-          marginRight: "15px",
-          width: "100%", // Adjust width if needed
+          padding: '5px',
+          borderRadius: '5px',
+          border: '3px solid #ccc',
+          marginRight: '15px',
+          width: '100%', // Adjust width if needed
         }}
       />
     </div>
     {/* Generate Ticket Number */}
-    <div
-      className="flex-fill d-flex align-items-center justify-content-center"
-      style={{ flexBasis: "33%" }}
-    >
+    <div className="flex-fill d-flex align-items-center justify-content-center" style={{ flexBasis: '33%' }}>
       <div>
         <span
           style={{
-            color: "#4682B4",
-            fontWeight: "bold",
+            color: '#4682B4',
+            fontWeight: 'bold',
           }}
         >
           Generate Ticket Number To Create Lottery Ticket By SEM
         </span>
-        <div style={{ display: "inline-block", marginLeft: "10px" }}>
+        <div style={{ display: 'inline-block', marginLeft: '10px' }}>
           <select
-            value={state.inputs.sem || ""}
+            value={state.inputs.sem || ''}
             style={{
-              padding: "5px",
-              borderRadius: "5px",
-              border: "1px solid #ccc",
-              backgroundColor: "#f1f1f1",
-              cursor: "pointer",
+              padding: '5px',
+              borderRadius: '5px',
+              border: '1px solid #ccc',
+              backgroundColor: '#f1f1f1',
+              cursor: 'pointer',
             }}
             onChange={async (e) => {
               const selectedValue = e.target.value;
-              console.log("Selected Value:", selectedValue);
+              console.log('Selected Value:', selectedValue);
               await handleGenerateTicketNumber(selectedValue);
               setState((prevState) => ({
                 ...prevState,
@@ -83,19 +77,16 @@
     </div>
   </div>
   {/* Delete icon */}
-  <div
-    className="flex-fill d-flex align-items-center justify-content-end"
-    style={{ flexBasis: "33%" }}
-  >
+  <div className="flex-fill d-flex align-items-center justify-content-end" style={{ flexBasis: '33%' }}>
     <i
       className="fas fa-trash-alt"
       style={{
-        cursor: "pointer",
-        fontSize: "2rem",
-        color: "#4682B4",
-        position: "absolute",
-        right: "20px", // Adjusted positioning
-        top: "10px", // Adjusted positioning for better visibility
+        cursor: 'pointer',
+        fontSize: '2rem',
+        color: '#4682B4',
+        position: 'absolute',
+        right: '20px', // Adjusted positioning
+        top: '10px', // Adjusted positioning for better visibility
       }}
       title="Delete all unpurchased lottery tickets"
       onClick={() => setState((prev) => ({ ...prev, showDeleteModal: true }))}

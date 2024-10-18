@@ -1,6 +1,6 @@
-(function($) {
-"use strict";
+(function ($) {
+  'use strict';
 
-// wow js
-new WOW().init();
+  // wow js
+  new WOW().init();
 })(jQuery);
