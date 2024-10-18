@@ -59,7 +59,7 @@ const Login = () => {
       });
 
       // Navigate to the desired route after successful login
-      navigate('/lottery-markets');
+      navigate('/dashboard');
     } else {
       // Handle login failure
       setError(response?.errMessage || 'Login failed');
