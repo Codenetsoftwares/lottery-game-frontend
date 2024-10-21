@@ -123,3 +123,16 @@ export async function singleLotteryEdit(body, isToast = true) {
     throw error;
   }
 }
+
+
+export async function generateLotteryNumber(body, isToast = true) {
+  try {
+    const callParams = await getAuthCallParams(strings.POST, body, isToast);
+    const response = await makeCall(urls.generateNumber, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+

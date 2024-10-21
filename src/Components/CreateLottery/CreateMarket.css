@@ -1,0 +1,39 @@
+.picker-dropdown {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    z-index: 100;
+    width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Updated Calendar Grid */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr); /* 10 equal columns */
+    gap: 10px;
+  }
+  
+  .calendar-cell {
+    padding: 10px;
+    text-align: center;
+    background-color: #e6f7ff;
+    border: 1px solid #4682B4;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .calendar-cell:hover {
+    background-color: #4682B4;
+    color: #fff;
+  }
+  
+  .series-grid {
+    grid-template-columns: repeat(5, 1fr); /* 5 equal columns for series grid */
+  }
+  
