@@ -7,7 +7,8 @@
   font-weight: 400;
 }
 
-[class^="material-icons"], [class*=" material-icons"] {
+[class^='material-icons'],
+[class*=' material-icons'] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'Material Icons' !important;
   speak: none;
@@ -17,14 +18,14 @@
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  
+
   /* Enable Ligatures ================ */
   letter-spacing: 0;
-  -webkit-font-feature-settings: "liga";
-  -moz-font-feature-settings: "liga=1";
-  -moz-font-feature-settings: "liga";
-  -ms-font-feature-settings: "liga" 1;
-  font-feature-settings: "liga";
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga=1';
+  -moz-font-feature-settings: 'liga';
+  -ms-font-feature-settings: 'liga' 1;
+  font-feature-settings: 'liga';
   -webkit-font-variant-ligatures: discretionary-ligatures;
   font-variant-ligatures: discretionary-ligatures;
 
@@ -34,3351 +35,3351 @@
 }
 
 .material-iconsd_rotation:before {
-  content: "\e9fd";
+  content: '\e9fd';
 }
 .material-icons4k:before {
-  content: "\e9fe";
+  content: '\e9fe';
 }
 .material-icons360:before {
-  content: "\e9ff";
+  content: '\e9ff';
 }
 .material-iconszoom_in:before {
-  content: "\ea53";
+  content: '\ea53';
 }
 .material-iconszoom_out:before {
-  content: "\ea54";
+  content: '\ea54';
 }
 .material-iconszoom_out_map:before {
-  content: "\ea55";
+  content: '\ea55';
 }
 .material-iconsyoutube_searched_for:before {
-  content: "\ea56";
+  content: '\ea56';
 }
 .material-iconswallpaper:before {
-  content: "\ea57";
+  content: '\ea57';
 }
 .material-iconswarning:before {
-  content: "\ea58";
+  content: '\ea58';
 }
 .material-iconswatch:before {
-  content: "\ea59";
+  content: '\ea59';
 }
 .material-iconswatch_later:before {
-  content: "\ea5a";
+  content: '\ea5a';
 }
 .material-iconswaves:before {
-  content: "\ea5b";
+  content: '\ea5b';
 }
 .material-iconswb_auto:before {
-  content: "\ea5c";
+  content: '\ea5c';
 }
 .material-iconswb_cloudy:before {
-  content: "\ea5d";
+  content: '\ea5d';
 }
 .material-iconswb_incandescent:before {
-  content: "\ea5e";
+  content: '\ea5e';
 }
 .material-iconswb_iridescent:before {
-  content: "\ea5f";
+  content: '\ea5f';
 }
 .material-iconswb_sunny:before {
-  content: "\ea60";
+  content: '\ea60';
 }
 .material-iconswc:before {
-  content: "\ea61";
+  content: '\ea61';
 }
 .material-iconsweb:before {
-  content: "\ea62";
+  content: '\ea62';
 }
 .material-iconsweb_asset:before {
-  content: "\ea63";
+  content: '\ea63';
 }
 .material-iconsweekend:before {
-  content: "\ea64";
+  content: '\ea64';
 }
 .material-iconswhatshot:before {
-  content: "\ea65";
+  content: '\ea65';
 }
 .material-iconswhere_to_vote:before {
-  content: "\ea66";
+  content: '\ea66';
 }
 .material-iconswidgets:before {
-  content: "\ea67";
+  content: '\ea67';
 }
 .material-iconswifi:before {
-  content: "\ea68";
+  content: '\ea68';
 }
 .material-iconswifi_lock:before {
-  content: "\ea69";
+  content: '\ea69';
 }
 .material-iconswifi_off:before {
-  content: "\ea6a";
+  content: '\ea6a';
 }
 .material-iconswifi_tethering:before {
-  content: "\ea6b";
+  content: '\ea6b';
 }
 .material-iconswork:before {
-  content: "\ea6c";
+  content: '\ea6c';
 }
 .material-iconswork_off:before {
-  content: "\ea6d";
+  content: '\ea6d';
 }
 .material-iconswork_outline:before {
-  content: "\ea6e";
+  content: '\ea6e';
 }
 .material-iconswrap_text:before {
-  content: "\ea6f";
+  content: '\ea6f';
 }
 .material-iconsverified_user:before {
-  content: "\ea70";
+  content: '\ea70';
 }
 .material-iconsvertical_align_bottom:before {
-  content: "\ea71";
+  content: '\ea71';
 }
 .material-iconsvertical_align_center:before {
-  content: "\ea72";
+  content: '\ea72';
 }
 .material-iconsvertical_align_top:before {
-  content: "\ea73";
+  content: '\ea73';
 }
 .material-iconsvertical_split:before {
-  content: "\ea74";
+  content: '\ea74';
 }
 .material-iconsvibration:before {
-  content: "\ea75";
+  content: '\ea75';
 }
 .material-iconsvideo_call:before {
-  content: "\ea76";
+  content: '\ea76';
 }
 .material-iconsvideocam:before {
-  content: "\ea77";
+  content: '\ea77';
 }
 .material-iconsvideocam_off:before {
-  content: "\ea78";
+  content: '\ea78';
 }
 .material-iconsvideogame_asset:before {
-  content: "\ea79";
+  content: '\ea79';
 }
 .material-iconsvideo_label:before {
-  content: "\ea7a";
+  content: '\ea7a';
 }
 .material-iconsvideo_library:before {
-  content: "\ea7b";
+  content: '\ea7b';
 }
 .material-iconsview_agenda:before {
-  content: "\ea7c";
+  content: '\ea7c';
 }
 .material-iconsview_array:before {
-  content: "\ea7d";
+  content: '\ea7d';
 }
 .material-iconsview_carousel:before {
-  content: "\ea7e";
+  content: '\ea7e';
 }
 .material-iconsview_column:before {
-  content: "\ea7f";
+  content: '\ea7f';
 }
 .material-iconsview_comfy:before {
-  content: "\ea80";
+  content: '\ea80';
 }
 .material-iconsview_compact:before {
-  content: "\ea81";
+  content: '\ea81';
 }
 .material-iconsview_day:before {
-  content: "\ea82";
+  content: '\ea82';
 }
 .material-iconsview_headline:before {
-  content: "\ea83";
+  content: '\ea83';
 }
 .material-iconsview_list:before {
-  content: "\ea84";
+  content: '\ea84';
 }
 .material-iconsview_module:before {
-  content: "\ea85";
+  content: '\ea85';
 }
 .material-iconsview_quilt:before {
-  content: "\ea86";
+  content: '\ea86';
 }
 .material-iconsview_stream:before {
-  content: "\ea87";
+  content: '\ea87';
 }
 .material-iconsview_week:before {
-  content: "\ea88";
+  content: '\ea88';
 }
 .material-iconsvignette:before {
-  content: "\ea89";
+  content: '\ea89';
 }
 .material-iconsvisibility:before {
-  content: "\ea8a";
+  content: '\ea8a';
 }
 .material-iconsvisibility_off:before {
-  content: "\ea8b";
+  content: '\ea8b';
 }
 .material-iconsvoice_chat:before {
-  content: "\ea8c";
+  content: '\ea8c';
 }
 .material-iconsvoicemail:before {
-  content: "\ea8d";
+  content: '\ea8d';
 }
 .material-iconsvoice_over_off:before {
-  content: "\ea8e";
+  content: '\ea8e';
 }
 .material-iconsvolume_down:before {
-  content: "\ea8f";
+  content: '\ea8f';
 }
 .material-iconsvolume_mute:before {
-  content: "\ea90";
+  content: '\ea90';
 }
 .material-iconsvolume_off:before {
-  content: "\ea91";
+  content: '\ea91';
 }
 .material-iconsvolume_up:before {
-  content: "\ea92";
+  content: '\ea92';
 }
 .material-iconsvpn_key:before {
-  content: "\ea93";
+  content: '\ea93';
 }
 .material-iconsvpn_lock:before {
-  content: "\ea94";
+  content: '\ea94';
 }
 .material-iconsunarchive:before {
-  content: "\ea95";
+  content: '\ea95';
 }
 .material-iconsundo:before {
-  content: "\ea96";
+  content: '\ea96';
 }
 .material-iconsunfold_less:before {
-  content: "\ea97";
+  content: '\ea97';
 }
 .material-iconsunfold_more:before {
-  content: "\ea98";
+  content: '\ea98';
 }
 .material-iconsunsubscribe:before {
-  content: "\ea99";
+  content: '\ea99';
 }
 .material-iconsupdate:before {
-  content: "\ea9a";
+  content: '\ea9a';
 }
 .material-iconsusb:before {
-  content: "\ea9b";
+  content: '\ea9b';
 }
 .material-iconstab:before {
-  content: "\ea9c";
+  content: '\ea9c';
 }
 .material-iconstable_chart:before {
-  content: "\ea9d";
+  content: '\ea9d';
 }
 .material-iconstablet:before {
-  content: "\ea9e";
+  content: '\ea9e';
 }
 .material-iconstablet_android:before {
-  content: "\ea9f";
+  content: '\ea9f';
 }
 .material-iconstablet_mac:before {
-  content: "\eaa0";
+  content: '\eaa0';
 }
 .material-iconstab_unselected:before {
-  content: "\eaa1";
+  content: '\eaa1';
 }
 .material-iconstag_faces:before {
-  content: "\eaa2";
+  content: '\eaa2';
 }
 .material-iconstap_and_play:before {
-  content: "\eaa3";
+  content: '\eaa3';
 }
 .material-iconsterrain:before {
-  content: "\eaa4";
+  content: '\eaa4';
 }
 .material-iconstext_fields:before {
-  content: "\eaa5";
+  content: '\eaa5';
 }
 .material-iconstext_format:before {
-  content: "\eaa6";
+  content: '\eaa6';
 }
 .material-iconstext_rotate_up:before {
-  content: "\eaa7";
+  content: '\eaa7';
 }
 .material-iconstext_rotate_vertical:before {
-  content: "\eaa8";
+  content: '\eaa8';
 }
 .material-iconstext_rotation_down:before {
-  content: "\eaa9";
+  content: '\eaa9';
 }
 .material-iconstext_rotation_none:before {
-  content: "\eaaa";
+  content: '\eaaa';
 }
 .material-iconstextsms:before {
-  content: "\eaab";
+  content: '\eaab';
 }
 .material-iconstexture:before {
-  content: "\eaac";
+  content: '\eaac';
 }
 .material-iconstheaters:before {
-  content: "\eaad";
+  content: '\eaad';
 }
 .material-iconsthumb_down:before {
-  content: "\eaae";
+  content: '\eaae';
 }
 .material-iconsthumb_down_alt:before {
-  content: "\eaaf";
+  content: '\eaaf';
 }
 .material-iconsthumbs_up_down:before {
-  content: "\eab0";
+  content: '\eab0';
 }
 .material-iconsthumb_up:before {
-  content: "\eab1";
+  content: '\eab1';
 }
 .material-iconsthumb_up_alt:before {
-  content: "\eab2";
+  content: '\eab2';
 }
 .material-iconstimelapse:before {
-  content: "\eab3";
+  content: '\eab3';
 }
 .material-iconstimeline:before {
-  content: "\eab4";
+  content: '\eab4';
 }
 .material-iconstimer:before {
-  content: "\eab5";
+  content: '\eab5';
 }
 .material-iconstimer_3:before {
-  content: "\eab6";
+  content: '\eab6';
 }
 .material-iconstimer_10:before {
-  content: "\eab7";
+  content: '\eab7';
 }
 .material-iconstimer_off:before {
-  content: "\eab8";
+  content: '\eab8';
 }
 .material-iconstime_to_leave:before {
-  content: "\eab9";
+  content: '\eab9';
 }
 .material-iconstitle:before {
-  content: "\eaba";
+  content: '\eaba';
 }
 .material-iconstoc:before {
-  content: "\eabb";
+  content: '\eabb';
 }
 .material-iconstoday:before {
-  content: "\eabc";
+  content: '\eabc';
 }
 .material-iconstoggle_off:before {
-  content: "\eabd";
+  content: '\eabd';
 }
 .material-iconstoggle_on:before {
-  content: "\eabe";
+  content: '\eabe';
 }
 .material-iconstoll:before {
-  content: "\eabf";
+  content: '\eabf';
 }
 .material-iconstonality:before {
-  content: "\eac0";
+  content: '\eac0';
 }
 .material-iconstouch_app:before {
-  content: "\eac1";
+  content: '\eac1';
 }
 .material-iconstoys:before {
-  content: "\eac2";
+  content: '\eac2';
 }
 .material-iconstrack_changes:before {
-  content: "\eac3";
+  content: '\eac3';
 }
 .material-iconstraffic:before {
-  content: "\eac4";
+  content: '\eac4';
 }
 .material-iconstrain:before {
-  content: "\eac5";
+  content: '\eac5';
 }
 .material-iconstram:before {
-  content: "\eac6";
+  content: '\eac6';
 }
 .material-iconstransfer_within_a_station:before {
-  content: "\eac7";
+  content: '\eac7';
 }
 .material-iconstransform:before {
-  content: "\eac8";
+  content: '\eac8';
 }
 .material-iconstransit_enterexit:before {
-  content: "\eac9";
+  content: '\eac9';
 }
 .material-iconstranslate:before {
-  content: "\eaca";
+  content: '\eaca';
 }
 .material-iconstrending_down:before {
-  content: "\eacb";
+  content: '\eacb';
 }
 .material-iconstrending_flat:before {
-  content: "\eacc";
+  content: '\eacc';
 }
 .material-iconstrending_up:before {
-  content: "\eacd";
+  content: '\eacd';
 }
 .material-iconstrip_origin:before {
-  content: "\eace";
+  content: '\eace';
 }
 .material-iconstune:before {
-  content: "\eacf";
+  content: '\eacf';
 }
 .material-iconsturned_in:before {
-  content: "\ead0";
+  content: '\ead0';
 }
 .material-iconsturned_in_not:before {
-  content: "\ead1";
+  content: '\ead1';
 }
 .material-iconstv:before {
-  content: "\ead2";
+  content: '\ead2';
 }
 .material-iconstv_off:before {
-  content: "\ead3";
+  content: '\ead3';
 }
 .material-iconsswitch_video:before {
-  content: "\ead4";
+  content: '\ead4';
 }
 .material-iconssync:before {
-  content: "\ead5";
+  content: '\ead5';
 }
 .material-iconssync_disabled:before {
-  content: "\ead6";
+  content: '\ead6';
 }
 .material-iconssync_problem:before {
-  content: "\ead7";
+  content: '\ead7';
 }
 .material-iconssystem_update:before {
-  content: "\ead8";
+  content: '\ead8';
 }
 .material-iconsstreetview:before {
-  content: "\ead9";
+  content: '\ead9';
 }
 .material-iconsstrikethrough_s:before {
-  content: "\eada";
+  content: '\eada';
 }
 .material-iconsstyle:before {
-  content: "\eadb";
+  content: '\eadb';
 }
 .material-iconssubdirectory_arrow_left:before {
-  content: "\eadc";
+  content: '\eadc';
 }
 .material-iconssubdirectory_arrow_right:before {
-  content: "\eadd";
+  content: '\eadd';
 }
 .material-iconssubject:before {
-  content: "\eade";
+  content: '\eade';
 }
 .material-iconssubscriptions:before {
-  content: "\eadf";
+  content: '\eadf';
 }
 .material-iconssubtitles:before {
-  content: "\eae0";
+  content: '\eae0';
 }
 .material-iconssubway:before {
-  content: "\eae1";
+  content: '\eae1';
 }
 .material-iconssupervised_user_circle:before {
-  content: "\eae2";
+  content: '\eae2';
 }
 .material-iconssupervisor_account:before {
-  content: "\eae3";
+  content: '\eae3';
 }
 .material-iconssurround_sound:before {
-  content: "\eae4";
+  content: '\eae4';
 }
 .material-iconsswap_calls:before {
-  content: "\eae5";
+  content: '\eae5';
 }
 .material-iconsswap_horiz:before {
-  content: "\eae6";
+  content: '\eae6';
 }
 .material-iconsswap_horizontal_circle:before {
-  content: "\eae7";
+  content: '\eae7';
 }
 .material-iconsswap_vert:before {
-  content: "\eae8";
+  content: '\eae8';
 }
 .material-iconsswap_vertical_circle:before {
-  content: "\eae9";
+  content: '\eae9';
 }
 .material-iconsswitch_camera:before {
-  content: "\eaea";
+  content: '\eaea';
 }
 .material-iconsspeaker_notes_off:before {
-  content: "\eaeb";
+  content: '\eaeb';
 }
 .material-iconsspeaker_phone:before {
-  content: "\eaec";
+  content: '\eaec';
 }
 .material-iconsspellcheck:before {
-  content: "\eaed";
+  content: '\eaed';
 }
 .material-iconsstar:before {
-  content: "\eaee";
+  content: '\eaee';
 }
 .material-iconsstar_border:before {
-  content: "\eaef";
+  content: '\eaef';
 }
 .material-iconsstar_half:before {
-  content: "\eaf0";
+  content: '\eaf0';
 }
 .material-iconsstar_rate:before {
-  content: "\eaf1";
+  content: '\eaf1';
 }
 .material-iconsstars:before {
-  content: "\eaf2";
+  content: '\eaf2';
 }
 .material-iconsstay_current_landscape:before {
-  content: "\eaf3";
+  content: '\eaf3';
 }
 .material-iconsstay_current_portrait:before {
-  content: "\eaf4";
+  content: '\eaf4';
 }
 .material-iconsstay_primary_landscape:before {
-  content: "\eaf5";
+  content: '\eaf5';
 }
 .material-iconsstay_primary_portrait:before {
-  content: "\eaf6";
+  content: '\eaf6';
 }
 .material-iconsstop:before {
-  content: "\eaf7";
+  content: '\eaf7';
 }
 .material-iconsstop_screen_share:before {
-  content: "\eaf8";
+  content: '\eaf8';
 }
 .material-iconsstorage:before {
-  content: "\eaf9";
+  content: '\eaf9';
 }
 .material-iconsstore:before {
-  content: "\eafa";
+  content: '\eafa';
 }
 .material-iconsstore_mall_directory:before {
-  content: "\eafb";
+  content: '\eafb';
 }
 .material-iconsstraighten:before {
-  content: "\eafc";
+  content: '\eafc';
 }
 .material-iconsspeaker:before {
-  content: "\eafd";
+  content: '\eafd';
 }
 .material-iconsspeaker_group:before {
-  content: "\eafe";
+  content: '\eafe';
 }
 .material-iconsspeaker_notes:before {
-  content: "\eaff";
+  content: '\eaff';
 }
 .material-iconssim_card:before {
-  content: "\eb00";
+  content: '\eb00';
 }
 .material-iconsskip_next:before {
-  content: "\eb01";
+  content: '\eb01';
 }
 .material-iconsskip_previous:before {
-  content: "\eb02";
+  content: '\eb02';
 }
 .material-iconsslideshow:before {
-  content: "\eb03";
+  content: '\eb03';
 }
 .material-iconsslow_motion_video:before {
-  content: "\eb04";
+  content: '\eb04';
 }
 .material-iconssmartphone:before {
-  content: "\eb05";
+  content: '\eb05';
 }
 .material-iconssmoke_free:before {
-  content: "\eb06";
+  content: '\eb06';
 }
 .material-iconssmoking_rooms:before {
-  content: "\eb07";
+  content: '\eb07';
 }
 .material-iconssms:before {
-  content: "\eb08";
+  content: '\eb08';
 }
 .material-iconssms_failed:before {
-  content: "\eb09";
+  content: '\eb09';
 }
 .material-iconssnooze:before {
-  content: "\eb0a";
+  content: '\eb0a';
 }
 .material-iconssort:before {
-  content: "\eb0b";
+  content: '\eb0b';
 }
 .material-iconssort_by_alpha:before {
-  content: "\eb0c";
+  content: '\eb0c';
 }
 .material-iconsspa:before {
-  content: "\eb0d";
+  content: '\eb0d';
 }
 .material-iconsspace_bar:before {
-  content: "\eb0e";
+  content: '\eb0e';
 }
 .material-iconssignal_cellular_connected_no_internet_3_bar .path1:before {
-  content: "\eb0f";
+  content: '\eb0f';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_cellular_connected_no_internet_3_bar .path2:before {
-  content: "\eb10";
+  content: '\eb10';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssignal_cellular_connected_no_internet_4_bar:before {
-  content: "\eb11";
+  content: '\eb11';
 }
 .material-iconssignal_cellular_no_sim:before {
-  content: "\eb12";
+  content: '\eb12';
 }
 .material-iconssignal_cellular_null:before {
-  content: "\eb13";
+  content: '\eb13';
 }
 .material-iconssignal_cellular_off:before {
-  content: "\eb14";
+  content: '\eb14';
 }
 .material-iconssignal_wifi_0_bar:before {
-  content: "\eb15";
+  content: '\eb15';
 }
 .material-iconssignal_wifi_1_bar .path1:before {
-  content: "\eb16";
+  content: '\eb16';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_wifi_1_bar .path2:before {
-  content: "\eb17";
+  content: '\eb17';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssignal_wifi_1_bar_lock .path1:before {
-  content: "\eb18";
+  content: '\eb18';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_wifi_1_bar_lock .path2:before {
-  content: "\eb19";
+  content: '\eb19';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssignal_wifi_2_bar .path1:before {
-  content: "\eb1a";
+  content: '\eb1a';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_wifi_2_bar .path2:before {
-  content: "\eb1b";
+  content: '\eb1b';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssignal_wifi_2_bar_lock .path1:before {
-  content: "\eb1c";
+  content: '\eb1c';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_wifi_2_bar_lock .path2:before {
-  content: "\eb1d";
+  content: '\eb1d';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssignal_wifi_3_bar .path1:before {
-  content: "\eb1e";
+  content: '\eb1e';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_wifi_3_bar .path2:before {
-  content: "\eb1f";
+  content: '\eb1f';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssignal_wifi_3_bar_lock .path1:before {
-  content: "\eb20";
+  content: '\eb20';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_wifi_3_bar_lock .path2:before {
-  content: "\eb21";
+  content: '\eb21';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssignal_wifi_4_bar:before {
-  content: "\eb22";
+  content: '\eb22';
 }
 .material-iconssignal_wifi_4_bar_lock:before {
-  content: "\eb23";
+  content: '\eb23';
 }
 .material-iconssignal_wifi_off:before {
-  content: "\eb24";
+  content: '\eb24';
 }
 .material-iconsshopping_cart:before {
-  content: "\eb25";
+  content: '\eb25';
 }
 .material-iconsshop_two:before {
-  content: "\eb26";
+  content: '\eb26';
 }
 .material-iconsshort_text:before {
-  content: "\eb27";
+  content: '\eb27';
 }
 .material-iconsshow_chart:before {
-  content: "\eb28";
+  content: '\eb28';
 }
 .material-iconsshuffle:before {
-  content: "\eb29";
+  content: '\eb29';
 }
 .material-iconsshutter_speed:before {
-  content: "\eb2a";
+  content: '\eb2a';
 }
 .material-iconssignal_cellular_0_bar:before {
-  content: "\eb2b";
+  content: '\eb2b';
 }
 .material-iconssignal_cellular_1_bar .path1:before {
-  content: "\eb2c";
+  content: '\eb2c';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_cellular_1_bar .path2:before {
-  content: "\eb2d";
+  content: '\eb2d';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssignal_cellular_2_bar .path1:before {
-  content: "\eb2e";
+  content: '\eb2e';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_cellular_2_bar .path2:before {
-  content: "\eb2f";
+  content: '\eb2f';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssignal_cellular_3_bar .path1:before {
-  content: "\eb30";
+  content: '\eb30';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_cellular_3_bar .path2:before {
-  content: "\eb31";
+  content: '\eb31';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssignal_cellular_4_bar:before {
-  content: "\eb32";
+  content: '\eb32';
 }
 .material-iconssignal_cellular_alt:before {
-  content: "\eb33";
+  content: '\eb33';
 }
 .material-iconssignal_cellular_connected_no_internet_0_bar .path1:before {
-  content: "\eb34";
+  content: '\eb34';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_cellular_connected_no_internet_0_bar .path2:before {
-  content: "\eb35";
+  content: '\eb35';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssignal_cellular_connected_no_internet_1_bar .path1:before {
-  content: "\eb36";
+  content: '\eb36';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_cellular_connected_no_internet_1_bar .path2:before {
-  content: "\eb37";
+  content: '\eb37';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssignal_cellular_connected_no_internet_2_bar .path1:before {
-  content: "\eb38";
+  content: '\eb38';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconssignal_cellular_connected_no_internet_2_bar .path2:before {
-  content: "\eb39";
+  content: '\eb39';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconssettings_ethernet:before {
-  content: "\eb3a";
+  content: '\eb3a';
 }
 .material-iconssettings_input_antenna:before {
-  content: "\eb3b";
+  content: '\eb3b';
 }
 .material-iconssettings_input_component:before {
-  content: "\eb3c";
+  content: '\eb3c';
 }
 .material-iconssettings_input_composite:before {
-  content: "\eb3d";
+  content: '\eb3d';
 }
 .material-iconssettings_input_hdmi:before {
-  content: "\eb3e";
+  content: '\eb3e';
 }
 .material-iconssettings_input_svideo:before {
-  content: "\eb3f";
+  content: '\eb3f';
 }
 .material-iconssettings_overscan:before {
-  content: "\eb40";
+  content: '\eb40';
 }
 .material-iconssettings_phone:before {
-  content: "\eb41";
+  content: '\eb41';
 }
 .material-iconssettings_power:before {
-  content: "\eb42";
+  content: '\eb42';
 }
 .material-iconssettings_remote:before {
-  content: "\eb43";
+  content: '\eb43';
 }
 .material-iconssettings_system_daydream:before {
-  content: "\eb44";
+  content: '\eb44';
 }
 .material-iconssettings_voice:before {
-  content: "\eb45";
+  content: '\eb45';
 }
 .material-iconsshare:before {
-  content: "\eb46";
+  content: '\eb46';
 }
 .material-iconsshop:before {
-  content: "\eb47";
+  content: '\eb47';
 }
 .material-iconsshopping_basket:before {
-  content: "\eb48";
+  content: '\eb48';
 }
 .material-iconssearch:before {
-  content: "\eb49";
+  content: '\eb49';
 }
 .material-iconssecurity:before {
-  content: "\eb4a";
+  content: '\eb4a';
 }
 .material-iconsselect_all:before {
-  content: "\eb4b";
+  content: '\eb4b';
 }
 .material-iconssend:before {
-  content: "\eb4c";
+  content: '\eb4c';
 }
 .material-iconssentiment_dissatisfied:before {
-  content: "\eb4d";
+  content: '\eb4d';
 }
 .material-iconssentiment_satisfied:before {
-  content: "\eb4e";
+  content: '\eb4e';
 }
 .material-iconssentiment_satisfied_alt:before {
-  content: "\eb4f";
+  content: '\eb4f';
 }
 .material-iconssentiment_very_dissatisfied:before {
-  content: "\eb50";
+  content: '\eb50';
 }
 .material-iconssentiment_very_satisfied:before {
-  content: "\eb51";
+  content: '\eb51';
 }
 .material-iconssettings:before {
-  content: "\eb52";
+  content: '\eb52';
 }
 .material-iconssettings_applications:before {
-  content: "\eb53";
+  content: '\eb53';
 }
 .material-iconssettings_backup_restore:before {
-  content: "\eb54";
+  content: '\eb54';
 }
 .material-iconssettings_bluetooth:before {
-  content: "\eb55";
+  content: '\eb55';
 }
 .material-iconssettings_brightness:before {
-  content: "\eb56";
+  content: '\eb56';
 }
 .material-iconssettings_cell:before {
-  content: "\eb57";
+  content: '\eb57';
 }
 .material-iconssatellite:before {
-  content: "\eb58";
+  content: '\eb58';
 }
 .material-iconssave:before {
-  content: "\eb59";
+  content: '\eb59';
 }
 .material-iconssave_alt:before {
-  content: "\eb5a";
+  content: '\eb5a';
 }
 .material-iconsscanner:before {
-  content: "\eb5b";
+  content: '\eb5b';
 }
 .material-iconsscatter_plot:before {
-  content: "\eb5c";
+  content: '\eb5c';
 }
 .material-iconsschedule:before {
-  content: "\eb5d";
+  content: '\eb5d';
 }
 .material-iconsschool:before {
-  content: "\eb5e";
+  content: '\eb5e';
 }
 .material-iconsscore:before {
-  content: "\eb5f";
+  content: '\eb5f';
 }
 .material-iconsscreen_lock_landscape:before {
-  content: "\eb60";
+  content: '\eb60';
 }
 .material-iconsscreen_lock_portrait:before {
-  content: "\eb61";
+  content: '\eb61';
 }
 .material-iconsscreen_lock_rotation:before {
-  content: "\eb62";
+  content: '\eb62';
 }
 .material-iconsscreen_rotation:before {
-  content: "\eb63";
+  content: '\eb63';
 }
 .material-iconsscreen_share:before {
-  content: "\eb64";
+  content: '\eb64';
 }
 .material-iconssd_card:before {
-  content: "\eb65";
+  content: '\eb65';
 }
 .material-iconssd_storage:before {
-  content: "\eb66";
+  content: '\eb66';
 }
 .material-iconsradio:before {
-  content: "\eb67";
+  content: '\eb67';
 }
 .material-iconsradio_button_checked:before {
-  content: "\eb68";
+  content: '\eb68';
 }
 .material-iconsradio_button_unchecked:before {
-  content: "\eb69";
+  content: '\eb69';
 }
 .material-iconsrate_review:before {
-  content: "\eb6a";
+  content: '\eb6a';
 }
 .material-iconsreceipt:before {
-  content: "\eb6b";
+  content: '\eb6b';
 }
 .material-iconsrecent_actors:before {
-  content: "\eb6c";
+  content: '\eb6c';
 }
 .material-iconsrecord_voice_over:before {
-  content: "\eb6d";
+  content: '\eb6d';
 }
 .material-iconsredeem:before {
-  content: "\eb6e";
+  content: '\eb6e';
 }
 .material-iconsredo:before {
-  content: "\eb6f";
+  content: '\eb6f';
 }
 .material-iconsrefresh:before {
-  content: "\eb70";
+  content: '\eb70';
 }
 .material-iconsremove:before {
-  content: "\eb71";
+  content: '\eb71';
 }
 .material-iconsremove_circle:before {
-  content: "\eb72";
+  content: '\eb72';
 }
 .material-iconsremove_circle_outline:before {
-  content: "\eb73";
+  content: '\eb73';
 }
 .material-iconsremove_from_queue:before {
-  content: "\eb74";
+  content: '\eb74';
 }
 .material-iconsremove_red_eye:before {
-  content: "\eb75";
+  content: '\eb75';
 }
 .material-iconsremove_shopping_cart:before {
-  content: "\eb76";
+  content: '\eb76';
 }
 .material-iconsreorder:before {
-  content: "\eb77";
+  content: '\eb77';
 }
 .material-iconsrepeat:before {
-  content: "\eb78";
+  content: '\eb78';
 }
 .material-iconsrepeat_one:before {
-  content: "\eb79";
+  content: '\eb79';
 }
 .material-iconsreplay:before {
-  content: "\eb7a";
+  content: '\eb7a';
 }
 .material-iconsreplay_5:before {
-  content: "\eb7b";
+  content: '\eb7b';
 }
 .material-iconsreplay_10:before {
-  content: "\eb7c";
+  content: '\eb7c';
 }
 .material-iconsreplay_30:before {
-  content: "\eb7d";
+  content: '\eb7d';
 }
 .material-iconsreply:before {
-  content: "\eb7e";
+  content: '\eb7e';
 }
 .material-iconsreply_all:before {
-  content: "\eb7f";
+  content: '\eb7f';
 }
 .material-iconsreport:before {
-  content: "\eb80";
+  content: '\eb80';
 }
 .material-iconsreport_off:before {
-  content: "\eb81";
+  content: '\eb81';
 }
 .material-iconsreport_problem:before {
-  content: "\eb82";
+  content: '\eb82';
 }
 .material-iconsrestaurant:before {
-  content: "\eb83";
+  content: '\eb83';
 }
 .material-iconsrestaurant_menu:before {
-  content: "\eb84";
+  content: '\eb84';
 }
 .material-iconsrestore:before {
-  content: "\eb85";
+  content: '\eb85';
 }
 .material-iconsrestore_from_trash:before {
-  content: "\eb86";
+  content: '\eb86';
 }
 .material-iconsrestore_page:before {
-  content: "\eb87";
+  content: '\eb87';
 }
 .material-iconsring_volume:before {
-  content: "\eb88";
+  content: '\eb88';
 }
 .material-iconsroom:before {
-  content: "\eb89";
+  content: '\eb89';
 }
 .material-iconsroom_service:before {
-  content: "\eb8a";
+  content: '\eb8a';
 }
 .material-iconsrotate_90_degrees_ccw:before {
-  content: "\eb8b";
+  content: '\eb8b';
 }
 .material-iconsrotate_left:before {
-  content: "\eb8c";
+  content: '\eb8c';
 }
 .material-iconsrotate_right:before {
-  content: "\eb8d";
+  content: '\eb8d';
 }
 .material-iconsrounded_corner:before {
-  content: "\eb8e";
+  content: '\eb8e';
 }
 .material-iconsrouter:before {
-  content: "\eb8f";
+  content: '\eb8f';
 }
 .material-iconsrowing:before {
-  content: "\eb90";
+  content: '\eb90';
 }
 .material-iconsrss_feed:before {
-  content: "\eb91";
+  content: '\eb91';
 }
 .material-iconsrv_hookup:before {
-  content: "\eb92";
+  content: '\eb92';
 }
 .material-iconsquery_builder:before {
-  content: "\eb93";
+  content: '\eb93';
 }
 .material-iconsquestion_answer:before {
-  content: "\eb94";
+  content: '\eb94';
 }
 .material-iconsqueue:before {
-  content: "\eb95";
+  content: '\eb95';
 }
 .material-iconsqueue_music:before {
-  content: "\eb96";
+  content: '\eb96';
 }
 .material-iconsqueue_play_next:before {
-  content: "\eb97";
+  content: '\eb97';
 }
 .material-iconspages:before {
-  content: "\eb98";
+  content: '\eb98';
 }
 .material-iconspageview:before {
-  content: "\eb99";
+  content: '\eb99';
 }
 .material-iconspalette:before {
-  content: "\eb9a";
+  content: '\eb9a';
 }
 .material-iconspanorama:before {
-  content: "\eb9b";
+  content: '\eb9b';
 }
 .material-iconspanorama_fish_eye:before {
-  content: "\eb9c";
+  content: '\eb9c';
 }
 .material-iconspanorama_horizontal:before {
-  content: "\eb9d";
+  content: '\eb9d';
 }
 .material-iconspanorama_vertical:before {
-  content: "\eb9e";
+  content: '\eb9e';
 }
 .material-iconspanorama_wide_angle:before {
-  content: "\eb9f";
+  content: '\eb9f';
 }
 .material-iconspan_tool:before {
-  content: "\eba0";
+  content: '\eba0';
 }
 .material-iconsparty_mode:before {
-  content: "\eba1";
+  content: '\eba1';
 }
 .material-iconspause:before {
-  content: "\eba2";
+  content: '\eba2';
 }
 .material-iconspause_circle_filled:before {
-  content: "\eba3";
+  content: '\eba3';
 }
 .material-iconspause_circle_outline:before {
-  content: "\eba4";
+  content: '\eba4';
 }
 .material-iconspause_presentation:before {
-  content: "\eba5";
+  content: '\eba5';
 }
 .material-iconspayment:before {
-  content: "\eba6";
+  content: '\eba6';
 }
 .material-iconspeople:before {
-  content: "\eba7";
+  content: '\eba7';
 }
 .material-iconspeople_outline:before {
-  content: "\eba8";
+  content: '\eba8';
 }
 .material-iconsperm_camera_mic:before {
-  content: "\eba9";
+  content: '\eba9';
 }
 .material-iconsperm_contact_calendar:before {
-  content: "\ebaa";
+  content: '\ebaa';
 }
 .material-iconsperm_data_setting:before {
-  content: "\ebab";
+  content: '\ebab';
 }
 .material-iconsperm_device_information:before {
-  content: "\ebac";
+  content: '\ebac';
 }
 .material-iconsperm_identity:before {
-  content: "\ebad";
+  content: '\ebad';
 }
 .material-iconsperm_media:before {
-  content: "\ebae";
+  content: '\ebae';
 }
 .material-iconsperm_phone_msg:before {
-  content: "\ebaf";
+  content: '\ebaf';
 }
 .material-iconsperm_scan_wifi:before {
-  content: "\ebb0";
+  content: '\ebb0';
 }
 .material-iconsperson:before {
-  content: "\ebb1";
+  content: '\ebb1';
 }
 .material-iconsperson_add:before {
-  content: "\ebb2";
+  content: '\ebb2';
 }
 .material-iconsperson_add_disabled:before {
-  content: "\ebb3";
+  content: '\ebb3';
 }
 .material-iconspersonal_video:before {
-  content: "\ebb4";
+  content: '\ebb4';
 }
 .material-iconsperson_outline:before {
-  content: "\ebb5";
+  content: '\ebb5';
 }
 .material-iconsperson_pin:before {
-  content: "\ebb6";
+  content: '\ebb6';
 }
 .material-iconsperson_pin_circle:before {
-  content: "\ebb7";
+  content: '\ebb7';
 }
 .material-iconspets:before {
-  content: "\ebb8";
+  content: '\ebb8';
 }
 .material-iconsphone:before {
-  content: "\ebb9";
+  content: '\ebb9';
 }
 .material-iconsphone_android:before {
-  content: "\ebba";
+  content: '\ebba';
 }
 .material-iconsphone_bluetooth_speaker:before {
-  content: "\ebbb";
+  content: '\ebbb';
 }
 .material-iconsphone_callback:before {
-  content: "\ebbc";
+  content: '\ebbc';
 }
 .material-iconsphone_forwarded:before {
-  content: "\ebbd";
+  content: '\ebbd';
 }
 .material-iconsphone_in_talk:before {
-  content: "\ebbe";
+  content: '\ebbe';
 }
 .material-iconsphone_iphone:before {
-  content: "\ebbf";
+  content: '\ebbf';
 }
 .material-iconsphonelink:before {
-  content: "\ebc0";
+  content: '\ebc0';
 }
 .material-iconsphonelink_erase:before {
-  content: "\ebc1";
+  content: '\ebc1';
 }
 .material-iconsphonelink_lock:before {
-  content: "\ebc2";
+  content: '\ebc2';
 }
 .material-iconsphonelink_off:before {
-  content: "\ebc3";
+  content: '\ebc3';
 }
 .material-iconsphonelink_ring:before {
-  content: "\ebc4";
+  content: '\ebc4';
 }
 .material-iconsphonelink_setup:before {
-  content: "\ebc5";
+  content: '\ebc5';
 }
 .material-iconsphone_locked:before {
-  content: "\ebc6";
+  content: '\ebc6';
 }
 .material-iconsphone_missed:before {
-  content: "\ebc7";
+  content: '\ebc7';
 }
 .material-iconsphone_paused:before {
-  content: "\ebc8";
+  content: '\ebc8';
 }
 .material-iconsphoto:before {
-  content: "\ebc9";
+  content: '\ebc9';
 }
 .material-iconsphoto_album:before {
-  content: "\ebca";
+  content: '\ebca';
 }
 .material-iconsphoto_camera:before {
-  content: "\ebcb";
+  content: '\ebcb';
 }
 .material-iconsphoto_filter:before {
-  content: "\ebcc";
+  content: '\ebcc';
 }
 .material-iconsphoto_library:before {
-  content: "\ebcd";
+  content: '\ebcd';
 }
 .material-iconsphoto_size_select_actual:before {
-  content: "\ebce";
+  content: '\ebce';
 }
 .material-iconsphoto_size_select_large:before {
-  content: "\ebcf";
+  content: '\ebcf';
 }
 .material-iconsphoto_size_select_small:before {
-  content: "\ebd0";
+  content: '\ebd0';
 }
 .material-iconspicture_as_pdf:before {
-  content: "\ebd1";
+  content: '\ebd1';
 }
 .material-iconspicture_in_picture:before {
-  content: "\ebd2";
+  content: '\ebd2';
 }
 .material-iconspicture_in_picture_alt:before {
-  content: "\ebd3";
+  content: '\ebd3';
 }
 .material-iconspie_chart:before {
-  content: "\ebd4";
+  content: '\ebd4';
 }
 .material-iconspin_drop:before {
-  content: "\ebd5";
+  content: '\ebd5';
 }
 .material-iconsplace:before {
-  content: "\ebd6";
+  content: '\ebd6';
 }
 .material-iconsplay_arrow:before {
-  content: "\ebd7";
+  content: '\ebd7';
 }
 .material-iconsplay_circle_filled:before {
-  content: "\ebd8";
+  content: '\ebd8';
 }
 .material-iconsplay_circle_filled_white:before {
-  content: "\ebd9";
+  content: '\ebd9';
 }
 .material-iconsplay_circle_outline:before {
-  content: "\ebda";
+  content: '\ebda';
 }
 .material-iconsplay_for_work:before {
-  content: "\ebdb";
+  content: '\ebdb';
 }
 .material-iconsplaylist_add:before {
-  content: "\ebdc";
+  content: '\ebdc';
 }
 .material-iconsplaylist_add_check:before {
-  content: "\ebdd";
+  content: '\ebdd';
 }
 .material-iconsplaylist_play:before {
-  content: "\ebde";
+  content: '\ebde';
 }
 .material-iconsplus_one:before {
-  content: "\ebdf";
+  content: '\ebdf';
 }
 .material-iconspoll:before {
-  content: "\ebe0";
+  content: '\ebe0';
 }
 .material-iconspolymer:before {
-  content: "\ebe1";
+  content: '\ebe1';
 }
 .material-iconspool:before {
-  content: "\ebe2";
+  content: '\ebe2';
 }
 .material-iconsportable_wifi_off:before {
-  content: "\ebe3";
+  content: '\ebe3';
 }
 .material-iconsportrait:before {
-  content: "\ebe4";
+  content: '\ebe4';
 }
 .material-iconspower:before {
-  content: "\ebe5";
+  content: '\ebe5';
 }
 .material-iconspower_input:before {
-  content: "\ebe6";
+  content: '\ebe6';
 }
 .material-iconspower_off:before {
-  content: "\ebe7";
+  content: '\ebe7';
 }
 .material-iconspower_settings_new:before {
-  content: "\ebe8";
+  content: '\ebe8';
 }
 .material-iconspregnant_woman:before {
-  content: "\ebe9";
+  content: '\ebe9';
 }
 .material-iconspresent_to_all:before {
-  content: "\ebea";
+  content: '\ebea';
 }
 .material-iconsprint:before {
-  content: "\ebeb";
+  content: '\ebeb';
 }
 .material-iconsprint_disabled:before {
-  content: "\ebec";
+  content: '\ebec';
 }
 .material-iconspriority_high:before {
-  content: "\ebed";
+  content: '\ebed';
 }
 .material-iconspublic:before {
-  content: "\ebee";
+  content: '\ebee';
 }
 .material-iconspublish:before {
-  content: "\ebef";
+  content: '\ebef';
 }
 .material-iconsoffline_bolt:before {
-  content: "\ebf0";
+  content: '\ebf0';
 }
 .material-iconsoffline_pin:before {
-  content: "\ebf1";
+  content: '\ebf1';
 }
 .material-iconsondemand_video:before {
-  content: "\ebf2";
+  content: '\ebf2';
 }
 .material-iconsopacity:before {
-  content: "\ebf3";
+  content: '\ebf3';
 }
 .material-iconsopen_in_browser:before {
-  content: "\ebf4";
+  content: '\ebf4';
 }
 .material-iconsopen_in_new:before {
-  content: "\ebf5";
+  content: '\ebf5';
 }
 .material-iconsopen_with:before {
-  content: "\ebf6";
+  content: '\ebf6';
 }
 .material-iconsoutlined_flag:before {
-  content: "\ebf7";
+  content: '\ebf7';
 }
 .material-iconsnature:before {
-  content: "\ebf8";
+  content: '\ebf8';
 }
 .material-iconsnature_people:before {
-  content: "\ebf9";
+  content: '\ebf9';
 }
 .material-iconsnavigate_before:before {
-  content: "\ebfa";
+  content: '\ebfa';
 }
 .material-iconsnavigate_next:before {
-  content: "\ebfb";
+  content: '\ebfb';
 }
 .material-iconsnavigation:before {
-  content: "\ebfc";
+  content: '\ebfc';
 }
 .material-iconsnear_me:before {
-  content: "\ebfd";
+  content: '\ebfd';
 }
 .material-iconsnetwork_cell .path1:before {
-  content: "\ebfe";
+  content: '\ebfe';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsnetwork_cell .path2:before {
-  content: "\ebff";
+  content: '\ebff';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconsnetwork_check:before {
-  content: "\ec00";
+  content: '\ec00';
 }
 .material-iconsnetwork_locked:before {
-  content: "\ec01";
+  content: '\ec01';
 }
 .material-iconsnetwork_wifi .path1:before {
-  content: "\ec02";
+  content: '\ec02';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsnetwork_wifi .path2:before {
-  content: "\ec03";
+  content: '\ec03';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconsnew_releases:before {
-  content: "\ec04";
+  content: '\ec04';
 }
 .material-iconsnext_week:before {
-  content: "\ec05";
+  content: '\ec05';
 }
 .material-iconsnfc:before {
-  content: "\ec06";
+  content: '\ec06';
 }
 .material-iconsno_encryption:before {
-  content: "\ec07";
+  content: '\ec07';
 }
 .material-iconsno_meeting_room:before {
-  content: "\ec08";
+  content: '\ec08';
 }
 .material-iconsno_sim:before {
-  content: "\ec09";
+  content: '\ec09';
 }
 .material-iconsnote:before {
-  content: "\ec0a";
+  content: '\ec0a';
 }
 .material-iconsnote_add:before {
-  content: "\ec0b";
+  content: '\ec0b';
 }
 .material-iconsnotes:before {
-  content: "\ec0c";
+  content: '\ec0c';
 }
 .material-iconsnotification_important:before {
-  content: "\ec0d";
+  content: '\ec0d';
 }
 .material-iconsnotifications:before {
-  content: "\ec0e";
+  content: '\ec0e';
 }
 .material-iconsnotifications_active:before {
-  content: "\ec0f";
+  content: '\ec0f';
 }
 .material-iconsnotifications_none:before {
-  content: "\ec10";
+  content: '\ec10';
 }
 .material-iconsnotifications_off:before {
-  content: "\ec11";
+  content: '\ec11';
 }
 .material-iconsnotifications_paused:before {
-  content: "\ec12";
+  content: '\ec12';
 }
 .material-iconsnot_interested:before {
-  content: "\ec13";
+  content: '\ec13';
 }
 .material-iconsnot_listed_location:before {
-  content: "\ec14";
+  content: '\ec14';
 }
 .material-iconsmail:before {
-  content: "\ec15";
+  content: '\ec15';
 }
 .material-iconsmail_outline:before {
-  content: "\ec16";
+  content: '\ec16';
 }
 .material-iconsmap:before {
-  content: "\ec17";
+  content: '\ec17';
 }
 .material-iconsmarkunread:before {
-  content: "\ec18";
+  content: '\ec18';
 }
 .material-iconsmarkunread_mailbox:before {
-  content: "\ec19";
+  content: '\ec19';
 }
 .material-iconsmaximize:before {
-  content: "\ec1a";
+  content: '\ec1a';
 }
 .material-iconsmeeting_room:before {
-  content: "\ec1b";
+  content: '\ec1b';
 }
 .material-iconsmemory:before {
-  content: "\ec1c";
+  content: '\ec1c';
 }
 .material-iconsmenu:before {
-  content: "\ec1d";
+  content: '\ec1d';
 }
 .material-iconsmerge_type:before {
-  content: "\ec1e";
+  content: '\ec1e';
 }
 .material-iconsmessage:before {
-  content: "\ec1f";
+  content: '\ec1f';
 }
 .material-iconsmic:before {
-  content: "\ec20";
+  content: '\ec20';
 }
 .material-iconsmic_none:before {
-  content: "\ec21";
+  content: '\ec21';
 }
 .material-iconsmic_off:before {
-  content: "\ec22";
+  content: '\ec22';
 }
 .material-iconsminimize:before {
-  content: "\ec23";
+  content: '\ec23';
 }
 .material-iconsmissed_video_call:before {
-  content: "\ec24";
+  content: '\ec24';
 }
 .material-iconsmms:before {
-  content: "\ec25";
+  content: '\ec25';
 }
 .material-iconsmobile_friendly:before {
-  content: "\ec26";
+  content: '\ec26';
 }
 .material-iconsmobile_off:before {
-  content: "\ec27";
+  content: '\ec27';
 }
 .material-iconsmobile_screen_share:before {
-  content: "\ec28";
+  content: '\ec28';
 }
 .material-iconsmode_comment:before {
-  content: "\ec29";
+  content: '\ec29';
 }
 .material-iconsmonetization_on:before {
-  content: "\ec2a";
+  content: '\ec2a';
 }
 .material-iconsmoney:before {
-  content: "\ec2b";
+  content: '\ec2b';
 }
 .material-iconsmoney_off:before {
-  content: "\ec2c";
+  content: '\ec2c';
 }
 .material-iconsmonochrome_photos:before {
-  content: "\ec2d";
+  content: '\ec2d';
 }
 .material-iconsmood:before {
-  content: "\ec2e";
+  content: '\ec2e';
 }
 .material-iconsmood_bad:before {
-  content: "\ec2f";
+  content: '\ec2f';
 }
 .material-iconsmore:before {
-  content: "\ec30";
+  content: '\ec30';
 }
 .material-iconsmore_horiz:before {
-  content: "\ec31";
+  content: '\ec31';
 }
 .material-iconsmore_vert:before {
-  content: "\ec32";
+  content: '\ec32';
 }
 .material-iconsmotorcycle:before {
-  content: "\ec33";
+  content: '\ec33';
 }
 .material-iconsmouse:before {
-  content: "\ec34";
+  content: '\ec34';
 }
 .material-iconsmove_to_inbox:before {
-  content: "\ec35";
+  content: '\ec35';
 }
 .material-iconsmovie:before {
-  content: "\ec36";
+  content: '\ec36';
 }
 .material-iconsmovie_creation:before {
-  content: "\ec37";
+  content: '\ec37';
 }
 .material-iconsmovie_filter:before {
-  content: "\ec38";
+  content: '\ec38';
 }
 .material-iconsmultiline_chart:before {
-  content: "\ec39";
+  content: '\ec39';
 }
 .material-iconsmusic_note:before {
-  content: "\ec3a";
+  content: '\ec3a';
 }
 .material-iconsmusic_off:before {
-  content: "\ec3b";
+  content: '\ec3b';
 }
 .material-iconsmusic_video:before {
-  content: "\ec3c";
+  content: '\ec3c';
 }
 .material-iconsmy_location:before {
-  content: "\ec3d";
+  content: '\ec3d';
 }
 .material-iconslabel:before {
-  content: "\ec3e";
+  content: '\ec3e';
 }
 .material-iconslabel_important:before {
-  content: "\ec3f";
+  content: '\ec3f';
 }
 .material-iconslabel_off:before {
-  content: "\ec40";
+  content: '\ec40';
 }
 .material-iconslandscape:before {
-  content: "\ec41";
+  content: '\ec41';
 }
 .material-iconslanguage:before {
-  content: "\ec42";
+  content: '\ec42';
 }
 .material-iconslaptop:before {
-  content: "\ec43";
+  content: '\ec43';
 }
 .material-iconslaptop_chromebook:before {
-  content: "\ec44";
+  content: '\ec44';
 }
 .material-iconslaptop_mac:before {
-  content: "\ec45";
+  content: '\ec45';
 }
 .material-iconslaptop_windows:before {
-  content: "\ec46";
+  content: '\ec46';
 }
 .material-iconslast_page:before {
-  content: "\ec47";
+  content: '\ec47';
 }
 .material-iconslaunch:before {
-  content: "\ec48";
+  content: '\ec48';
 }
 .material-iconslayers:before {
-  content: "\ec49";
+  content: '\ec49';
 }
 .material-iconslayers_clear:before {
-  content: "\ec4a";
+  content: '\ec4a';
 }
 .material-iconsleak_add:before {
-  content: "\ec4b";
+  content: '\ec4b';
 }
 .material-iconsleak_remove:before {
-  content: "\ec4c";
+  content: '\ec4c';
 }
 .material-iconslens:before {
-  content: "\ec4d";
+  content: '\ec4d';
 }
 .material-iconslibrary_add:before {
-  content: "\ec4e";
+  content: '\ec4e';
 }
 .material-iconslibrary_books:before {
-  content: "\ec4f";
+  content: '\ec4f';
 }
 .material-iconslibrary_music:before {
-  content: "\ec50";
+  content: '\ec50';
 }
 .material-iconslinear_scale:before {
-  content: "\ec51";
+  content: '\ec51';
 }
 .material-iconsline_style:before {
-  content: "\ec52";
+  content: '\ec52';
 }
 .material-iconsline_weight:before {
-  content: "\ec53";
+  content: '\ec53';
 }
 .material-iconslink:before {
-  content: "\ec54";
+  content: '\ec54';
 }
 .material-iconslinked_camera:before {
-  content: "\ec55";
+  content: '\ec55';
 }
 .material-iconslink_off:before {
-  content: "\ec56";
+  content: '\ec56';
 }
 .material-iconslist:before {
-  content: "\ec57";
+  content: '\ec57';
 }
 .material-iconslist_alt:before {
-  content: "\ec58";
+  content: '\ec58';
 }
 .material-iconslive_help:before {
-  content: "\ec59";
+  content: '\ec59';
 }
 .material-iconslive_tv:before {
-  content: "\ec5a";
+  content: '\ec5a';
 }
 .material-iconslocal_activity:before {
-  content: "\ec5b";
+  content: '\ec5b';
 }
 .material-iconslocal_airport:before {
-  content: "\ec5c";
+  content: '\ec5c';
 }
 .material-iconslocal_atm:before {
-  content: "\ec5d";
+  content: '\ec5d';
 }
 .material-iconslocal_bar:before {
-  content: "\ec5e";
+  content: '\ec5e';
 }
 .material-iconslocal_cafe:before {
-  content: "\ec5f";
+  content: '\ec5f';
 }
 .material-iconslocal_car_wash:before {
-  content: "\ec60";
+  content: '\ec60';
 }
 .material-iconslocal_convenience_store:before {
-  content: "\ec61";
+  content: '\ec61';
 }
 .material-iconslocal_dining:before {
-  content: "\ec62";
+  content: '\ec62';
 }
 .material-iconslocal_drink:before {
-  content: "\ec63";
+  content: '\ec63';
 }
 .material-iconslocal_florist:before {
-  content: "\ec64";
+  content: '\ec64';
 }
 .material-iconslocal_gas_station:before {
-  content: "\ec65";
+  content: '\ec65';
 }
 .material-iconslocal_grocery_store:before {
-  content: "\ec66";
+  content: '\ec66';
 }
 .material-iconslocal_hospital:before {
-  content: "\ec67";
+  content: '\ec67';
 }
 .material-iconslocal_hotel:before {
-  content: "\ec68";
+  content: '\ec68';
 }
 .material-iconslocal_laundry_service:before {
-  content: "\ec69";
+  content: '\ec69';
 }
 .material-iconslocal_library:before {
-  content: "\ec6a";
+  content: '\ec6a';
 }
 .material-iconslocal_mall:before {
-  content: "\ec6b";
+  content: '\ec6b';
 }
 .material-iconslocal_movies:before {
-  content: "\ec6c";
+  content: '\ec6c';
 }
 .material-iconslocal_offer:before {
-  content: "\ec6d";
+  content: '\ec6d';
 }
 .material-iconslocal_parking:before {
-  content: "\ec6e";
+  content: '\ec6e';
 }
 .material-iconslocal_pharmacy:before {
-  content: "\ec6f";
+  content: '\ec6f';
 }
 .material-iconslocal_phone:before {
-  content: "\ec70";
+  content: '\ec70';
 }
 .material-iconslocal_pizza:before {
-  content: "\ec71";
+  content: '\ec71';
 }
 .material-iconslocal_play:before {
-  content: "\ec72";
+  content: '\ec72';
 }
 .material-iconslocal_post_office:before {
-  content: "\ec73";
+  content: '\ec73';
 }
 .material-iconslocal_printshop:before {
-  content: "\ec74";
+  content: '\ec74';
 }
 .material-iconslocal_see:before {
-  content: "\ec75";
+  content: '\ec75';
 }
 .material-iconslocal_shipping:before {
-  content: "\ec76";
+  content: '\ec76';
 }
 .material-iconslocal_taxi:before {
-  content: "\ec77";
+  content: '\ec77';
 }
 .material-iconslocation_city:before {
-  content: "\ec78";
+  content: '\ec78';
 }
 .material-iconslocation_disabled:before {
-  content: "\ec79";
+  content: '\ec79';
 }
 .material-iconslocation_off:before {
-  content: "\ec7a";
+  content: '\ec7a';
 }
 .material-iconslocation_on:before {
-  content: "\ec7b";
+  content: '\ec7b';
 }
 .material-iconslocation_searching:before {
-  content: "\ec7c";
+  content: '\ec7c';
 }
 .material-iconslock:before {
-  content: "\ec7d";
+  content: '\ec7d';
 }
 .material-iconslock_open:before {
-  content: "\ec7e";
+  content: '\ec7e';
 }
 .material-iconslooks:before {
-  content: "\ec7f";
+  content: '\ec7f';
 }
 .material-iconslooks_3:before {
-  content: "\ec80";
+  content: '\ec80';
 }
 .material-iconslooks_4:before {
-  content: "\ec81";
+  content: '\ec81';
 }
 .material-iconslooks_5:before {
-  content: "\ec82";
+  content: '\ec82';
 }
 .material-iconslooks_6:before {
-  content: "\ec83";
+  content: '\ec83';
 }
 .material-iconslooks_one:before {
-  content: "\ec84";
+  content: '\ec84';
 }
 .material-iconslooks_two:before {
-  content: "\ec85";
+  content: '\ec85';
 }
 .material-iconsloop:before {
-  content: "\ec86";
+  content: '\ec86';
 }
 .material-iconsloupe:before {
-  content: "\ec87";
+  content: '\ec87';
 }
 .material-iconslow_priority:before {
-  content: "\ec88";
+  content: '\ec88';
 }
 .material-iconsloyalty:before {
-  content: "\ec89";
+  content: '\ec89';
 }
 .material-iconskeyboard:before {
-  content: "\ec8a";
+  content: '\ec8a';
 }
 .material-iconskeyboard_arrow_down:before {
-  content: "\ec8b";
+  content: '\ec8b';
 }
 .material-iconskeyboard_arrow_left:before {
-  content: "\ec8c";
+  content: '\ec8c';
 }
 .material-iconskeyboard_arrow_right:before {
-  content: "\ec8d";
+  content: '\ec8d';
 }
 .material-iconskeyboard_arrow_up:before {
-  content: "\ec8e";
+  content: '\ec8e';
 }
 .material-iconskeyboard_backspace:before {
-  content: "\ec8f";
+  content: '\ec8f';
 }
 .material-iconskeyboard_capslock:before {
-  content: "\ec90";
+  content: '\ec90';
 }
 .material-iconskeyboard_hide:before {
-  content: "\ec91";
+  content: '\ec91';
 }
 .material-iconskeyboard_return:before {
-  content: "\ec92";
+  content: '\ec92';
 }
 .material-iconskeyboard_tab:before {
-  content: "\ec93";
+  content: '\ec93';
 }
 .material-iconskeyboard_voice:before {
-  content: "\ec94";
+  content: '\ec94';
 }
 .material-iconskitchen:before {
-  content: "\ec95";
+  content: '\ec95';
 }
 .material-iconsimage:before {
-  content: "\ec96";
+  content: '\ec96';
 }
 .material-iconsimage_aspect_ratio:before {
-  content: "\ec97";
+  content: '\ec97';
 }
 .material-iconsimage_search:before {
-  content: "\ec98";
+  content: '\ec98';
 }
 .material-iconsimportant_devices:before {
-  content: "\ec99";
+  content: '\ec99';
 }
 .material-iconsimport_contacts:before {
-  content: "\ec9a";
+  content: '\ec9a';
 }
 .material-iconsimport_export:before {
-  content: "\ec9b";
+  content: '\ec9b';
 }
 .material-iconsinbox:before {
-  content: "\ec9c";
+  content: '\ec9c';
 }
 .material-iconsindeterminate_check_box:before {
-  content: "\ec9d";
+  content: '\ec9d';
 }
 .material-iconsinfo:before {
-  content: "\ec9e";
+  content: '\ec9e';
 }
 .material-iconsinput:before {
-  content: "\ec9f";
+  content: '\ec9f';
 }
 .material-iconsinsert_chart:before {
-  content: "\eca0";
+  content: '\eca0';
 }
 .material-iconsinsert_chart_outlined:before {
-  content: "\eca1";
+  content: '\eca1';
 }
 .material-iconsinsert_comment:before {
-  content: "\eca2";
+  content: '\eca2';
 }
 .material-iconsinsert_drive_file:before {
-  content: "\eca3";
+  content: '\eca3';
 }
 .material-iconsinsert_emoticon:before {
-  content: "\eca4";
+  content: '\eca4';
 }
 .material-iconsinsert_invitation:before {
-  content: "\eca5";
+  content: '\eca5';
 }
 .material-iconsinsert_link:before {
-  content: "\eca6";
+  content: '\eca6';
 }
 .material-iconsinsert_photo:before {
-  content: "\eca7";
+  content: '\eca7';
 }
 .material-iconsinvert_colors:before {
-  content: "\eca8";
+  content: '\eca8';
 }
 .material-iconsinvert_colors_off:before {
-  content: "\eca9";
+  content: '\eca9';
 }
 .material-iconsiso:before {
-  content: "\ecaa";
+  content: '\ecaa';
 }
 .material-iconshd:before {
-  content: "\ecab";
+  content: '\ecab';
 }
 .material-iconshdr_off:before {
-  content: "\ecac";
+  content: '\ecac';
 }
 .material-iconshdr_on:before {
-  content: "\ecad";
+  content: '\ecad';
 }
 .material-iconshdr_strong:before {
-  content: "\ecae";
+  content: '\ecae';
 }
 .material-iconshdr_weak:before {
-  content: "\ecaf";
+  content: '\ecaf';
 }
 .material-iconsheadset:before {
-  content: "\ecb0";
+  content: '\ecb0';
 }
 .material-iconsheadset_mic:before {
-  content: "\ecb1";
+  content: '\ecb1';
 }
 .material-iconshealing:before {
-  content: "\ecb2";
+  content: '\ecb2';
 }
 .material-iconshearing:before {
-  content: "\ecb3";
+  content: '\ecb3';
 }
 .material-iconshelp:before {
-  content: "\ecb4";
+  content: '\ecb4';
 }
 .material-iconshelp_outline:before {
-  content: "\ecb5";
+  content: '\ecb5';
 }
 .material-iconshighlight:before {
-  content: "\ecb6";
+  content: '\ecb6';
 }
 .material-iconshighlight_off:before {
-  content: "\ecb7";
+  content: '\ecb7';
 }
 .material-iconshigh_quality:before {
-  content: "\ecb8";
+  content: '\ecb8';
 }
 .material-iconshistory:before {
-  content: "\ecb9";
+  content: '\ecb9';
 }
 .material-iconshome:before {
-  content: "\ecba";
+  content: '\ecba';
 }
 .material-iconshorizontal_split:before {
-  content: "\ecbb";
+  content: '\ecbb';
 }
 .material-iconshotel:before {
-  content: "\ecbc";
+  content: '\ecbc';
 }
 .material-iconshot_tub:before {
-  content: "\ecbd";
+  content: '\ecbd';
 }
 .material-iconshourglass_empty:before {
-  content: "\ecbe";
+  content: '\ecbe';
 }
 .material-iconshourglass_full:before {
-  content: "\ecbf";
+  content: '\ecbf';
 }
 .material-iconshow_to_reg:before {
-  content: "\ecc0";
+  content: '\ecc0';
 }
 .material-iconshow_to_vote:before {
-  content: "\ecc1";
+  content: '\ecc1';
 }
 .material-iconshttp:before {
-  content: "\ecc2";
+  content: '\ecc2';
 }
 .material-iconshttps:before {
-  content: "\ecc3";
+  content: '\ecc3';
 }
 .material-iconsgamepad:before {
-  content: "\ecc4";
+  content: '\ecc4';
 }
 .material-iconsgames:before {
-  content: "\ecc5";
+  content: '\ecc5';
 }
 .material-iconsgavel:before {
-  content: "\ecc6";
+  content: '\ecc6';
 }
 .material-iconsgesture:before {
-  content: "\ecc7";
+  content: '\ecc7';
 }
 .material-iconsget_app:before {
-  content: "\ecc8";
+  content: '\ecc8';
 }
 .material-iconsgif:before {
-  content: "\ecc9";
+  content: '\ecc9';
 }
 .material-iconsgolf_course:before {
-  content: "\ecca";
+  content: '\ecca';
 }
 .material-iconsgps_fixed:before {
-  content: "\eccb";
+  content: '\eccb';
 }
 .material-iconsgps_not_fixed:before {
-  content: "\eccc";
+  content: '\eccc';
 }
 .material-iconsgps_off:before {
-  content: "\eccd";
+  content: '\eccd';
 }
 .material-iconsgrade:before {
-  content: "\ecce";
+  content: '\ecce';
 }
 .material-iconsgradient:before {
-  content: "\eccf";
+  content: '\eccf';
 }
 .material-iconsgrain:before {
-  content: "\ecd0";
+  content: '\ecd0';
 }
 .material-iconsgraphic_eq:before {
-  content: "\ecd1";
+  content: '\ecd1';
 }
 .material-iconsgrid_off:before {
-  content: "\ecd2";
+  content: '\ecd2';
 }
 .material-iconsgrid_on:before {
-  content: "\ecd3";
+  content: '\ecd3';
 }
 .material-iconsgroup:before {
-  content: "\ecd4";
+  content: '\ecd4';
 }
 .material-iconsgroup_add:before {
-  content: "\ecd5";
+  content: '\ecd5';
 }
 .material-iconsgroup_work:before {
-  content: "\ecd6";
+  content: '\ecd6';
 }
 .material-iconsg_translate:before {
-  content: "\ecd7";
+  content: '\ecd7';
 }
 .material-iconsface:before {
-  content: "\ecd8";
+  content: '\ecd8';
 }
 .material-iconsfastfood:before {
-  content: "\ecd9";
+  content: '\ecd9';
 }
 .material-iconsfast_forward:before {
-  content: "\ecda";
+  content: '\ecda';
 }
 .material-iconsfast_rewind:before {
-  content: "\ecdb";
+  content: '\ecdb';
 }
 .material-iconsfavorite:before {
-  content: "\ecdc";
+  content: '\ecdc';
 }
 .material-iconsfavorite_border:before {
-  content: "\ecdd";
+  content: '\ecdd';
 }
 .material-iconsfeatured_play_list:before {
-  content: "\ecde";
+  content: '\ecde';
 }
 .material-iconsfeatured_video:before {
-  content: "\ecdf";
+  content: '\ecdf';
 }
 .material-iconsfeedback:before {
-  content: "\ece0";
+  content: '\ece0';
 }
 .material-iconsfiber_dvr:before {
-  content: "\ece1";
+  content: '\ece1';
 }
 .material-iconsfiber_manual_record:before {
-  content: "\ece2";
+  content: '\ece2';
 }
 .material-iconsfiber_new:before {
-  content: "\ece3";
+  content: '\ece3';
 }
 .material-iconsfiber_pin:before {
-  content: "\ece4";
+  content: '\ece4';
 }
 .material-iconsfiber_smart_record:before {
-  content: "\ece5";
+  content: '\ece5';
 }
 .material-iconsfile_copy:before {
-  content: "\ece6";
+  content: '\ece6';
 }
 .material-iconsfilter:before {
-  content: "\ece7";
+  content: '\ece7';
 }
 .material-iconsfilter_1:before {
-  content: "\ece8";
+  content: '\ece8';
 }
 .material-iconsfilter_2:before {
-  content: "\ece9";
+  content: '\ece9';
 }
 .material-iconsfilter_3:before {
-  content: "\ecea";
+  content: '\ecea';
 }
 .material-iconsfilter_4:before {
-  content: "\eceb";
+  content: '\eceb';
 }
 .material-iconsfilter_5:before {
-  content: "\ecec";
+  content: '\ecec';
 }
 .material-iconsfilter_6:before {
-  content: "\eced";
+  content: '\eced';
 }
 .material-iconsfilter_7:before {
-  content: "\ecee";
+  content: '\ecee';
 }
 .material-iconsfilter_8:before {
-  content: "\ecef";
+  content: '\ecef';
 }
 .material-iconsfilter_9:before {
-  content: "\ecf0";
+  content: '\ecf0';
 }
 .material-iconsfilter_9_plus:before {
-  content: "\ecf1";
+  content: '\ecf1';
 }
 .material-iconsfilter_b_and_w:before {
-  content: "\ecf2";
+  content: '\ecf2';
 }
 .material-iconsfilter_center_focus:before {
-  content: "\ecf3";
+  content: '\ecf3';
 }
 .material-iconsfilter_drama:before {
-  content: "\ecf4";
+  content: '\ecf4';
 }
 .material-iconsfilter_frames:before {
-  content: "\ecf5";
+  content: '\ecf5';
 }
 .material-iconsfilter_hdr:before {
-  content: "\ecf6";
+  content: '\ecf6';
 }
 .material-iconsfilter_list:before {
-  content: "\ecf7";
+  content: '\ecf7';
 }
 .material-iconsfilter_none:before {
-  content: "\ecf8";
+  content: '\ecf8';
 }
 .material-iconsfilter_tilt_shift:before {
-  content: "\ecf9";
+  content: '\ecf9';
 }
 .material-iconsfilter_vintage:before {
-  content: "\ecfa";
+  content: '\ecfa';
 }
 .material-iconsfind_in_page:before {
-  content: "\ecfb";
+  content: '\ecfb';
 }
 .material-iconsfind_replace:before {
-  content: "\ecfc";
+  content: '\ecfc';
 }
 .material-iconsfingerprint:before {
-  content: "\ecfd";
+  content: '\ecfd';
 }
 .material-iconsfirst_page:before {
-  content: "\ecfe";
+  content: '\ecfe';
 }
 .material-iconsfitness_center:before {
-  content: "\ecff";
+  content: '\ecff';
 }
 .material-iconsflag:before {
-  content: "\ed00";
+  content: '\ed00';
 }
 .material-iconsflare:before {
-  content: "\ed01";
+  content: '\ed01';
 }
 .material-iconsflash_auto:before {
-  content: "\ed02";
+  content: '\ed02';
 }
 .material-iconsflash_off:before {
-  content: "\ed03";
+  content: '\ed03';
 }
 .material-iconsflash_on:before {
-  content: "\ed04";
+  content: '\ed04';
 }
 .material-iconsflight:before {
-  content: "\ed05";
+  content: '\ed05';
 }
 .material-iconsflight_land:before {
-  content: "\ed06";
+  content: '\ed06';
 }
 .material-iconsflight_takeoff:before {
-  content: "\ed07";
+  content: '\ed07';
 }
 .material-iconsflip:before {
-  content: "\ed08";
+  content: '\ed08';
 }
 .material-iconsflip_to_back:before {
-  content: "\ed09";
+  content: '\ed09';
 }
 .material-iconsflip_to_front:before {
-  content: "\ed0a";
+  content: '\ed0a';
 }
 .material-iconsfolder:before {
-  content: "\ed0b";
+  content: '\ed0b';
 }
 .material-iconsfolder_open:before {
-  content: "\ed0c";
+  content: '\ed0c';
 }
 .material-iconsfolder_shared:before {
-  content: "\ed0d";
+  content: '\ed0d';
 }
 .material-iconsfolder_special:before {
-  content: "\ed0e";
+  content: '\ed0e';
 }
 .material-iconsfont_download:before {
-  content: "\ed0f";
+  content: '\ed0f';
 }
 .material-iconsformat_align_center:before {
-  content: "\ed10";
+  content: '\ed10';
 }
 .material-iconsformat_align_justify:before {
-  content: "\ed11";
+  content: '\ed11';
 }
 .material-iconsformat_align_left:before {
-  content: "\ed12";
+  content: '\ed12';
 }
 .material-iconsformat_align_right:before {
-  content: "\ed13";
+  content: '\ed13';
 }
 .material-iconsformat_bold:before {
-  content: "\ed14";
+  content: '\ed14';
 }
 .material-iconsformat_clear:before {
-  content: "\ed15";
+  content: '\ed15';
 }
 .material-iconsformat_color_fill .path1:before {
-  content: "\ed16";
+  content: '\ed16';
   color: rgb(0, 0, 0);
 }
 .material-iconsformat_color_fill .path2:before {
-  content: "\ed17";
+  content: '\ed17';
   margin-left: -1em;
   color: rgb(0, 0, 0);
   opacity: 0.36;
 }
 .material-iconsformat_color_reset:before {
-  content: "\ed18";
+  content: '\ed18';
 }
 .material-iconsformat_color_text .path1:before {
-  content: "\ed19";
+  content: '\ed19';
   color: rgb(0, 0, 0);
   opacity: 0.36;
 }
 .material-iconsformat_color_text .path2:before {
-  content: "\ed1a";
+  content: '\ed1a';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconsformat_indent_decrease:before {
-  content: "\ed1b";
+  content: '\ed1b';
 }
 .material-iconsformat_indent_increase:before {
-  content: "\ed1c";
+  content: '\ed1c';
 }
 .material-iconsformat_italic:before {
-  content: "\ed1d";
+  content: '\ed1d';
 }
 .material-iconsformat_line_spacing:before {
-  content: "\ed1e";
+  content: '\ed1e';
 }
 .material-iconsformat_list_bulleted:before {
-  content: "\ed1f";
+  content: '\ed1f';
 }
 .material-iconsformat_list_numbered:before {
-  content: "\ed20";
+  content: '\ed20';
 }
 .material-iconsformat_list_numbered_rtl:before {
-  content: "\ed21";
+  content: '\ed21';
 }
 .material-iconsformat_paint:before {
-  content: "\ed22";
+  content: '\ed22';
 }
 .material-iconsformat_quote:before {
-  content: "\ed23";
+  content: '\ed23';
 }
 .material-iconsformat_shapes:before {
-  content: "\ed24";
+  content: '\ed24';
 }
 .material-iconsformat_size:before {
-  content: "\ed25";
+  content: '\ed25';
 }
 .material-iconsformat_strikethrough:before {
-  content: "\ed26";
+  content: '\ed26';
 }
 .material-iconsformat_textdirection_l_to_r:before {
-  content: "\ed27";
+  content: '\ed27';
 }
 .material-iconsformat_textdirection_r_to_l:before {
-  content: "\ed28";
+  content: '\ed28';
 }
 .material-iconsformat_underlined:before {
-  content: "\ed29";
+  content: '\ed29';
 }
 .material-iconsforum:before {
-  content: "\ed2a";
+  content: '\ed2a';
 }
 .material-iconsforward:before {
-  content: "\ed2b";
+  content: '\ed2b';
 }
 .material-iconsforward_5:before {
-  content: "\ed2c";
+  content: '\ed2c';
 }
 .material-iconsforward_10:before {
-  content: "\ed2d";
+  content: '\ed2d';
 }
 .material-iconsforward_30:before {
-  content: "\ed2e";
+  content: '\ed2e';
 }
 .material-iconsfree_breakfast:before {
-  content: "\ed2f";
+  content: '\ed2f';
 }
 .material-iconsfullscreen:before {
-  content: "\ed30";
+  content: '\ed30';
 }
 .material-iconsfullscreen_exit:before {
-  content: "\ed31";
+  content: '\ed31';
 }
 .material-iconsfunctions:before {
-  content: "\ed32";
+  content: '\ed32';
 }
 .material-iconsedit:before {
-  content: "\e900";
+  content: '\e900';
 }
 .material-iconsedit_attributes:before {
-  content: "\e901";
+  content: '\e901';
 }
 .material-iconsedit_location:before {
-  content: "\e902";
+  content: '\e902';
 }
 .material-iconseject:before {
-  content: "\e903";
+  content: '\e903';
 }
 .material-iconsemail:before {
-  content: "\e904";
+  content: '\e904';
 }
 .material-iconsenhanced_encryption:before {
-  content: "\e905";
+  content: '\e905';
 }
 .material-iconsequalizer:before {
-  content: "\e906";
+  content: '\e906';
 }
 .material-iconserror:before {
-  content: "\e907";
+  content: '\e907';
 }
 .material-iconserror_outline:before {
-  content: "\e908";
+  content: '\e908';
 }
 .material-iconseuro_symbol:before {
-  content: "\e909";
+  content: '\e909';
 }
 .material-iconsevent:before {
-  content: "\e90a";
+  content: '\e90a';
 }
 .material-iconsevent_available:before {
-  content: "\e90b";
+  content: '\e90b';
 }
 .material-iconsevent_busy:before {
-  content: "\e90c";
+  content: '\e90c';
 }
 .material-iconsevent_note:before {
-  content: "\e90d";
+  content: '\e90d';
 }
 .material-iconsevent_seat:before {
-  content: "\e90e";
+  content: '\e90e';
 }
 .material-iconsev_station:before {
-  content: "\e90f";
+  content: '\e90f';
 }
 .material-iconsexit_to_app:before {
-  content: "\e910";
+  content: '\e910';
 }
 .material-iconsexpand_less:before {
-  content: "\e911";
+  content: '\e911';
 }
 .material-iconsexpand_more:before {
-  content: "\e912";
+  content: '\e912';
 }
 .material-iconsexplicit:before {
-  content: "\e913";
+  content: '\e913';
 }
 .material-iconsexplore:before {
-  content: "\e914";
+  content: '\e914';
 }
 .material-iconsexplore_off:before {
-  content: "\e915";
+  content: '\e915';
 }
 .material-iconsexposure:before {
-  content: "\e916";
+  content: '\e916';
 }
 .material-iconsexposure_neg_1:before {
-  content: "\e917";
+  content: '\e917';
 }
 .material-iconsexposure_neg_2:before {
-  content: "\e918";
+  content: '\e918';
 }
 .material-iconsexposure_plus_1:before {
-  content: "\e919";
+  content: '\e919';
 }
 .material-iconsexposure_plus_2:before {
-  content: "\e91a";
+  content: '\e91a';
 }
 .material-iconsexposure_zero:before {
-  content: "\e91b";
+  content: '\e91b';
 }
 .material-iconsextension:before {
-  content: "\e91c";
+  content: '\e91c';
 }
 .material-iconsdashboard:before {
-  content: "\e91d";
+  content: '\e91d';
 }
 .material-iconsdata_usage:before {
-  content: "\e91e";
+  content: '\e91e';
 }
 .material-iconsdate_range:before {
-  content: "\e91f";
+  content: '\e91f';
 }
 .material-iconsdehaze:before {
-  content: "\e920";
+  content: '\e920';
 }
 .material-iconsdelete:before {
-  content: "\e921";
+  content: '\e921';
 }
 .material-iconsdelete_forever:before {
-  content: "\e922";
+  content: '\e922';
 }
 .material-iconsdelete_outline:before {
-  content: "\e923";
+  content: '\e923';
 }
 .material-iconsdelete_sweep:before {
-  content: "\e924";
+  content: '\e924';
 }
 .material-iconsdeparture_board:before {
-  content: "\e925";
+  content: '\e925';
 }
 .material-iconsdescription:before {
-  content: "\e926";
+  content: '\e926';
 }
 .material-iconsdesktop_access_disabled:before {
-  content: "\e927";
+  content: '\e927';
 }
 .material-iconsdesktop_mac:before {
-  content: "\e928";
+  content: '\e928';
 }
 .material-iconsdesktop_windows:before {
-  content: "\e929";
+  content: '\e929';
 }
 .material-iconsdetails:before {
-  content: "\e92a";
+  content: '\e92a';
 }
 .material-iconsdeveloper_board:before {
-  content: "\e92b";
+  content: '\e92b';
 }
 .material-iconsdeveloper_mode:before {
-  content: "\e92c";
+  content: '\e92c';
 }
 .material-iconsdevice_hub:before {
-  content: "\e92d";
+  content: '\e92d';
 }
 .material-iconsdevices:before {
-  content: "\e92e";
+  content: '\e92e';
 }
 .material-iconsdevices_other:before {
-  content: "\e92f";
+  content: '\e92f';
 }
 .material-iconsdevice_unknown:before {
-  content: "\e930";
+  content: '\e930';
 }
 .material-iconsdialer_sip:before {
-  content: "\e931";
+  content: '\e931';
 }
 .material-iconsdialpad:before {
-  content: "\e932";
+  content: '\e932';
 }
 .material-iconsdirections:before {
-  content: "\e933";
+  content: '\e933';
 }
 .material-iconsdirections_bike:before {
-  content: "\e934";
+  content: '\e934';
 }
 .material-iconsdirections_boat:before {
-  content: "\e935";
+  content: '\e935';
 }
 .material-iconsdirections_bus:before {
-  content: "\e936";
+  content: '\e936';
 }
 .material-iconsdirections_car:before {
-  content: "\e937";
+  content: '\e937';
 }
 .material-iconsdirections_railway:before {
-  content: "\e938";
+  content: '\e938';
 }
 .material-iconsdirections_run:before {
-  content: "\e939";
+  content: '\e939';
 }
 .material-iconsdirections_subway:before {
-  content: "\e93a";
+  content: '\e93a';
 }
 .material-iconsdirections_transit:before {
-  content: "\e93b";
+  content: '\e93b';
 }
 .material-iconsdirections_walk:before {
-  content: "\e93c";
+  content: '\e93c';
 }
 .material-iconsdisc_full:before {
-  content: "\e93d";
+  content: '\e93d';
 }
 .material-iconsdns:before {
-  content: "\e93e";
+  content: '\e93e';
 }
 .material-iconsdock:before {
-  content: "\e93f";
+  content: '\e93f';
 }
 .material-iconsdomain:before {
-  content: "\e940";
+  content: '\e940';
 }
 .material-iconsdomain_disabled:before {
-  content: "\e941";
+  content: '\e941';
 }
 .material-iconsdone:before {
-  content: "\e942";
+  content: '\e942';
 }
 .material-iconsdone_all:before {
-  content: "\e943";
+  content: '\e943';
 }
 .material-iconsdone_outline:before {
-  content: "\e944";
+  content: '\e944';
 }
 .material-iconsdonut_large:before {
-  content: "\e945";
+  content: '\e945';
 }
 .material-iconsdonut_small:before {
-  content: "\e946";
+  content: '\e946';
 }
 .material-iconsdrafts:before {
-  content: "\e947";
+  content: '\e947';
 }
 .material-iconsdrag_handle:before {
-  content: "\e948";
+  content: '\e948';
 }
 .material-iconsdrag_indicator:before {
-  content: "\e949";
+  content: '\e949';
 }
 .material-iconsdrive_eta:before {
-  content: "\e94a";
+  content: '\e94a';
 }
 .material-iconsduo:before {
-  content: "\e94b";
+  content: '\e94b';
 }
 .material-iconsdvr:before {
-  content: "\e94c";
+  content: '\e94c';
 }
 .material-iconscached:before {
-  content: "\e94d";
+  content: '\e94d';
 }
 .material-iconscake:before {
-  content: "\e94e";
+  content: '\e94e';
 }
 .material-iconscalendar_today:before {
-  content: "\e94f";
+  content: '\e94f';
 }
 .material-iconscalendar_view_day:before {
-  content: "\e950";
+  content: '\e950';
 }
 .material-iconscall:before {
-  content: "\e951";
+  content: '\e951';
 }
 .material-iconscall_end:before {
-  content: "\e952";
+  content: '\e952';
 }
 .material-iconscall_made:before {
-  content: "\e953";
+  content: '\e953';
 }
 .material-iconscall_merge:before {
-  content: "\e954";
+  content: '\e954';
 }
 .material-iconscall_missed:before {
-  content: "\e955";
+  content: '\e955';
 }
 .material-iconscall_missed_outgoing:before {
-  content: "\e956";
+  content: '\e956';
 }
 .material-iconscall_received:before {
-  content: "\e957";
+  content: '\e957';
 }
 .material-iconscall_split:before {
-  content: "\e958";
+  content: '\e958';
 }
 .material-iconscall_to_action:before {
-  content: "\e959";
+  content: '\e959';
 }
 .material-iconscamera:before {
-  content: "\e95a";
+  content: '\e95a';
 }
 .material-iconscamera_alt:before {
-  content: "\e95b";
+  content: '\e95b';
 }
 .material-iconscamera_enhance:before {
-  content: "\e95c";
+  content: '\e95c';
 }
 .material-iconscamera_front:before {
-  content: "\e95d";
+  content: '\e95d';
 }
 .material-iconscamera_rear:before {
-  content: "\e95e";
+  content: '\e95e';
 }
 .material-iconscamera_roll:before {
-  content: "\e95f";
+  content: '\e95f';
 }
 .material-iconscancel:before {
-  content: "\e960";
+  content: '\e960';
 }
 .material-iconscancel_presentation:before {
-  content: "\e961";
+  content: '\e961';
 }
 .material-iconscard_giftcard:before {
-  content: "\e962";
+  content: '\e962';
 }
 .material-iconscard_membership:before {
-  content: "\e963";
+  content: '\e963';
 }
 .material-iconscard_travel:before {
-  content: "\e964";
+  content: '\e964';
 }
 .material-iconscasino:before {
-  content: "\e965";
+  content: '\e965';
 }
 .material-iconscast:before {
-  content: "\e966";
+  content: '\e966';
 }
 .material-iconscast_connected:before {
-  content: "\e967";
+  content: '\e967';
 }
 .material-iconscast_for_education:before {
-  content: "\e968";
+  content: '\e968';
 }
 .material-iconscategory:before {
-  content: "\e969";
+  content: '\e969';
 }
 .material-iconscell_wifi .path1:before {
-  content: "\e96a";
+  content: '\e96a';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconscell_wifi .path2:before {
-  content: "\e96b";
+  content: '\e96b';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconscenter_focus_strong:before {
-  content: "\e96c";
+  content: '\e96c';
 }
 .material-iconscenter_focus_weak:before {
-  content: "\e96d";
+  content: '\e96d';
 }
 .material-iconschange_history:before {
-  content: "\e96e";
+  content: '\e96e';
 }
 .material-iconschat:before {
-  content: "\e96f";
+  content: '\e96f';
 }
 .material-iconschat_bubble:before {
-  content: "\e970";
+  content: '\e970';
 }
 .material-iconschat_bubble_outline:before {
-  content: "\e971";
+  content: '\e971';
 }
 .material-iconscheck:before {
-  content: "\e972";
+  content: '\e972';
 }
 .material-iconscheck_box:before {
-  content: "\e973";
+  content: '\e973';
 }
 .material-iconscheck_box_outline_blank:before {
-  content: "\e974";
+  content: '\e974';
 }
 .material-iconscheck_circle:before {
-  content: "\e975";
+  content: '\e975';
 }
 .material-iconscheck_circle_outline:before {
-  content: "\e976";
+  content: '\e976';
 }
 .material-iconschevron_left:before {
-  content: "\e977";
+  content: '\e977';
 }
 .material-iconschevron_right:before {
-  content: "\e978";
+  content: '\e978';
 }
 .material-iconschild_care:before {
-  content: "\e979";
+  content: '\e979';
 }
 .material-iconschild_friendly:before {
-  content: "\e97a";
+  content: '\e97a';
 }
 .material-iconschrome_reader_mode:before {
-  content: "\e97b";
+  content: '\e97b';
 }
 .material-iconsclass:before {
-  content: "\e97c";
+  content: '\e97c';
 }
 .material-iconsclear:before {
-  content: "\e97d";
+  content: '\e97d';
 }
 .material-iconsclear_all:before {
-  content: "\e97e";
+  content: '\e97e';
 }
 .material-iconsclose:before {
-  content: "\e97f";
+  content: '\e97f';
 }
 .material-iconsclosed_caption:before {
-  content: "\e980";
+  content: '\e980';
 }
 .material-iconscloud:before {
-  content: "\e981";
+  content: '\e981';
 }
 .material-iconscloud_circle:before {
-  content: "\e982";
+  content: '\e982';
 }
 .material-iconscloud_done:before {
-  content: "\e983";
+  content: '\e983';
 }
 .material-iconscloud_download:before {
-  content: "\e984";
+  content: '\e984';
 }
 .material-iconscloud_off:before {
-  content: "\e985";
+  content: '\e985';
 }
 .material-iconscloud_queue:before {
-  content: "\e986";
+  content: '\e986';
 }
 .material-iconscloud_upload:before {
-  content: "\e987";
+  content: '\e987';
 }
 .material-iconscode:before {
-  content: "\e988";
+  content: '\e988';
 }
 .material-iconscollections:before {
-  content: "\e989";
+  content: '\e989';
 }
 .material-iconscollections_bookmark:before {
-  content: "\e98a";
+  content: '\e98a';
 }
 .material-iconscolorize:before {
-  content: "\e98b";
+  content: '\e98b';
 }
 .material-iconscolor_lens:before {
-  content: "\e98c";
+  content: '\e98c';
 }
 .material-iconscomment:before {
-  content: "\e98d";
+  content: '\e98d';
 }
 .material-iconscommute:before {
-  content: "\e98e";
+  content: '\e98e';
 }
 .material-iconscompare:before {
-  content: "\e98f";
+  content: '\e98f';
 }
 .material-iconscompare_arrows:before {
-  content: "\e990";
+  content: '\e990';
 }
 .material-iconscompass_calibration:before {
-  content: "\e991";
+  content: '\e991';
 }
 .material-iconscomputer:before {
-  content: "\e992";
+  content: '\e992';
 }
 .material-iconsconfirmation_number:before {
-  content: "\e993";
+  content: '\e993';
 }
 .material-iconscontact_mail:before {
-  content: "\e994";
+  content: '\e994';
 }
 .material-iconscontact_phone:before {
-  content: "\e995";
+  content: '\e995';
 }
 .material-iconscontacts:before {
-  content: "\e996";
+  content: '\e996';
 }
 .material-iconscontact_support:before {
-  content: "\e997";
+  content: '\e997';
 }
 .material-iconscontrol_camera:before {
-  content: "\e998";
+  content: '\e998';
 }
 .material-iconscontrol_point:before {
-  content: "\e999";
+  content: '\e999';
 }
 .material-iconscontrol_point_duplicate:before {
-  content: "\e99a";
+  content: '\e99a';
 }
 .material-iconscopyright:before {
-  content: "\e99b";
+  content: '\e99b';
 }
 .material-iconscreate:before {
-  content: "\e99c";
+  content: '\e99c';
 }
 .material-iconscreate_new_folder:before {
-  content: "\e99d";
+  content: '\e99d';
 }
 .material-iconscredit_card:before {
-  content: "\e99e";
+  content: '\e99e';
 }
 .material-iconscrop:before {
-  content: "\e99f";
+  content: '\e99f';
 }
 .material-iconscrop_3_2:before {
-  content: "\e9a0";
+  content: '\e9a0';
 }
 .material-iconscrop_5_4:before {
-  content: "\e9a1";
+  content: '\e9a1';
 }
 .material-iconscrop_7_5:before {
-  content: "\e9a2";
+  content: '\e9a2';
 }
 .material-iconscrop_16_9:before {
-  content: "\e9a3";
+  content: '\e9a3';
 }
 .material-iconscrop_din:before {
-  content: "\e9a4";
+  content: '\e9a4';
 }
 .material-iconscrop_free:before {
-  content: "\e9a5";
+  content: '\e9a5';
 }
 .material-iconscrop_landscape:before {
-  content: "\e9a6";
+  content: '\e9a6';
 }
 .material-iconscrop_original:before {
-  content: "\e9a7";
+  content: '\e9a7';
 }
 .material-iconscrop_portrait:before {
-  content: "\e9a8";
+  content: '\e9a8';
 }
 .material-iconscrop_rotate:before {
-  content: "\e9a9";
+  content: '\e9a9';
 }
 .material-iconscrop_square:before {
-  content: "\e9aa";
+  content: '\e9aa';
 }
 .material-iconsbackspace:before {
-  content: "\e9ab";
+  content: '\e9ab';
 }
 .material-iconsbackup:before {
-  content: "\e9ac";
+  content: '\e9ac';
 }
 .material-iconsballot:before {
-  content: "\e9ad";
+  content: '\e9ad';
 }
 .material-iconsbar_chart:before {
-  content: "\e9ae";
+  content: '\e9ae';
 }
 .material-iconsbattery_20 .path1:before {
-  content: "\e9af";
+  content: '\e9af';
   color: rgb(0, 0, 0);
 }
 .material-iconsbattery_20 .path2:before {
-  content: "\e9b0";
+  content: '\e9b0';
   margin-left: -1em;
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsbattery_30 .path1:before {
-  content: "\e9b1";
+  content: '\e9b1';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsbattery_30 .path2:before {
-  content: "\e9b2";
+  content: '\e9b2';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconsbattery_50 .path1:before {
-  content: "\e9b3";
+  content: '\e9b3';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsbattery_50 .path2:before {
-  content: "\e9b4";
+  content: '\e9b4';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconsbattery_60 .path1:before {
-  content: "\e9b5";
+  content: '\e9b5';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsbattery_60 .path2:before {
-  content: "\e9b6";
+  content: '\e9b6';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconsbattery_80 .path1:before {
-  content: "\e9b7";
+  content: '\e9b7';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsbattery_80 .path2:before {
-  content: "\e9b8";
+  content: '\e9b8';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconsbattery_90 .path1:before {
-  content: "\e9b9";
+  content: '\e9b9';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsbattery_90 .path2:before {
-  content: "\e9ba";
+  content: '\e9ba';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconsbattery_alert:before {
-  content: "\e9bb";
+  content: '\e9bb';
 }
 .material-iconsbattery_charging_20 .path1:before {
-  content: "\e9bc";
+  content: '\e9bc';
   color: rgb(0, 0, 0);
 }
 .material-iconsbattery_charging_20 .path2:before {
-  content: "\e9bd";
+  content: '\e9bd';
   margin-left: -1em;
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsbattery_charging_30 .path1:before {
-  content: "\e9be";
+  content: '\e9be';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsbattery_charging_30 .path2:before {
-  content: "\e9bf";
+  content: '\e9bf';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconsbattery_charging_50 .path1:before {
-  content: "\e9c0";
+  content: '\e9c0';
   color: rgb(0, 0, 0);
 }
 .material-iconsbattery_charging_50 .path2:before {
-  content: "\e9c1";
+  content: '\e9c1';
   margin-left: -1em;
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsbattery_charging_60 .path1:before {
-  content: "\e9c2";
+  content: '\e9c2';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsbattery_charging_60 .path2:before {
-  content: "\e9c3";
+  content: '\e9c3';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconsbattery_charging_80 .path1:before {
-  content: "\e9c4";
+  content: '\e9c4';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsbattery_charging_80 .path2:before {
-  content: "\e9c5";
+  content: '\e9c5';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconsbattery_charging_90 .path1:before {
-  content: "\e9c6";
+  content: '\e9c6';
   color: rgb(0, 0, 0);
   opacity: 0.3;
 }
 .material-iconsbattery_charging_90 .path2:before {
-  content: "\e9c7";
+  content: '\e9c7';
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
 .material-iconsbattery_charging_full:before {
-  content: "\e9c8";
+  content: '\e9c8';
 }
 .material-iconsbattery_full:before {
-  content: "\e9c9";
+  content: '\e9c9';
 }
 .material-iconsbattery_std:before {
-  content: "\e9ca";
+  content: '\e9ca';
 }
 .material-iconsbattery_unknown:before {
-  content: "\e9cb";
+  content: '\e9cb';
 }
 .material-iconsbeach_access:before {
-  content: "\e9cc";
+  content: '\e9cc';
 }
 .material-iconsbeenhere:before {
-  content: "\e9cd";
+  content: '\e9cd';
 }
 .material-iconsblock:before {
-  content: "\e9ce";
+  content: '\e9ce';
 }
 .material-iconsbluetooth:before {
-  content: "\e9cf";
+  content: '\e9cf';
 }
 .material-iconsbluetooth_audio:before {
-  content: "\e9d0";
+  content: '\e9d0';
 }
 .material-iconsbluetooth_connected:before {
-  content: "\e9d1";
+  content: '\e9d1';
 }
 .material-iconsbluetooth_disabled:before {
-  content: "\e9d2";
+  content: '\e9d2';
 }
 .material-iconsbluetooth_searching:before {
-  content: "\e9d3";
+  content: '\e9d3';
 }
 .material-iconsblur_circular:before {
-  content: "\e9d4";
+  content: '\e9d4';
 }
 .material-iconsblur_linear:before {
-  content: "\e9d5";
+  content: '\e9d5';
 }
 .material-iconsblur_off:before {
-  content: "\e9d6";
+  content: '\e9d6';
 }
 .material-iconsblur_on:before {
-  content: "\e9d7";
+  content: '\e9d7';
 }
 .material-iconsbook:before {
-  content: "\e9d8";
+  content: '\e9d8';
 }
 .material-iconsbookmark:before {
-  content: "\e9d9";
+  content: '\e9d9';
 }
 .material-iconsbookmark_border:before {
-  content: "\e9da";
+  content: '\e9da';
 }
 .material-iconsbookmarks:before {
-  content: "\e9db";
+  content: '\e9db';
 }
 .material-iconsborder_all:before {
-  content: "\e9dc";
+  content: '\e9dc';
 }
 .material-iconsborder_bottom:before {
-  content: "\e9dd";
+  content: '\e9dd';
 }
 .material-iconsborder_clear:before {
-  content: "\e9de";
+  content: '\e9de';
 }
 .material-iconsborder_color .path1:before {
-  content: "\e9df";
+  content: '\e9df';
   color: rgb(0, 0, 0);
 }
 .material-iconsborder_color .path2:before {
-  content: "\e9e0";
+  content: '\e9e0';
   margin-left: -1em;
   color: rgb(0, 0, 0);
   opacity: 0.36;
 }
 .material-iconsborder_horizontal:before {
-  content: "\e9e1";
+  content: '\e9e1';
 }
 .material-iconsborder_inner:before {
-  content: "\e9e2";
+  content: '\e9e2';
 }
 .material-iconsborder_left:before {
-  content: "\e9e3";
+  content: '\e9e3';
 }
 .material-iconsborder_outer:before {
-  content: "\e9e4";
+  content: '\e9e4';
 }
 .material-iconsborder_right:before {
-  content: "\e9e5";
+  content: '\e9e5';
 }
 .material-iconsborder_style:before {
-  content: "\e9e6";
+  content: '\e9e6';
 }
 .material-iconsborder_top:before {
-  content: "\e9e7";
+  content: '\e9e7';
 }
 .material-iconsborder_vertical:before {
-  content: "\e9e8";
+  content: '\e9e8';
 }
 .material-iconsbranding_watermark:before {
-  content: "\e9e9";
+  content: '\e9e9';
 }
 .material-iconsbrightness_1:before {
-  content: "\e9ea";
+  content: '\e9ea';
 }
 .material-iconsbrightness_2:before {
-  content: "\e9eb";
+  content: '\e9eb';
 }
 .material-iconsbrightness_3:before {
-  content: "\e9ec";
+  content: '\e9ec';
 }
 .material-iconsbrightness_4:before {
-  content: "\e9ed";
+  content: '\e9ed';
 }
 .material-iconsbrightness_5:before {
-  content: "\e9ee";
+  content: '\e9ee';
 }
 .material-iconsbrightness_6:before {
-  content: "\e9ef";
+  content: '\e9ef';
 }
 .material-iconsbrightness_7:before {
-  content: "\e9f0";
+  content: '\e9f0';
 }
 .material-iconsbrightness_auto:before {
-  content: "\e9f1";
+  content: '\e9f1';
 }
 .material-iconsbrightness_high:before {
-  content: "\e9f2";
+  content: '\e9f2';
 }
 .material-iconsbrightness_low:before {
-  content: "\e9f3";
+  content: '\e9f3';
 }
 .material-iconsbrightness_medium:before {
-  content: "\e9f4";
+  content: '\e9f4';
 }
 .material-iconsbroken_image:before {
-  content: "\e9f5";
+  content: '\e9f5';
 }
 .material-iconsbrush:before {
-  content: "\e9f6";
+  content: '\e9f6';
 }
 .material-iconsbubble_chart:before {
-  content: "\e9f7";
+  content: '\e9f7';
 }
 .material-iconsbug_report:before {
-  content: "\e9f8";
+  content: '\e9f8';
 }
 .material-iconsbuild:before {
-  content: "\e9f9";
+  content: '\e9f9';
 }
 .material-iconsburst_mode:before {
-  content: "\e9fa";
+  content: '\e9fa';
 }
 .material-iconsbusiness:before {
-  content: "\e9fb";
+  content: '\e9fb';
 }
 .material-iconsbusiness_center:before {
-  content: "\e9fc";
+  content: '\e9fc';
 }
 .material-iconsaccess_alarm:before {
-  content: "\ea00";
+  content: '\ea00';
 }
 .material-iconsaccess_alarms:before {
-  content: "\ea01";
+  content: '\ea01';
 }
 .material-iconsaccessibility:before {
-  content: "\ea02";
+  content: '\ea02';
 }
 .material-iconsaccessibility_new:before {
-  content: "\ea03";
+  content: '\ea03';
 }
 .material-iconsaccessible:before {
-  content: "\ea04";
+  content: '\ea04';
 }
 .material-iconsaccessible_forward:before {
-  content: "\ea05";
+  content: '\ea05';
 }
 .material-iconsaccess_time:before {
-  content: "\ea06";
+  content: '\ea06';
 }
 .material-iconsaccount_balance:before {
-  content: "\ea07";
+  content: '\ea07';
 }
 .material-iconsaccount_balance_wallet:before {
-  content: "\ea08";
+  content: '\ea08';
 }
 .material-iconsaccount_box:before {
-  content: "\ea09";
+  content: '\ea09';
 }
 .material-iconsaccount_circle:before {
-  content: "\ea0a";
+  content: '\ea0a';
 }
 .material-iconsac_unit:before {
-  content: "\ea0b";
+  content: '\ea0b';
 }
 .material-iconsadb:before {
-  content: "\ea0c";
+  content: '\ea0c';
 }
 .material-iconsadd:before {
-  content: "\ea0d";
+  content: '\ea0d';
 }
 .material-iconsadd_alarm:before {
-  content: "\ea0e";
+  content: '\ea0e';
 }
 .material-iconsadd_alert:before {
-  content: "\ea0f";
+  content: '\ea0f';
 }
 .material-iconsadd_a_photo:before {
-  content: "\ea10";
+  content: '\ea10';
 }
 .material-iconsadd_box:before {
-  content: "\ea11";
+  content: '\ea11';
 }
 .material-iconsadd_circle:before {
-  content: "\ea12";
+  content: '\ea12';
 }
 .material-iconsadd_circle_outline:before {
-  content: "\ea13";
+  content: '\ea13';
 }
 .material-iconsadd_comment:before {
-  content: "\ea14";
+  content: '\ea14';
 }
 .material-iconsadd_location:before {
-  content: "\ea15";
+  content: '\ea15';
 }
 .material-iconsadd_photo_alternate:before {
-  content: "\ea16";
+  content: '\ea16';
 }
 .material-iconsadd_shopping_cart:before {
-  content: "\ea17";
+  content: '\ea17';
 }
 .material-iconsadd_to_home_screen:before {
-  content: "\ea18";
+  content: '\ea18';
 }
 .material-iconsadd_to_photos:before {
-  content: "\ea19";
+  content: '\ea19';
 }
 .material-iconsadd_to_queue:before {
-  content: "\ea1a";
+  content: '\ea1a';
 }
 .material-iconsadjust:before {
-  content: "\ea1b";
+  content: '\ea1b';
 }
 .material-iconsairline_seat_flat:before {
-  content: "\ea1c";
+  content: '\ea1c';
 }
 .material-iconsairline_seat_flat_angled:before {
-  content: "\ea1d";
+  content: '\ea1d';
 }
 .material-iconsairline_seat_individual_suite:before {
-  content: "\ea1e";
+  content: '\ea1e';
 }
 .material-iconsairline_seat_legroom_extra:before {
-  content: "\ea1f";
+  content: '\ea1f';
 }
 .material-iconsairline_seat_legroom_normal:before {
-  content: "\ea20";
+  content: '\ea20';
 }
 .material-iconsairline_seat_legroom_reduced:before {
-  content: "\ea21";
+  content: '\ea21';
 }
 .material-iconsairline_seat_recline_extra:before {
-  content: "\ea22";
+  content: '\ea22';
 }
 .material-iconsairline_seat_recline_normal:before {
-  content: "\ea23";
+  content: '\ea23';
 }
 .material-iconsairplanemode_active:before {
-  content: "\ea24";
+  content: '\ea24';
 }
 .material-iconsairplanemode_inactive:before {
-  content: "\ea25";
+  content: '\ea25';
 }
 .material-iconsairplay:before {
-  content: "\ea26";
+  content: '\ea26';
 }
 .material-iconsairport_shuttle:before {
-  content: "\ea27";
+  content: '\ea27';
 }
 .material-iconsalarm:before {
-  content: "\ea28";
+  content: '\ea28';
 }
 .material-iconsalarm_add:before {
-  content: "\ea29";
+  content: '\ea29';
 }
 .material-iconsalarm_off:before {
-  content: "\ea2a";
+  content: '\ea2a';
 }
 .material-iconsalarm_on:before {
-  content: "\ea2b";
+  content: '\ea2b';
 }
 .material-iconsalbum:before {
-  content: "\ea2c";
+  content: '\ea2c';
 }
 .material-iconsall_inbox:before {
-  content: "\ea2d";
+  content: '\ea2d';
 }
 .material-iconsall_inclusive:before {
-  content: "\ea2e";
+  content: '\ea2e';
 }
 .material-iconsall_out:before {
-  content: "\ea2f";
+  content: '\ea2f';
 }
 .material-iconsalternate_email:before {
-  content: "\ea30";
+  content: '\ea30';
 }
 .material-iconsandroid:before {
-  content: "\ea31";
+  content: '\ea31';
 }
 .material-iconsannouncement:before {
-  content: "\ea32";
+  content: '\ea32';
 }
 .material-iconsapps:before {
-  content: "\ea33";
+  content: '\ea33';
 }
 .material-iconsarchive:before {
-  content: "\ea34";
+  content: '\ea34';
 }
 .material-iconsarrow_back:before {
-  content: "\ea35";
+  content: '\ea35';
 }
 .material-iconsarrow_back_ios:before {
-  content: "\ea36";
+  content: '\ea36';
 }
 .material-iconsarrow_downward:before {
-  content: "\ea37";
+  content: '\ea37';
 }
 .material-iconsarrow_drop_down:before {
-  content: "\ea38";
+  content: '\ea38';
 }
 .material-iconsarrow_drop_down_circle:before {
-  content: "\ea39";
+  content: '\ea39';
 }
 .material-iconsarrow_drop_up:before {
-  content: "\ea3a";
+  content: '\ea3a';
 }
 .material-iconsarrow_forward:before {
-  content: "\ea3b";
+  content: '\ea3b';
 }
 .material-iconsarrow_forward_ios:before {
-  content: "\ea3c";
+  content: '\ea3c';
 }
 .material-iconsarrow_left:before {
-  content: "\ea3d";
+  content: '\ea3d';
 }
 .material-iconsarrow_right:before {
-  content: "\ea3e";
+  content: '\ea3e';
 }
 .material-iconsarrow_right_alt:before {
-  content: "\ea3f";
+  content: '\ea3f';
 }
 .material-iconsarrow_upward:before {
-  content: "\ea40";
+  content: '\ea40';
 }
 .material-iconsart_track:before {
-  content: "\ea41";
+  content: '\ea41';
 }
 .material-iconsaspect_ratio:before {
-  content: "\ea42";
+  content: '\ea42';
 }
 .material-iconsassessment:before {
-  content: "\ea43";
+  content: '\ea43';
 }
 .material-iconsassignment:before {
-  content: "\ea44";
+  content: '\ea44';
 }
 .material-iconsassignment_ind:before {
-  content: "\ea45";
+  content: '\ea45';
 }
 .material-iconsassignment_late:before {
-  content: "\ea46";
+  content: '\ea46';
 }
 .material-iconsassignment_return:before {
-  content: "\ea47";
+  content: '\ea47';
 }
 .material-iconsassignment_returned:before {
-  content: "\ea48";
+  content: '\ea48';
 }
 .material-iconsassignment_turned_in:before {
-  content: "\ea49";
+  content: '\ea49';
 }
 .material-iconsassistant:before {
-  content: "\ea4a";
+  content: '\ea4a';
 }
 .material-iconsassistant_photo:before {
-  content: "\ea4b";
+  content: '\ea4b';
 }
 .material-iconsatm:before {
-  content: "\ea4c";
+  content: '\ea4c';
 }
 .material-iconsattach_file:before {
-  content: "\ea4d";
+  content: '\ea4d';
 }
 .material-iconsattachment:before {
-  content: "\ea4e";
+  content: '\ea4e';
 }
 .material-iconsattach_money:before {
-  content: "\ea4f";
+  content: '\ea4f';
 }
 .material-iconsaudiotrack:before {
-  content: "\ea50";
+  content: '\ea50';
 }
 .material-iconsautorenew:before {
-  content: "\ea51";
+  content: '\ea51';
 }
 .material-iconsav_timer:before {
-  content: "\ea52";
+  content: '\ea52';
 }

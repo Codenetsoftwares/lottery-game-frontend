@@ -1,43 +1,43 @@
-.table-sm td, .table-sm th {
-    padding: 0.35rem;
-  }
-  
-  .container {
-    max-width: 1200px;
-    margin: auto;
-  }
+.table-sm td,
+.table-sm th {
+  padding: 0.35rem;
+}
 
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
 
+.table tbody tr {
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
 
-  .table tbody tr {
-    transition: background-color 0.3s, color 0.3s;
-  }
-  
-  .table tbody tr:hover {
-    background-color: #6a0dad; /* Dark violet for row hover */
-    color: #fff; /* White text color on hover */
-  }
-  
-  .table tbody .fas.fa-trash {
-    cursor: pointer;
-    color: #4682B4; /* Initial color of the trash icon */
-    transition: color 0.3s;
-  }
-  
-  .table tbody .fas.fa-trash:hover {
-    color: #6a0dad; /* Violet color on hover */
-  }
-  
-  /* Optional: Add spacing and alignment adjustments for the action column */
-  .table td {
-    vertical-align: middle;
-  }
-  .custom-dropdown-menu {
-    max-height: 200px; /* Set a maximum height for the dropdown */
-    overflow-y: auto; /* Enable scrolling if there are many items */
-    background: white; /* Set background color to avoid transparency issues */
-    border: 1px solid #ccc; /* Optional: border to distinguish it */
-    border-radius: 4px; /* Rounded corners */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect for depth */
-  }
-  
+.table tbody tr:hover {
+  background-color: #6a0dad; /* Dark violet for row hover */
+  color: #fff; /* White text color on hover */
+}
+
+.table tbody .fas.fa-trash {
+  cursor: pointer;
+  color: #4682b4; /* Initial color of the trash icon */
+  transition: color 0.3s;
+}
+
+.table tbody .fas.fa-trash:hover {
+  color: #6a0dad; /* Violet color on hover */
+}
+
+/* Optional: Add spacing and alignment adjustments for the action column */
+.table td {
+  vertical-align: middle;
+}
+.custom-dropdown-menu {
+  max-height: 200px; /* Set a maximum height for the dropdown */
+  overflow-y: auto; /* Enable scrolling if there are many items */
+  background: white; /* Set background color to avoid transparency issues */
+  border: 1px solid #ccc; /* Optional: border to distinguish it */
+  border-radius: 4px; /* Rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect for depth */
+}

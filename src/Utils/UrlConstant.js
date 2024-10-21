@@ -2,7 +2,7 @@ class UrlConstant {
   constructor() {}
 
   //  url_dev = "https://lottery.server.dummydoma.in/api";
-  url_dev = "http://localhost:8080/api";
+  url_dev = 'http://localhost:8080/api';
 
   // admin api
 
@@ -17,6 +17,7 @@ class UrlConstant {
   getSelectSem = `${this.url_dev}/generate-tickets`;
   SingleDeleteCard = `${this.url_dev}/delete-particularLottery`;
   SingleEditCard = `${this.url_dev}/edit-particularLottery`;
+  generateNumber= `${this.url_dev}/generate-ticket`
 }
 
 const urls = new UrlConstant();

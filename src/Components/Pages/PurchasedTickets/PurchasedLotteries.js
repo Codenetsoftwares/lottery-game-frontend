@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useAppContext } from "../../../contextApi/context";
-import {
-  getPurchasedLotteryTickets,
-  PurchasedLotteryTicketsDelete,
-} from "../../../Utils/apiService";
-import strings from "../../../Utils/constant/stringConstant";
-import { Table, Spinner } from "react-bootstrap";
-import "./PurchasedLotteries.css";
-import Pagination from "../../Common/Pagination";
+import React, { useEffect, useState } from 'react';
+import { useAppContext } from '../../../contextApi/context';
+import { getPurchasedLotteryTickets, PurchasedLotteryTicketsDelete } from '../../../Utils/apiService';
+import strings from '../../../Utils/constant/stringConstant';
+import { Table, Spinner } from 'react-bootstrap';
+import './PurchasedLotteries.css';
+import Pagination from '../../Common/Pagination';
 
 const PurchasedLotteries = () => {
   const { dispatch } = useAppContext();
@@ -21,7 +18,7 @@ const PurchasedLotteries = () => {
   });
 
   const [dropdownOpen, setDropdownOpen] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
 
   const toggleDropdown = (id) => {
     setDropdownOpen(dropdownOpen === id ? null : id);
@@ -36,7 +33,7 @@ const PurchasedLotteries = () => {
       page: pagination.page,
       limit: pagination.limit,
     });
-    console.log('====>>> response from purchased tickets', response)
+    console.log('====>>> response from purchased tickets', response);
     if (response && response.success) {
       setPurchasedTickets(response.data || []);
       setPagination({
@@ -50,7 +47,7 @@ const PurchasedLotteries = () => {
         payload: response.data,
       });
     } else {
-      console.error("Failed to fetch purchased tickets");
+      console.error('Failed to fetch purchased tickets');
     }
     setLoading(false);
   };
@@ -60,9 +57,7 @@ const PurchasedLotteries = () => {
     setPagination((prev) => ({ ...prev, page: 1 })); // Reset to page 1 on new search
   };
 
-  const filteredTickets = purchasedTickets.filter((ticket) =>
-    ticket.sem.toString().includes(searchTerm)
-  );
+  const filteredTickets = purchasedTickets.filter((ticket) => ticket.sem.toString().includes(searchTerm));
 
   const handlePageChange = (newPage) => {
     setPagination((prev) => ({ ...prev, page: newPage }));
@@ -78,22 +73,19 @@ const PurchasedLotteries = () => {
   }
 
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
-  const endIndex = Math.min(
-    pagination.page * pagination.limit,
-    pagination.totalItems
-  );
+  const endIndex = Math.min(pagination.page * pagination.limit, pagination.totalItems);
 
   return (
     <div
       className="container mt-4 p-3"
       style={{
-        background: "#e6f7ff",
-        borderRadius: "10px",
-        boxShadow: "0 0 15px rgba(0,0,0,0.1)",
+        background: '#e6f7ff',
+        borderRadius: '10px',
+        boxShadow: '0 0 15px rgba(0,0,0,0.1)',
       }}
     >
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 style={{ color: "#4682B4" }}>Purchased Lottery Tickets</h2>
+        <h2 style={{ color: '#4682B4' }}>Purchased Lottery Tickets</h2>
         <div className="w-50">
           <input
             type="text"
@@ -109,10 +101,10 @@ const PurchasedLotteries = () => {
       <Table striped hover responsive bordered className="table-sm">
         <thead
           style={{
-            backgroundColor: "#4682B4",
-            color: "#fff",
-            fontWeight: "bold",
-            textAlign: "center",
+            backgroundColor: '#4682B4',
+            color: '#fff',
+            fontWeight: 'bold',
+            textAlign: 'center',
           }}
         >
           <tr>
@@ -126,7 +118,7 @@ const PurchasedLotteries = () => {
             <th>User Name</th>
           </tr>
         </thead>
-        <tbody style={{ textAlign: "center" }}>
+        <tbody style={{ textAlign: 'center' }}>
           {purchasedTickets && purchasedTickets.length > 0 ? (
             purchasedTickets.map((ticket, index) => (
               <tr key={ticket.purchaseId}>
@@ -137,7 +129,7 @@ const PurchasedLotteries = () => {
                 <td>{ticket.purchaseAmount}</td>
                 <td>{ticket.sem}</td>
                 <td>
-                  <div className="dropdown" style={{ position: "relative" }}>
+                  <div className="dropdown" style={{ position: 'relative' }}>
                     <button
                       className="btn btn-link dropdown-toggle"
                       type="button"
@@ -147,21 +139,16 @@ const PurchasedLotteries = () => {
                     </button>
                     {dropdownOpen === ticket.purchaseId && (
                       <div className="custom-dropdown-menu">
-                        <span className="dropdown-item-text">
-                          Ticket Numbers:
-                        </span>
+                        <span className="dropdown-item-text">Ticket Numbers:</span>
                         <div className="dropdown-divider" />
-                        {ticket.ticketNumber &&
-                          ticket.ticketNumber.length > 0 ? (
+                        {ticket.ticketNumber && ticket.ticketNumber.length > 0 ? (
                           ticket.ticketNumber.map((number, i) => (
                             <span key={i} className="dropdown-item">
                               {number}
                             </span>
                           ))
                         ) : (
-                          <span className="dropdown-item text-muted">
-                            No ticket numbers available
-                          </span>
+                          <span className="dropdown-item text-muted">No ticket numbers available</span>
                         )}
                       </div>
                     )}
