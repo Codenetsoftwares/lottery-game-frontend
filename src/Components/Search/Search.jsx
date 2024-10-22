@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Search.css'; 
+
 import { SearchLotteryTicket } from '../../Utils/apiService';
 
 const Search = () => {
@@ -45,23 +46,54 @@ const Search = () => {
     setIsSeriesPickerVisible(false);
   };
 
-  const renderSeriesGrid = () => {
+  // const renderSeriesGrid = () => {
+  //   // const letters = ['A', 'B', 'C', 'D', 'E', 'G', 'H', 'J', 'K', 'L'];
+  //   const availableSeries = sem === '5' || sem === '25' ? ['A', 'B', 'C', 'D', 'E'] : ['A', 'B', 'C', 'D', 'E', 'G', 'H', 'J', 'K', 'L'];
+  //   return (
+  //     <div className="calendar-grid">
+  //       {availableSeries.map((letter) => (
+  //         <button
+  //           key={letter}
+  //           className="calendar-cell"
+  //           onClick={() => handleSeriesSelect(letter)}
+  //         >
+  //           {letter}
+  //         </button>
+  //       ))}
+  //     </div>
+  //   );
+  // };
+  // Modify the renderSeriesGrid function to handle restrictions
+   // Modify the renderSeriesGrid function to handle restrictions
+   const renderSeriesGrid = () => {
     const letters = ['A', 'B', 'C', 'D', 'E', 'G', 'H', 'J', 'K', 'L'];
+    const disabledLetters = ['G', 'H', 'J', 'K', 'L']; // Letters to disable for 5 and 25 SEM
+
+    const handleDisabledClick = () => {
+      alert('This series is not allowed for the selected SEM.');
+    };
+
     return (
       <div className="calendar-grid">
-        {letters.map((letter) => (
-          <button
-            key={letter}
-            className="calendar-cell"
-            onClick={() => handleSeriesSelect(letter)}
-          >
-            {letter}
-          </button>
-        ))}
+        {letters.map((letter) => {
+          const isDisabled = (sem === '5' || sem === '25') && disabledLetters.includes(letter);
+          return (
+            <button
+              key={letter}
+              className={`calendar-cell ${isDisabled ? 'disabled-cell' : ''}`}
+              onClick={() => (isDisabled ? handleDisabledClick() : handleSeriesSelect(letter))}
+              disabled={isDisabled}
+              style={{ pointer: isDisabled ? 'not-allowed' : 'pointer',  color: isDisabled ? '#e0e0e0' : '#000'}}
+              title={isDisabled ? "This series is not allowed for the selected SEM" : ""}
+              
+            >
+              {letter}
+            </button>
+          );
+        })}
       </div>
     );
   };
-
   const handleNumberSelect = (value) => {
     setNumber(value);
     setIsNumberPickerVisible(false);

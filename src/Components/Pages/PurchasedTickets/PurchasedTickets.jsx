@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useAppContext } from '../../../contextApi/context';
 import { PurchasedTicketsHistory } from '../../../Utils/apiService';
 import strings from '../../../Utils/constant/stringConstant';
 import { Table, Spinner } from 'react-bootstrap';
 import './PurchasedLotteries.css';
 import Pagination from '../../Common/Pagination';
+import debounce from 'lodash.debounce';
 
 const PurchasedTickets = () => {
   const { dispatch } = useAppContext();
@@ -24,43 +25,52 @@ const PurchasedTickets = () => {
     setDropdownOpen(dropdownOpen === id ? null : id);
   };
 
-  useEffect(() => {
-    fetchPurchasedLotteryTickets();
-  }, [pagination.page, pagination.limit]);
+  // Debounce the search function to reduce API calls
+  const fetchPurchasedLotteryTickets = useCallback(
+    debounce(async (searchTerm) => {
+      setLoading(true);
+      const response = await PurchasedTicketsHistory({
+        page: pagination.page,
+        limit: pagination.limit,
+        searchBySem: searchTerm,
+      });
 
-  const fetchPurchasedLotteryTickets = async () => {
-    const response = await PurchasedTicketsHistory({
-      page: pagination.page,
-      limit: pagination.limit,
-    });
-    console.log('====>>> response from purchased tickets', response);
-    if (response && response.success) {
-      setPurchasedTickets(response.data || []);
-      setPagination({
-        page: response?.pagination?.page || pagination.page,
-        limit: response?.pagination?.limit || pagination.limit,
-        totalPages: response?.pagination?.totalPages || 0,
-        totalItems: response?.pagination?.totalItems || 0,
-      });
-      dispatch({
-        type: strings.PURCHASED_LOTTERY_TICKETS,
-        payload: response.data,
-      });
-    } else {
-      console.error('Failed to fetch purchased tickets');
-    }
-    setLoading(false);
-  };
+      console.log('====>>> response from purchased tickets', response);
+
+      if (response && response.success) {
+        setPurchasedTickets(response.data || []);
+        setPagination({
+          page: response?.pagination?.page || pagination.page,
+          limit: response?.pagination?.limit || pagination.limit,
+          totalPages: response?.pagination?.totalPages || 0,
+          totalItems: response?.pagination?.totalItems || 0,
+        });
+        dispatch({
+          type: strings.PURCHASED_LOTTERY_TICKETS,
+          payload: response.data,
+        });
+      } else {
+        console.error('Failed to fetch purchased tickets');
+      }
+
+      setLoading(false);
+    }, 500), // Adjust debounce time to 500ms or any suitable time for your case
+    [pagination.page, pagination.limit, dispatch]
+  );
+
+  useEffect(() => {
+    // Fetch tickets when searchTerm or pagination changes
+    fetchPurchasedLotteryTickets(searchTerm);
+
+    return () => {
+      fetchPurchasedLotteryTickets.cancel(); // Cleanup on unmount
+    };
+  }, [pagination.page, pagination.limit, searchTerm]);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
-    setPagination((prev) => ({ ...prev, page: 1 }));
+    setPagination((prev) => ({ ...prev, page: 1 })); // Reset to the first page
   };
-
-  // Filter tickets based on draw date (you might want to change this logic)
-  const filteredTickets = purchasedTickets.filter((ticket) =>
-    ticket.drawDate.toString().includes(searchTerm)
-  );
 
   const handlePageChange = (newPage) => {
     setPagination((prev) => ({ ...prev, page: newPage }));
@@ -77,7 +87,7 @@ const PurchasedTickets = () => {
 
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
   const endIndex = Math.min(pagination.page * pagination.limit, pagination.totalItems);
-  
+
   return (
     <div
       className="container mt-4 p-3"
@@ -93,7 +103,7 @@ const PurchasedTickets = () => {
           <input
             type="text"
             className="form-control"
-            placeholder="Search purchased tickets by draw date.."
+            placeholder="Search purchased tickets by SEM.."
             aria-label="Search tickets"
             value={searchTerm}
             onChange={handleSearchChange}
@@ -113,17 +123,19 @@ const PurchasedTickets = () => {
           <tr>
             <th>Serial Number</th>
             <th>Draw Date</th>
+            <th>SEM</th>
             <th>Tickets</th>
             <th>Price</th>
             <th>User Name</th>
           </tr>
         </thead>
         <tbody style={{ textAlign: 'center' }}>
-          {filteredTickets.length > 0 ? (
-            filteredTickets.map((ticket, index) => (
+          {purchasedTickets.length > 0 ? (
+            purchasedTickets.map((ticket, index) => (
               <tr key={index}>
                 <td>{startIndex + index}</td>
                 <td>{ticket.drawDate}</td>
+                <td>{ticket.sem}</td> 
                 <td>
                   <div className="dropdown" style={{ position: 'relative' }}>
                     <button
@@ -156,14 +168,14 @@ const PurchasedTickets = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="5" className="text-center">
+              <td colSpan="6" className="text-center">
                 No tickets found.
               </td>
             </tr>
           )}
         </tbody>
       </Table>
-      {filteredTickets.length > 0 && (
+      {purchasedTickets.length > 0 && (
         <Pagination
           currentPage={pagination.page}
           totalPages={pagination.totalPages}

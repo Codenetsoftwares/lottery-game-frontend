@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useAppContext } from '../../../contextApi/context';
-import { getPurchasedLotteryTickets, PurchasedLotteryTicketsDelete } from '../../../Utils/apiService';
-import strings from '../../../Utils/constant/stringConstant';
-import { Table, Spinner } from 'react-bootstrap';
-import './PurchasedLotteries.css';
-import Pagination from '../../Common/Pagination';
+import React, { useEffect, useState } from "react";
+import { useAppContext } from "../../../contextApi/context";
+import { getPurchasedLotteryTickets } from "../../../Utils/apiService";
+import strings from "../../../Utils/constant/stringConstant";
+import { Table, Spinner } from "react-bootstrap";
+import "./PurchasedLotteries.css";
+import Pagination from "../../Common/Pagination";
 
 const PurchasedLotteries = () => {
   const { dispatch } = useAppContext();
@@ -16,24 +16,29 @@ const PurchasedLotteries = () => {
     totalPages: 0,
     totalItems: 0,
   });
-
   const [dropdownOpen, setDropdownOpen] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(''); // State for search term
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+
+  console.log("serch",searchTerm)
 
   const toggleDropdown = (id) => {
     setDropdownOpen(dropdownOpen === id ? null : id);
   };
 
+  // Fetch tickets whenever pagination or search term changes
   useEffect(() => {
-    fetchPurchasedLotteryTickets(pagination.page, pagination.limit);
-  }, [pagination.page, pagination.limit]);
+    fetchPurchasedLotteryTickets();
+  }, [pagination.page, pagination.limit, searchTerm]);
 
   const fetchPurchasedLotteryTickets = async () => {
+    setLoading(true); // Start loading when fetching data
     const response = await getPurchasedLotteryTickets({
       page: pagination.page,
       limit: pagination.limit,
+      searchBySem: searchTerm || "", // Pass the search term here
     });
-    console.log('====>>> response from purchased tickets', response);
+
+    console.log("====>>> response from purchased tickets", response);
     if (response && response.success) {
       setPurchasedTickets(response.data || []);
       setPagination({
@@ -47,22 +52,23 @@ const PurchasedLotteries = () => {
         payload: response.data,
       });
     } else {
-      console.error('Failed to fetch purchased tickets');
+      console.error("Failed to fetch purchased tickets");
     }
-    setLoading(false);
+    setLoading(false); // Stop loading after data fetch
   };
 
+  // Handle search term change and reset to the first page
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value); // Update the search term
-    setPagination((prev) => ({ ...prev, page: 1 })); // Reset to page 1 on new search
+    const newSearchTerm = event.target.value;
+    setSearchTerm(newSearchTerm);
+    setPagination((prev) => ({ ...prev, page: 1 })); // Reset to first page on search
   };
-
-  const filteredTickets = purchasedTickets.filter((ticket) => ticket.sem.toString().includes(searchTerm));
 
   const handlePageChange = (newPage) => {
     setPagination((prev) => ({ ...prev, page: newPage }));
   };
 
+  // Show loading spinner if data is still being fetched
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center">
@@ -73,27 +79,30 @@ const PurchasedLotteries = () => {
   }
 
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
-  const endIndex = Math.min(pagination.page * pagination.limit, pagination.totalItems);
+  const endIndex = Math.min(
+    pagination.page * pagination.limit,
+    pagination.totalItems
+  );
 
   return (
     <div
       className="container mt-4 p-3"
       style={{
-        background: '#e6f7ff',
-        borderRadius: '10px',
-        boxShadow: '0 0 15px rgba(0,0,0,0.1)',
+        background: "#e6f7ff",
+        borderRadius: "10px",
+        boxShadow: "0 0 15px rgba(0,0,0,0.1)",
       }}
     >
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 style={{ color: '#4682B4' }}>Purchased Lottery Tickets</h2>
+        <h2 style={{ color: "#4682B4" }}>Purchased Lottery Tickets</h2>
         <div className="w-50">
           <input
             type="text"
             className="form-control"
             placeholder="Search purchased tickets by sem.."
-            aria-label="Search tickets" // Bind the input value to the state
-            value={searchTerm} // Bind the input value to the state
-            onChange={handleSearchChange}
+            aria-label="Search tickets"
+            value={searchTerm}
+            onChange={(e)=>searchTerm(e.target.value)} // Trigger search on input change
           />
         </div>
       </div>
@@ -101,10 +110,10 @@ const PurchasedLotteries = () => {
       <Table striped hover responsive bordered className="table-sm">
         <thead
           style={{
-            backgroundColor: '#4682B4',
-            color: '#fff',
-            fontWeight: 'bold',
-            textAlign: 'center',
+            backgroundColor: "#4682B4",
+            color: "#fff",
+            fontWeight: "bold",
+            textAlign: "center",
           }}
         >
           <tr>
@@ -118,8 +127,8 @@ const PurchasedLotteries = () => {
             <th>User Name</th>
           </tr>
         </thead>
-        <tbody style={{ textAlign: 'center' }}>
-          {purchasedTickets && purchasedTickets.length > 0 ? (
+        <tbody style={{ textAlign: "center" }}>
+          {purchasedTickets.length > 0 ? (
             purchasedTickets.map((ticket, index) => (
               <tr key={ticket.purchaseId}>
                 <td>{startIndex + index}</td>
@@ -129,7 +138,7 @@ const PurchasedLotteries = () => {
                 <td>{ticket.purchaseAmount}</td>
                 <td>{ticket.sem}</td>
                 <td>
-                  <div className="dropdown" style={{ position: 'relative' }}>
+                  <div className="dropdown" style={{ position: "relative" }}>
                     <button
                       className="btn btn-link dropdown-toggle"
                       type="button"
@@ -139,16 +148,21 @@ const PurchasedLotteries = () => {
                     </button>
                     {dropdownOpen === ticket.purchaseId && (
                       <div className="custom-dropdown-menu">
-                        <span className="dropdown-item-text">Ticket Numbers:</span>
+                        <span className="dropdown-item-text">
+                          Ticket Numbers:
+                        </span>
                         <div className="dropdown-divider" />
-                        {ticket.ticketNumber && ticket.ticketNumber.length > 0 ? (
+                        {ticket.ticketNumber &&
+                        ticket.ticketNumber.length > 0 ? (
                           ticket.ticketNumber.map((number, i) => (
                             <span key={i} className="dropdown-item">
                               {number}
                             </span>
                           ))
                         ) : (
-                          <span className="dropdown-item text-muted">No ticket numbers available</span>
+                          <span className="dropdown-item text-muted">
+                            No ticket numbers available
+                          </span>
                         )}
                       </div>
                     )}
@@ -166,6 +180,7 @@ const PurchasedLotteries = () => {
           )}
         </tbody>
       </Table>
+
       {purchasedTickets.length > 0 && (
         <Pagination
           currentPage={pagination.page}
