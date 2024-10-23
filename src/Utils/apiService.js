@@ -136,3 +136,24 @@ export async function generateLotteryNumber(body, isToast = true) {
 }
 
 
+export async function SearchLotteryTicket(body, isToast = true) {
+  try {
+    const callParams = await getAuthCallParams(strings.POST, body, isToast);
+    const response = await makeCall(urls.searchTicket, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function PurchasedTicketsHistory(body,isToast = true) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, null, isToast);
+  const response = await makeCall(`${urls.PurchasedLotteryHistory}?page=${body.page}&limitPerPage=${body.limit}&sem=${body.searchBySem}`, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+

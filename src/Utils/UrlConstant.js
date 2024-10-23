@@ -10,14 +10,16 @@ class UrlConstant {
   generateTicketId = `${this.url_dev}/ticket-create`;
   generateLottery = `${this.url_dev}/create-lottery`;
   getLotteryTicket = `${this.url_dev}/getAllLotteries`;
-  getPurchasedLotteryTicket = `${this.url_dev}/allPurchase-Lotteries`;
+  getPurchasedLotteryTicket = `${this.url_dev}/allPurchase-Lotteries`;// not in use as of now
   removeCreatedLottery = `${this.url_dev}/deleteAll-lotteries`;
   deletePurchasedLottery = `${this.url_dev}/deleteAll-purchaseLotteries`; // not in use as of now
   UnPurchasedLotteryDelete = `${this.url_dev}/lotteries/delete-non-purchased`;
   getSelectSem = `${this.url_dev}/generate-tickets`;
   SingleDeleteCard = `${this.url_dev}/delete-particularLottery`;
   SingleEditCard = `${this.url_dev}/edit-particularLottery`;
-  generateNumber= `${this.url_dev}/generate-ticket`
+  generateNumber= `${this.url_dev}/generate-ticket`;
+  searchTicket=`${this.url_dev}/admin/search-ticket`;
+  PurchasedLotteryHistory=`${this.url_dev}/admin/purchase-history`;
 }
 
 const urls = new UrlConstant();
