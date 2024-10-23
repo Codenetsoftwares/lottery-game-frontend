@@ -62,8 +62,8 @@ const CreateMarket = () => {
         end: seriesTo
       },
       number: {
-        min: parseInt(numberFrom), // Convert string to integer
-        max: parseInt(numberTo) // Convert string to integer
+        min: numberFrom, // Convert string to integer
+        max: numberTo // Convert string to integer
       }
     };
   
