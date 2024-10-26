@@ -12,16 +12,53 @@ const Search = () => {
   const [isGroupPickerVisible, setIsGroupPickerVisible] = useState(false);
   const [isSeriesPickerVisible, setIsSeriesPickerVisible] = useState(false);
   const [isNumberPickerVisible, setIsNumberPickerVisible] = useState(false);
-  const [responseData, setResponseData] = useState(null); // State to hold API response
-  const [showSearch, setShowSearch] = useState(true); // State to control visibility of search box
+  const [responseData, setResponseData] = useState(null); 
+  const [showSearch, setShowSearch] = useState(true); 
+  const [errors, setErrors] = useState({});
+
+  // Validation function
+  const validateFields = () => {
+    const newErrors = {};
+    if (!sem) newErrors.sem = 'SEM is required.';
+    if (!group) newErrors.group = 'Group is required.';
+    if (!series) newErrors.series = 'Series is required.';
+    if (!number || number.length !== 5) newErrors.number = 'A valid 5-digit number is required.';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSemChange = (e) => {
     setSem(e.target.value);
+    if (e.target.value) {
+      setErrors((prevErrors) => ({ ...prevErrors, sem: undefined })); 
+    }
   };
 
   const handleGroupSelect = (value) => {
     setGroup(value);
     setIsGroupPickerVisible(false);
+    setErrors((prevErrors) => ({ ...prevErrors, group: undefined }));
+    closeOtherPickers('group');
+  };
+
+  const handleSeriesSelect = (value) => {
+    setSeries(value);
+    setIsSeriesPickerVisible(false);
+    setErrors((prevErrors) => ({ ...prevErrors, series: undefined }));
+    closeOtherPickers('series');
+  };
+
+  const handleNumberSelect = (value) => {
+    setNumber(value);
+    setIsNumberPickerVisible(false);
+    setErrors((prevErrors) => ({ ...prevErrors, number: undefined }));
+    closeOtherPickers('number');
+  };
+
+  const closeOtherPickers = (activePicker) => {
+    if (activePicker !== 'group') setIsGroupPickerVisible(false);
+    if (activePicker !== 'series') setIsSeriesPickerVisible(false);
+    if (activePicker !== 'number') setIsNumberPickerVisible(false);
   };
 
   const renderGroupGrid = () => {
@@ -41,33 +78,9 @@ const Search = () => {
     );
   };
 
-  const handleSeriesSelect = (value) => {
-    setSeries(value);
-    setIsSeriesPickerVisible(false);
-  };
-
-  // const renderSeriesGrid = () => {
-  //   // const letters = ['A', 'B', 'C', 'D', 'E', 'G', 'H', 'J', 'K', 'L'];
-  //   const availableSeries = sem === '5' || sem === '25' ? ['A', 'B', 'C', 'D', 'E'] : ['A', 'B', 'C', 'D', 'E', 'G', 'H', 'J', 'K', 'L'];
-  //   return (
-  //     <div className="calendar-grid">
-  //       {availableSeries.map((letter) => (
-  //         <button
-  //           key={letter}
-  //           className="calendar-cell"
-  //           onClick={() => handleSeriesSelect(letter)}
-  //         >
-  //           {letter}
-  //         </button>
-  //       ))}
-  //     </div>
-  //   );
-  // };
-  // Modify the renderSeriesGrid function to handle restrictions
-   // Modify the renderSeriesGrid function to handle restrictions
-   const renderSeriesGrid = () => {
+  const renderSeriesGrid = () => {
     const letters = ['A', 'B', 'C', 'D', 'E', 'G', 'H', 'J', 'K', 'L'];
-    const disabledLetters = ['G', 'H', 'J', 'K', 'L']; // Letters to disable for 5 and 25 SEM
+    const disabledLetters = ['G', 'H', 'J', 'K', 'L'];
 
     const handleDisabledClick = () => {
       alert('This series is not allowed for the selected SEM.');
@@ -83,9 +96,8 @@ const Search = () => {
               className={`calendar-cell ${isDisabled ? 'disabled-cell' : ''}`}
               onClick={() => (isDisabled ? handleDisabledClick() : handleSeriesSelect(letter))}
               disabled={isDisabled}
-              style={{ pointer: isDisabled ? 'not-allowed' : 'pointer',  color: isDisabled ? '#e0e0e0' : '#000'}}
+              style={{ pointerEvents: isDisabled ? 'none' : 'auto', color: isDisabled ? '#e0e0e0' : '#000' }}
               title={isDisabled ? "This series is not allowed for the selected SEM" : ""}
-              
             >
               {letter}
             </button>
@@ -94,12 +106,8 @@ const Search = () => {
       </div>
     );
   };
-  const handleNumberSelect = (value) => {
-    setNumber(value);
-    setIsNumberPickerVisible(false);
-  };
 
-  const renderNumberGrid = (rangeStart = 0, rangeEnd = 99999, isFormatted = true) => {
+  const renderNumberGrid = (rangeStart = 0, rangeEnd = 99999) => {
     const numbers = Array.from({ length: rangeEnd - rangeStart + 1 }, (_, i) => i + rangeStart);
     return (
       <div className="calendar-grid">
@@ -107,9 +115,9 @@ const Search = () => {
           <button
             key={number}
             className="calendar-cell"
-            onClick={() => handleNumberSelect(isFormatted ? number.toString().padStart(5, '0') : number.toString())}
+            onClick={() => handleNumberSelect(number.toString().padStart(5, '0'))}
           >
-            {isFormatted ? number.toString().padStart(5, '0') : number.toString()}
+            {number.toString().padStart(5, '0')}
           </button>
         ))}
       </div>
@@ -117,29 +125,23 @@ const Search = () => {
   };
 
   const handleSearch = async () => {
-    const requestBody = {
-      group: group ? parseInt(group) : null,
-      series: series ? series : null,
-      number: number ? parseInt(number) : null,
-      sem: sem ? parseInt(sem) : null,
-    };
+    if (!validateFields()) return; // Validate before searching
 
-    console.log("Request Body:", requestBody); 
+    const requestBody = {
+      group: group ? String(group) : null,
+      series: series ? String(series) : null,
+      number: number ? String(number) : null,
+      sem: sem ? String(sem) : null,
+    };
 
     try {
       const response = await SearchLotteryTicket(requestBody);
-      console.log('Success:', response);
-      
-      // Set the response data and hide the search box
       setResponseData(response.data);
-
       setShowSearch(false);
     } catch (error) {
       console.error('Error:', error);
-      // Handle the error if necessary
     }
   };
-  console.log('====>>> line 110',responseData)
 
   return (
     <div className="container-fluid d-flex justify-content-center" style={{ minHeight: '75vh', backgroundColor: '#f0f4f8' }}>
@@ -162,6 +164,7 @@ const Search = () => {
                 <option value="100">100 SEM</option>
                 <option value="200">200 SEM</option>
               </select>
+              {errors.sem && <small className="text-danger">{errors.sem}</small>}
             </div>
 
             {/* Group Input */}
@@ -172,7 +175,10 @@ const Search = () => {
                   placeholder="Group"
                   className="form-control"
                   value={group}
-                  onFocus={() => setIsGroupPickerVisible(true)}
+                  onFocus={() => {
+                    setIsGroupPickerVisible(true);
+                    closeOtherPickers('group'); // Close other dropdowns
+                  }}
                   readOnly
                 />
                 {isGroupPickerVisible && (
@@ -180,6 +186,7 @@ const Search = () => {
                     {renderGroupGrid()}
                   </div>
                 )}
+                {errors.group && <small className="text-danger">{errors.group}</small>}
               </div>
             </div>
 
@@ -191,7 +198,10 @@ const Search = () => {
                   placeholder="Series"
                   className="form-control"
                   value={series}
-                  onFocus={() => setIsSeriesPickerVisible(true)}
+                  onFocus={() => {
+                    setIsSeriesPickerVisible(true);
+                    closeOtherPickers('series'); // Close other dropdowns
+                  }}
                   readOnly
                 />
                 {isSeriesPickerVisible && (
@@ -199,6 +209,7 @@ const Search = () => {
                     {renderSeriesGrid()}
                   </div>
                 )}
+                {errors.series && <small className="text-danger">{errors.series}</small>}
               </div>
             </div>
 
@@ -210,7 +221,10 @@ const Search = () => {
                   placeholder="Number"
                   className="form-control"
                   value={number}
-                  onFocus={() => setIsNumberPickerVisible(true)}
+                  onFocus={() => {
+                    setIsNumberPickerVisible(true);
+                    closeOtherPickers('number'); // Close other dropdowns
+                  }}
                   readOnly
                 />
                 {isNumberPickerVisible && (
@@ -218,34 +232,46 @@ const Search = () => {
                     {renderNumberGrid()}
                   </div>
                 )}
+                {errors.number && <small className="text-danger">{errors.number}</small>}
               </div>
             </div>
 
-             {/* Search Button */}
-             <div className="text-center">
-              <button className="btn btn-primary" onClick={handleSearch} style={{ backgroundColor: '#4682B4', padding: '10px 40px', fontWeight: 'bold' }}>Search</button>
+            <div className="text-center">
+              <button
+                className="btn btn-primary"
+                onClick={handleSearch}
+                style={{ backgroundColor: '#4682B4' }}
+              >
+                Search
+              </button>
             </div>
           </>
         ) : (
           <div className="text-center">
-            <h4 style={{ color: '#4682B4', fontWeight: 'bold' }}>Search Results:</h4>
-            <div className="mt-3">
-              {responseData && responseData.tickets && responseData.tickets.length > 0 ? ( 
-                <>
-                  <h5>Tickets:</h5>
-                  <ul>
-                    {responseData.tickets.map((ticket, index) => ( 
-                      <li key={index} style={{ color: '#3b6e91' }}>{ticket}</li>
-                    ))}
-                  </ul>
-                  <h5>Price: <span style={{ color: '#3b6e91' }}>₹{responseData.price}</span></h5>
-                  <h5>SEM: <span style={{ color: '#3b6e91' }}>{responseData.sem}</span></h5>
-                </>
-              ) : (
-                <h5 style={{ color: '#3b6e91' }}>{responseData ? responseData.message || 'No tickets found.' : 'No data available.'}</h5>
-              )}
-            </div>
+          <h4 style={{ color: '#4682B4', fontWeight: 'bold' }}>Search Results:</h4>
+          <div className="mt-3" 
+           style={{
+            maxHeight: responseData && responseData.tickets && responseData.tickets.length > 8 ? '150px' : 'auto', // Apply max height for scrolling only if there are more than 8 tickets
+            overflowY: responseData && responseData.tickets && responseData.tickets.length > 8 ? 'auto' : 'visible', // Enable Y-scroll if more than 8 tickets
+          }}  
+                        
+                        >
+            {responseData && responseData.tickets && responseData.tickets.length > 0 ? ( 
+              <>
+                <h5>Tickets:</h5>
+                <ul>
+                  {responseData.tickets.map((ticket, index) => ( 
+                    <li key={index} style={{ color: '#3b6e91' }}>{ticket}</li>
+                  ))}
+                </ul>
+                <h5>Price: <span style={{ color: '#3b6e91' }}>₹{responseData.price}</span></h5>
+                <h5>SEM: <span style={{ color: '#3b6e91' }}>{responseData.sem}</span></h5>
+              </>
+            ) : (
+              <h5 style={{ color: '#3b6e91' }}>{responseData ? responseData.message || 'No tickets found.' : 'No data available.'}</h5>
+            )}
           </div>
+        </div>
         )}
       </div>
     </div>

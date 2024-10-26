@@ -1,25 +1,35 @@
-import React, { useState } from "react";
-import './CreateMarket.css'; // Import custom styles
+import React, { useEffect, useState } from "react";
+import "./CreateMarket.css"; // Import custom styles
 import { generateLotteryNumber } from "../../Utils/apiService";
 
 const CreateMarket = () => {
-  const [groupFrom, setGroupFrom] = useState('');
-  const [groupTo, setGroupTo] = useState('');
-  const [isGroupFromPickerVisible, setIsGroupFromPickerVisible] = useState(false);
+  const [groupFrom, setGroupFrom] = useState("");
+  const [groupTo, setGroupTo] = useState("");
+  const [isGroupFromPickerVisible, setIsGroupFromPickerVisible] =
+    useState(false);
   const [isGroupToPickerVisible, setIsGroupToPickerVisible] = useState(false);
 
-  const [seriesFrom, setSeriesFrom] = useState('');
-  const [seriesTo, setSeriesTo] = useState('');
-  const [isSeriesFromPickerVisible, setIsSeriesFromPickerVisible] = useState(false);
+  const [seriesFrom, setSeriesFrom] = useState("");
+  const [seriesTo, setSeriesTo] = useState("");
+  const [isSeriesFromPickerVisible, setIsSeriesFromPickerVisible] =
+    useState(false);
   const [isSeriesToPickerVisible, setIsSeriesToPickerVisible] = useState(false);
 
-  const [numberFrom, setNumberFrom] = useState('');
-  const [numberTo, setNumberTo] = useState('');
-  const [isNumberFromPickerVisible, setIsNumberFromPickerVisible] = useState(false);
+  const [numberFrom, setNumberFrom] = useState("");
+  const [numberTo, setNumberTo] = useState("");
+  const [isNumberFromPickerVisible, setIsNumberFromPickerVisible] =
+    useState(false);
   const [isNumberToPickerVisible, setIsNumberToPickerVisible] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false); // New state to trigger reload
+
+  useEffect(() => {
+    if (isSubmitted) {
+      window.location.reload();
+    }
+  }, [isSubmitted]);
 
   const handleGroupSelect = (value, type) => {
-    if (type === 'from') {
+    if (type === "from") {
       setGroupFrom(value);
       setIsGroupFromPickerVisible(false);
     } else {
@@ -29,7 +39,7 @@ const CreateMarket = () => {
   };
 
   const handleSeriesSelect = (value, type) => {
-    if (type === 'from') {
+    if (type === "from") {
       setSeriesFrom(value);
       setIsSeriesFromPickerVisible(false);
     } else {
@@ -39,7 +49,7 @@ const CreateMarket = () => {
   };
 
   const handleNumberSelect = (value, type) => {
-    if (type === 'from') {
+    if (type === "from") {
       setNumberFrom(value);
       setIsNumberFromPickerVisible(false);
     } else {
@@ -48,59 +58,56 @@ const CreateMarket = () => {
     }
   };
 
-   // Function to handle form submission
+  // Function to handle form submission
 
-   const handleSubmit = async () => {
-    // Prepare the data to send
+  const handleSubmit = async () => {
     const requestBody = {
       group: {
-        min: parseInt(groupFrom), // Convert string to integer
-        max: parseInt(groupTo) // Convert string to integer
+        min: parseInt(groupFrom),
+        max: parseInt(groupTo),
       },
       series: {
         start: seriesFrom,
-        end: seriesTo
+        end: seriesTo,
       },
       number: {
-        min: numberFrom, // Convert string to integer
-        max: numberTo // Convert string to integer
-      }
+        min: numberFrom,
+        max: numberTo,
+      },
     };
-  
-    console.log("Request Body:", requestBody); // Log the request body
-  
+
+    console.log("Request Body:", requestBody);
+
     try {
-      const response = await generateLotteryNumber(requestBody); // Call your API function
-      console.log('Success:', response);
-      // Handle success (e.g., show a success message or redirect)
-  
+      const response = await generateLotteryNumber(requestBody);
+      console.log("Success:", response);
+      setIsSubmitted(true);
     } catch (error) {
-      console.error('Error:', error);
-      // Handle error (e.g., show an error message)
+      console.error("Error:", error);
     }
   };
 
-    // Group Grid (38 to 99)
-    const renderGroupGrid = (type) => {
-      const groups = Array.from({ length: 62 }, (_, i) => (i + 38).toString()); // Generate groups from 38 to 99
-      return (
-        <div className="calendar-grid group-grid">
-          {groups.map((group) => (
-            <button
-              key={group}
-              className="calendar-cell"
-              onClick={() => handleGroupSelect(group, type)}
-            >
-              {group}
-            </button>
-          ))}
-        </div>
-      );
-    };
+  // Group Grid (38 to 99)
+  const renderGroupGrid = (type) => {
+    const groups = Array.from({ length: 62 }, (_, i) => (i + 38).toString()); // Generate groups from 38 to 99
+    return (
+      <div className="calendar-grid group-grid">
+        {groups.map((group) => (
+          <button
+            key={group}
+            className="calendar-cell"
+            onClick={() => handleGroupSelect(group, type)}
+          >
+            {group}
+          </button>
+        ))}
+      </div>
+    );
+  };
 
   // Series Grid (A to L, excluding I and F)
   const renderSeriesGrid = (type) => {
-    const letters = ['A', 'B', 'C', 'D', 'E', 'G', 'H', 'J', 'K', 'L'];
+    const letters = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
     return (
       <div className="calendar-grid series-grid">
         {letters.map((letter) => (
@@ -117,8 +124,16 @@ const CreateMarket = () => {
   };
 
   // Numbers grid picker (0 to 99999)
-  const renderNumberGrid = (type, rangeStart = 0, rangeEnd = 99999, isFormatted = true) => {
-    const numbers = Array.from({ length: rangeEnd - rangeStart + 1 }, (_, i) => i + rangeStart);
+  const renderNumberGrid = (
+    type,
+    rangeStart = 0,
+    rangeEnd = 99999,
+    isFormatted = true
+  ) => {
+    const numbers = Array.from(
+      { length: rangeEnd - rangeStart + 1 },
+      (_, i) => i + rangeStart
+    );
 
     return (
       <div className="calendar-grid number-grid">
@@ -126,9 +141,19 @@ const CreateMarket = () => {
           <button
             key={number}
             className="calendar-cell"
-            onClick={() => handleNumberSelect(isFormatted ? number.toString().padStart(5, '0') : number.toString(), type)} 
+            onClick={() =>
+              handleNumberSelect(
+                isFormatted
+                  ? number.toString().padStart(5, "0")
+                  : number.toString(),
+                type
+              )
+            }
           >
-            {isFormatted ? number.toString().padStart(5, '0') : number.toString()} {/* Show as 5 digits for numbers */}
+            {isFormatted
+              ? number.toString().padStart(5, "0")
+              : number.toString()}{" "}
+            {/* Show as 5 digits for numbers */}
           </button>
         ))}
       </div>
@@ -136,7 +161,7 @@ const CreateMarket = () => {
   };
 
   return (
-    <div style={{ minHeight: '75vh', backgroundColor: "#f0f4f8" }}>
+    <div style={{ minHeight: "75vh", backgroundColor: "#f0f4f8" }}>
       {/* Custom Header */}
       <div
         className="text-center"
@@ -173,14 +198,20 @@ const CreateMarket = () => {
         >
           {/* Body Content */}
           <div className="text-center">
-            <h3 className="mb-3" style={{ color: "#4682B4", fontWeight: "bold" }}>
+            <h3
+              className="mb-3"
+              style={{ color: "#4682B4", fontWeight: "bold" }}
+            >
               Choose Your Group, Series, and Number
             </h3>
 
             {/* Group From and To */}
             <div className="mb-3">
               <div className="d-flex justify-content-center mb-2">
-                <div className="position-relative mx-1" style={{ width: "40%" }}>
+                <div
+                  className="position-relative mx-1"
+                  style={{ width: "40%" }}
+                >
                   <input
                     type="text"
                     placeholder="From"
@@ -191,12 +222,18 @@ const CreateMarket = () => {
                   />
                   {isGroupFromPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderGroupGrid('from', 38, 99, false)} {/* Display range 38 to 99 without formatting */}
+                      {renderGroupGrid("from", 38, 99, false)}{" "}
+                      {/* Display range 38 to 99 without formatting */}
                     </div>
                   )}
                 </div>
-                <span className="mx-1" style={{ lineHeight: "2.4rem" }}>-</span>
-                <div className="position-relative mx-1" style={{ width: "40%" }}>
+                <span className="mx-1" style={{ lineHeight: "2.4rem" }}>
+                  -
+                </span>
+                <div
+                  className="position-relative mx-1"
+                  style={{ width: "40%" }}
+                >
                   <input
                     type="text"
                     placeholder="To"
@@ -207,7 +244,8 @@ const CreateMarket = () => {
                   />
                   {isGroupToPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderGroupGrid('to', 38, 99, false)} {/* Display range 38 to 99 without formatting */}
+                      {renderGroupGrid("to", 38, 99, false)}{" "}
+                      {/* Display range 38 to 99 without formatting */}
                     </div>
                   )}
                 </div>
@@ -218,7 +256,10 @@ const CreateMarket = () => {
             {/* Series From and To */}
             <div className="mb-3">
               <div className="d-flex justify-content-center mb-2">
-                <div className="position-relative mx-1" style={{ width: "40%" }}>
+                <div
+                  className="position-relative mx-1"
+                  style={{ width: "40%" }}
+                >
                   <input
                     type="text"
                     placeholder="Series From"
@@ -229,12 +270,17 @@ const CreateMarket = () => {
                   />
                   {isSeriesFromPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderSeriesGrid('from')}
+                      {renderSeriesGrid("from")}
                     </div>
                   )}
                 </div>
-                <span className="mx-1" style={{ lineHeight: "2.4rem" }}>-</span>
-                <div className="position-relative mx-1" style={{ width: "40%" }}>
+                <span className="mx-1" style={{ lineHeight: "2.4rem" }}>
+                  -
+                </span>
+                <div
+                  className="position-relative mx-1"
+                  style={{ width: "40%" }}
+                >
                   <input
                     type="text"
                     placeholder="Series To"
@@ -245,7 +291,7 @@ const CreateMarket = () => {
                   />
                   {isSeriesToPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderSeriesGrid('to')}
+                      {renderSeriesGrid("to")}
                     </div>
                   )}
                 </div>
@@ -256,7 +302,10 @@ const CreateMarket = () => {
             {/* Number From and To */}
             <div className="mb-3">
               <div className="d-flex justify-content-center mb-2">
-                <div className="position-relative mx-1" style={{ width: "40%" }}>
+                <div
+                  className="position-relative mx-1"
+                  style={{ width: "40%" }}
+                >
                   <input
                     type="text"
                     placeholder="Number From"
@@ -267,12 +316,18 @@ const CreateMarket = () => {
                   />
                   {isNumberFromPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderNumberGrid('from', 0, 99999, true)} {/* Display range 0 to 99999 with formatting */}
+                      {renderNumberGrid("from", 0, 99999, true)}{" "}
+                      {/* Display range 0 to 99999 with formatting */}
                     </div>
                   )}
                 </div>
-                <span className="mx-1" style={{ lineHeight: "2.4rem" }}>-</span>
-                <div className="position-relative mx-1" style={{ width: "40%" }}>
+                <span className="mx-1" style={{ lineHeight: "2.4rem" }}>
+                  -
+                </span>
+                <div
+                  className="position-relative mx-1"
+                  style={{ width: "40%" }}
+                >
                   <input
                     type="text"
                     placeholder="Number To"
@@ -283,7 +338,8 @@ const CreateMarket = () => {
                   />
                   {isNumberToPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderNumberGrid('to', 0, 99999, true)} {/* Display range 0 to 99999 with formatting */}
+                      {renderNumberGrid("to", 0, 99999, true)}{" "}
+                      {/* Display range 0 to 99999 with formatting */}
                     </div>
                   )}
                 </div>
@@ -300,17 +356,11 @@ const CreateMarket = () => {
             >
               Create Market
             </button>
-            
           </div>
-
-
-
-
-         
         </div>
       </div>
-        {/* Footer with Marquee */}
-        <div
+      {/* Footer with Marquee */}
+      <div
         style={{
           backgroundColor: "#4682B4",
           padding: "10px",
@@ -322,7 +372,8 @@ const CreateMarket = () => {
           direction="left"
           style={{ fontSize: "1.2rem", whiteSpace: "nowrap" }}
         >
-          🎉 Exciting updates are on the way! Stay connected for the latest news on our lottery market! 🎉
+          🎉 Exciting updates are on the way! Stay connected for the latest news
+          on our lottery market! 🎉
         </marquee>
       </div>
     </div>

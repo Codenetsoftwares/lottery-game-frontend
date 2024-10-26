@@ -146,7 +146,7 @@ export async function SearchLotteryTicket(body, isToast = true) {
   }
 }
 
-export async function PurchasedTicketsHistory(body,isToast = true) {
+export async function PurchasedTicketsHistory(body,isToast = false) {
   try {
     const callParams = await getAuthCallParams(strings.GET, null, isToast);
   const response = await makeCall(`${urls.PurchasedLotteryHistory}?page=${body.page}&limitPerPage=${body.limit}&sem=${body.searchBySem}`, callParams, isToast);
