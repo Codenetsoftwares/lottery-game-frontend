@@ -49,9 +49,16 @@ const Dashboard = () => {
         </div>
 
         <div className="text-center mt-5">
-          <p style={{ fontSize: '1.2em', color: '#2A4058' }}>
-            🎈 Create lotteries for different timings: 1 PM, 4 PM, and 8 PM every day! 🎈
-          </p>
+        <p style={{ 
+    fontSize: '1.5em', 
+    color: '#2A4058', 
+    fontWeight: '900', 
+    fontFamily: 'Georgia, serif', 
+    textTransform: 'uppercase', 
+    letterSpacing: '0.1em' 
+}}>
+        Unlock endless possibilities – create dynamic lottery experiences like never before!
+</p>
         </div>
       </div>
     </div>
