@@ -35,7 +35,7 @@ const CreateTime = () => {
         drawDate: drawTime
       };
 
-      try {feature
+      try {
         // Call the API to create draw time
         await CreateDrawTime(body);
         
