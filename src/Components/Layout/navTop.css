@@ -175,3 +175,23 @@
     font-size: 28px; /* Smaller icon for smaller screens */
   }
 }
+
+/* Additional styling for LuckyHour */
+.nav-options .nav-link.lucky-hour {
+  color: #ff69b4; /* Hot pink for a standout look */
+  font-weight: bold;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-options .nav-link.lucky-hour .nav-icon {
+  font-size: 34px; /* Slightly larger icon for emphasis */
+  margin-bottom: 5px;
+}
+
+
+
+/* Ensure all icons align consistently */
+.nav-options .nav-link .nav-icon {
+  font-size: 32px;
+  margin-bottom: 5px;
+}

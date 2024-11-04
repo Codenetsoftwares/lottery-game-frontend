@@ -14,6 +14,7 @@ import Result from '../Result/Result';
 import Win from '../Win/Win';
 import PurchasedTickets from '../Pages/PurchasedTickets/PurchasedTickets';
 import Search from '../Search/Search';
+import CreateTime from '../CreateDrawTime/CreateTime';
 
 const AppRoutes = () => {
   return (
@@ -42,6 +43,8 @@ const AppRoutes = () => {
             <Route path="/results" element={<Result />} />
             <Route path="/win" element={<Win />} />
             <Route path="/search-lottery" element={<Search />} />
+            <Route path="/lucky-hour" element={<CreateTime />}/>
+         
           </Route>
           {/* not found */}
           <Route path="*" element={<NotFound />} />
