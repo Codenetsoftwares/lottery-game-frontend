@@ -38,6 +38,18 @@ export const reducer = (state, action) => {
         purchasedTickets: action.payload, // Update the state with fetched tickets
       };
 
+      case strings.ADD_DRAW_TIME:
+  return {
+    ...state,
+    drawTimes: [...(state.drawTimes || []), action.payload], // Append the new draw time
+  };
+
+  case strings.ADD_SUBMITTED_PRIZE:
+    return {
+      ...state,
+      submittedPrizes: [...(state.submittedPrizes || []), action.payload],
+    };
+
     default:
       return state;
   }

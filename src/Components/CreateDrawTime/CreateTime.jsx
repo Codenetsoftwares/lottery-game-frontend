@@ -1,62 +1,79 @@
 import React, { useState, useEffect } from 'react';
 import { CreateDrawTime } from '../../Utils/apiService';
+import { useAppContext } from '../../contextApi/context';
+import strings from '../../Utils/constant/stringConstant';
 
 const CreateTime = () => {
-  const [drawTimes, setDrawTimes] = useState([]);
+  const { store, dispatch } = useAppContext();
   const [timeInput, setTimeInput] = useState('');
   const [isPM, setIsPM] = useState(false);
   const today = new Date().toLocaleDateString();
 
+  // Set drawTimes directly from the store's drawTimes array
+  const drawTimes = store.drawTimes || [];
+
   useEffect(() => {
+    // Clears drawTimes at midnight
     const clearDrawTimes = () => {
       const now = new Date();
       if (now.getHours() === 0 && now.getMinutes() === 0) {
-        setDrawTimes([]);
+        dispatch({ type: strings.CLEAR_DRAW_TIMES });
       }
     };
 
     const intervalId = setInterval(clearDrawTimes, 60000);
-
     return () => clearInterval(intervalId);
-  }, []);
+  }, [dispatch]);
 
-  // const handleAddTime = () => {
+  // const handleAddTime = async () => {
   //   if (timeInput) {
-  //     setDrawTimes((prevTimes) => [...prevTimes, timeInput + (isPM ? ' PM' : ' AM')]);
-  //     setTimeInput('');
+  //     const drawTime = `${timeInput} ${isPM ? 'PM' : 'AM'}`;
+  //     const body = { drawDate: drawTime };
+
+  //     const response = await CreateDrawTime(body);
+
+   
+  //     if (response && !drawTimes.includes(drawTime)) {
+  //       dispatch({
+  //         type: strings.ADD_DRAW_TIME,
+  //         payload: drawTime,
+  //       });
+  //       setTimeInput('');
+  //     }
   //   }
   // };
+
   const handleAddTime = async () => {
     if (timeInput) {
-      const drawTime = timeInput + (isPM ? ' PM' : ' AM');
-
-      // Prepare the request body
-      const body = {
-        drawDate: drawTime
-      };
-
-      try {
-        // Call the API to create draw time
-        await CreateDrawTime(body);
-        
-        // Update the state with the new draw time
-        setDrawTimes((prevTimes) => [...prevTimes, drawTime]);
+      const drawTime = `${timeInput} ${isPM ? 'PM' : 'AM'}`;
+      
+      // Check if drawTime already exists in drawTimes
+      if (drawTimes.includes(drawTime)) {
+        alert("This time already exists in the schedule.");
+        return;
+      }
+  
+      const body = { drawDate: drawTime };
+  
+      const response = await CreateDrawTime(body);
+  
+      // Add drawTime if the API call was successful and it's not a duplicate
+      if (response) {
+        dispatch({
+          type: strings.ADD_DRAW_TIME,
+          payload: drawTime,
+        });
         setTimeInput('');
-      } catch (error) {
-        console.error('Error creating draw time:', error);
-    
       }
     }
   };
+  
+
   return (
     <div
       className="container-fluid d-flex flex-column align-items-center"
-      style={{
-        minHeight: '75vh',
-        backgroundColor: '#f0f4f8',
-      }}
+      style={{ minHeight: '75vh', backgroundColor: '#f0f4f8' }}
     >
-      {/* Custom Header */}
       <div
         className="text-center"
         style={{
@@ -70,13 +87,9 @@ const CreateTime = () => {
           boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
         }}
       >
-        <h2
-          className="mb-1"
-          style={{ color: '#4682B4', fontWeight: 'bold', letterSpacing: '1px', fontSize: '2rem' }}
-        >
+        <h2 className="mb-1" style={{ color: '#4682B4', fontWeight: 'bold', letterSpacing: '1px', fontSize: '2rem' }}>
           ⏰ Lottery Schedule
         </h2>
-      
       </div>
 
       <div
@@ -87,12 +100,11 @@ const CreateTime = () => {
           maxWidth: '500px',
           height: '600px',
           background: 'linear-gradient(135deg, #ffffff 0%, #e0f7fa 100%)',
-          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
           boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15)',
         }}
       >
-        <div className="text-center py-4 ">
-          <p style={{ fontStyle: 'italic', color: '#555', fontSize: '1.1rem', fontWeight: '900', }}>
+        <div className="text-center py-4">
+          <p style={{ fontStyle: 'italic', color: '#555', fontSize: '1.1rem', fontWeight: '900' }}>
             Set Your Lottery Draw Times Below:
           </p>
           <div className="input-group mb-3">
@@ -127,15 +139,14 @@ const CreateTime = () => {
               onClick={handleAddTime}
               style={{
                 borderRadius: '25px',
-                transition: 'background-color 0.3s ease',
                 backgroundColor: '#00838f',
                 borderColor: '#00695c',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
               }}
               onMouseOver={(e) => (e.target.style.backgroundColor = '#00695c')}
-              onMouseOut={(e) => (e.target.style.backgroundColor = '')}
+              onMouseOut={(e) => (e.target.style.backgroundColor = '#00838f')}
             >
-              <i className="bi bi-clock" style={{ marginRight: '5px'  }}></i> Add Time
+              <i className="bi bi-clock" style={{ marginRight: '5px' }}></i> Add Time
             </button>
           </div>
 

@@ -191,3 +191,23 @@ export async function CreateDrawTime(body, isToast = true) {
     throw error;
   }
 }
+
+export async function CustomWining(body, isToast = true) {
+  try {
+    const callParams = await getAuthCallParams(strings.POST, body, isToast);
+    const response = await makeCall(urls.CustomWinningPrize, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function GetWiningResult(body, isToast = true) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, body, isToast);
+    const response = await makeCall(urls.GetResult, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
