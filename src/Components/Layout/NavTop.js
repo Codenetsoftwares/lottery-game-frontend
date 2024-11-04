@@ -35,6 +35,11 @@ const NavTop = () => {
                 <i className="fas fa-ticket-alt nav-icon" />
                 <span>Create Lottery</span>
               </Link>
+                {/* New LuckyHour link */}
+                <Link to="/lucky-hour" className="nav-link lucky-hour">
+                <i className="fas fa-clock nav-icon" />
+                <span>Lucky Hour </span>
+              </Link>
               <Link to="/results" className="nav-link results blink">
                 <i className="fas fa-trophy nav-icon" style={{ textDecoration: 'none' }} />
                 <span>Results</span>

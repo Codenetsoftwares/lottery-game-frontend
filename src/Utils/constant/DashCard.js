@@ -59,5 +59,19 @@ const DashCard = [
         },
         icon: "fas fa-money-bill-wave", // icon for Authorize Win
     },
+
+    {
+        name: "Lucky Hour",
+        description: "Create and manage multiple draw times for lotteries each day for a more dynamic experience!",
+        buttonName: "Set Lucky Hour",
+        buttonLink: "/lucky-hour",
+        cardstyle: {
+            borderRadius: '20px',
+            backgroundColor: '#4B9CD3',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+            color: '#fff',
+        },
+        icon: "fas fa-hourglass-half", // icon for Lucky Hour
+    },
 ];
 export default DashCard;
