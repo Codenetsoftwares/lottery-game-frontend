@@ -49,3 +49,40 @@ export const getLotteryMarketsInitialState = (body = {}) => {
     selectedTicketCount: body.selectedTicketCount ?? 5,
   };
 };
+
+
+export const getInitialValues = (body = {}) => {
+  return {
+    userName: "",
+    password: "",
+  };
+};
+
+export const getInitialCreateLotteryValues = (body = {}) => {
+  return {
+    groupFrom: "",
+    groupTo: "",
+    isGroupFromPickerVisible: false,
+    isGroupToPickerVisible: false,
+    seriesFrom: "",
+    seriesTo: "",
+    isSeriesFromPickerVisible: false,
+    isSeriesToPickerVisible: false,
+    numberFrom: "",
+    numberTo: "",
+    isNumberFromPickerVisible: false,
+    isNumberToPickerVisible: false,
+    isSubmitted: false,
+  };
+};
+
+export function getLotteryRange(body = {}) {
+  return {
+    group_start: null,
+    group_end: null,
+    series_start: "",
+    series_end: "",
+    number_start: "",
+    number_end: "",
+  };
+}

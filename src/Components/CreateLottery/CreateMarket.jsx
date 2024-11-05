@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./CreateMarket.css"; // Import custom styles
 import { generateLotteryNumber } from "../../Utils/apiService";
+import { toast } from "react-toastify";
 
 const CreateMarket = () => {
   const [groupFrom, setGroupFrom] = useState("");
@@ -58,9 +59,42 @@ const CreateMarket = () => {
     }
   };
 
+  const validateForm = () => {
+    if (
+      !groupFrom ||
+      !groupTo ||
+      !seriesFrom ||
+      !seriesTo ||
+      !numberFrom ||
+      !numberTo
+    ) {
+      return "All fields must be filled out.";
+    }
+
+    if (parseInt(groupTo) < parseInt(groupFrom)) {
+      return "Group 'To' must be greater than or equal to Group 'From'.";
+    }
+
+    if (seriesTo.toUpperCase() < seriesFrom.toUpperCase()) {
+      return "Series 'To' must be greater than or equal to Series 'From'.";
+    }
+
+    if (parseInt(numberTo) < parseInt(numberFrom)) {
+      return "Number 'To' must be greater than or equal to Number 'From'.";
+    }
+
+    return null;
+  };
+
   // Function to handle form submission
 
   const handleSubmit = async () => {
+    const error = validateForm();
+    if (error) {
+      toast.error(error);
+      return;
+    }
+
     const requestBody = {
       group: {
         min: parseInt(groupFrom),
