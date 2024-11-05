@@ -24,6 +24,7 @@ class UrlConstant {
   GetScheduleTime = `${this.url_dev}/draw-dates`;
   CustomWinningPrize=`${this.url_dev}/admin/results-declaration`;
   GetResult = `${this.url_dev}/admin/prize-results`;
+  lotteryRange = `${this.url_dev}/get-range`;
 }
 
 const urls = new UrlConstant();

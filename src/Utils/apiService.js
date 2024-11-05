@@ -238,3 +238,12 @@ export async function GetWiningResult(body, isToast = true) {
 }
 
 
+export async function LotteryRange(body = {}, isToast = false) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, body, isToast);
+    const response = await makeCall(urls.lotteryRange, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}

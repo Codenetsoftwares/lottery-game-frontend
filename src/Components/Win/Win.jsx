@@ -10,6 +10,7 @@ const Win = () => {
 
   // Initialize state for prize amounts and ticket numbers
   const [prizes, setPrizes] = useState({});
+  const [errors, setErrors] = useState({}); // State for error messages
 
   useEffect(() => {
     // Initialize prize state based on drawTimes
@@ -26,28 +27,55 @@ const Win = () => {
     setPrizes(initialPrizes);
   }, [drawTimes]);
 
-  const handlePrizeChange = (time, rank, value) => {
-    setPrizes((prevPrizes) => ({
-      ...prevPrizes,
-      [time]: {
-        ...prevPrizes[time],
-        [rank]: { ...prevPrizes[time][rank], amount: value },
-      },
-    }));
+  // Validation function to check for special characters
+  const validateInput = (value) => {
+    const invalidCharacters = /[-*#+=@_]/; // Regex to match invalid characters
+    return !invalidCharacters.test(value);
   };
 
-  const handleTicketChange = (time, rank, index, value) => {
-    setPrizes((prevPrizes) => {
-      const updatedTickets = [...(prevPrizes[time][rank]?.ticketNumbers || [])];
-      updatedTickets[index] = value;
-      return {
+  const handlePrizeChange = (time, rank, value) => {
+    if (validateInput(value)) {
+      setErrors((prevErrors) => ({ ...prevErrors, [time]: undefined })); // Clear error if valid
+      setPrizes((prevPrizes) => ({
         ...prevPrizes,
         [time]: {
           ...prevPrizes[time],
-          [rank]: { ...prevPrizes[time][rank], ticketNumbers: updatedTickets },
+          [rank]: { ...prevPrizes[time][rank], amount: value },
         },
-      };
-    });
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [time]: "Invalid input. Please avoid special characters.",
+      }));
+    }
+  };
+
+  const handleTicketChange = (time, rank, index, value) => {
+    if (validateInput(value)) {
+      setErrors((prevErrors) => ({ ...prevErrors, [time]: undefined })); // Clear error if valid
+      setPrizes((prevPrizes) => {
+        const updatedTickets = [
+          ...(prevPrizes[time][rank]?.ticketNumbers || []),
+        ];
+        updatedTickets[index] = value;
+        return {
+          ...prevPrizes,
+          [time]: {
+            ...prevPrizes[time],
+            [rank]: {
+              ...prevPrizes[time][rank],
+              ticketNumbers: updatedTickets,
+            },
+          },
+        };
+      });
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [time]: "Invalid input. Please avoid special characters.",
+      }));
+    }
   };
 
   const submitPrizes = async (time) => {
@@ -68,8 +96,8 @@ const Win = () => {
 
         // Filter out any empty ticket numbers and trim whitespace
         const validTickets = ticketNumbers
-          .map(ticket => ticket.trim())
-          .filter(ticket => ticket !== "");
+          .map((ticket) => ticket.trim())
+          .filter((ticket) => ticket !== "");
 
         if (validTickets.length > 0) {
           const requestBody = {
@@ -83,7 +111,7 @@ const Win = () => {
           const response = await CustomWining(requestBody);
 
           if (response) {
-            validTickets.forEach(ticket => {
+            validTickets.forEach((ticket) => {
               dispatch({
                 type: strings.ADD_SUBMITTED_PRIZE,
                 payload: {
@@ -158,6 +186,10 @@ const Win = () => {
                 style={{ backgroundColor: "#e6f7ff" }}
               >
                 <h4 style={{ color: "#007bb5", fontWeight: "bold" }}>{time}</h4>
+
+                {errors[time] && (
+                  <div className="text-danger mb-2">{errors[time]}</div>
+                )}
 
                 <Accordion defaultActiveKey="0">
                   {Object.entries(prizeData).map(
@@ -269,7 +301,7 @@ const Win = () => {
             ))}
           </div>
         ) : (
-          <p>No draw times available.</p>
+          <div>No draw times available.</div>
         )}
       </div>
     </div>
