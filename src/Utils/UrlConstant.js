@@ -1,8 +1,8 @@
 class UrlConstant {
   constructor() {}
 
-   url_dev = "https://lottery.server.dummydoma.in/api";
-  // url_dev = 'http://localhost:8080/api';
+  //  url_dev = "https://lottery.server.dummydoma.in/api";
+  url_dev = 'http://localhost:8080/api';
 
   // admin api
 
@@ -20,7 +20,9 @@ class UrlConstant {
   generateNumber= `${this.url_dev}/generate-ticket`;
   searchTicket=`${this.url_dev}/admin/search-ticket`;
   PurchasedLotteryHistory=`${this.url_dev}/admin/purchase-history`;
-  lotteryClock = `${this.url_dev}/admin/draw-dates`
+  lotteryClock = `${this.url_dev}/admin/draw-dates`;
+  CustomWinningPrize=`${this.url_dev}/admin/results-declaration`;
+  GetResult = `${this.url_dev}/admin/prize-results`;
 }
 
 const urls = new UrlConstant();
