@@ -21,6 +21,7 @@ class UrlConstant {
   searchTicket=`${this.url_dev}/admin/search-ticket`;
   PurchasedLotteryHistory=`${this.url_dev}/admin/purchase-history`;
   lotteryClock = `${this.url_dev}/admin/draw-dates`;
+  GetScheduleTime = `${this.url_dev}/draw-dates`;
   CustomWinningPrize=`${this.url_dev}/admin/results-declaration`;
   GetResult = `${this.url_dev}/admin/prize-results`;
 }
