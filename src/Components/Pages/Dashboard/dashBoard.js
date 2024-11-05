@@ -18,7 +18,7 @@ const Dashboard = () => {
       <div className="flex-grow-1 p-4">
         <div className="text-center mb-4">
           <h1 style={{ color: '#2A4058', fontWeight: 'bold', fontSize: '2.5rem' }}>
-            🎉 Welcome to the Lottery Game Admin Dashboard 🎉
+            🎉 Welcome To The Lottery Game Admin Dashboard 🎉
           </h1>
           <p style={{ fontStyle: 'italic', color: '#A5B8D1', fontSize: '1.3em' }}>
             This web application is still under development

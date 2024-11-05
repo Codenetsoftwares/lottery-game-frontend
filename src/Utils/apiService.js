@@ -182,10 +182,35 @@ export async function PurchasedTicketsHistory(body, isToast = false) {
   }
 }
 
+// export async function lotteryPurchaseHIstoryUserNew(body = {}, isToast = false) {
+//   try {
+//     const callParams = await getAuthCallParams(strings.GET, body, isToast); // Using POST method with `body`
+//     const response = await makeCall(
+//       `${urls.userPurchaseHIstory}?page=${body.page}&limitPerPage=${body.limit}&searchTerm=${body.searchTerm}`, // Constructing URL with pagination and search term
+//       callParams,
+//       isToast
+//     );
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
+
 export async function CreateDrawTime(body, isToast = true) {
   try {
     const callParams = await getAuthCallParams(strings.POST, body, isToast);
     const response = await makeCall(urls.lotteryClock, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function GetDrawTime(body, isToast = true) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, body, isToast);
+    const response = await makeCall(urls.GetScheduleTime, callParams, isToast);
     return response;
   } catch (error) {
     throw error;
@@ -211,3 +236,5 @@ export async function GetWiningResult(body, isToast = true) {
     throw error;
   }
 }
+
+

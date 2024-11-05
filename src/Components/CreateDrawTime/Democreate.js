@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CreateDrawTime, GetDrawTime } from '../../Utils/apiService'; 
+import { CreateDrawTime } from '../../Utils/apiService';
 import { useAppContext } from '../../contextApi/context';
 import strings from '../../Utils/constant/stringConstant';
 
@@ -7,32 +7,48 @@ const CreateTime = () => {
   const { store, dispatch } = useAppContext();
   const [timeInput, setTimeInput] = useState('');
   const [isPM, setIsPM] = useState(false);
-  const [drawTimes, setDrawTimes] = useState([]); 
   const today = new Date().toLocaleDateString();
 
+  // Set drawTimes directly from the store's drawTimes array
+  const drawTimes = store.drawTimes || [];
+
   useEffect(() => {
-    const fetchDrawTimes = async () => {
-      try {
-        const response = await GetDrawTime({}); // Fetch the draw times from the API
-        if (response.success) {
-          setDrawTimes(response.data); // Set the draw times from the response
-        } else {
-          console.error(response.message); // Handle error case
-        }
-      } catch (error) {
-        console.error('Failed to fetch draw times:', error);
+    // Clears drawTimes at midnight
+    const clearDrawTimes = () => {
+      const now = new Date();
+      if (now.getHours() === 0 && now.getMinutes() === 0) {
+        dispatch({ type: strings.CLEAR_DRAW_TIMES });
       }
     };
 
-    fetchDrawTimes(); // Call the fetch function
-  }, []);
+    const intervalId = setInterval(clearDrawTimes, 60000);
+    return () => clearInterval(intervalId);
+  }, [dispatch]);
+
+  // const handleAddTime = async () => {
+  //   if (timeInput) {
+  //     const drawTime = `${timeInput} ${isPM ? 'PM' : 'AM'}`;
+  //     const body = { drawDate: drawTime };
+
+  //     const response = await CreateDrawTime(body);
+
+   
+  //     if (response && !drawTimes.includes(drawTime)) {
+  //       dispatch({
+  //         type: strings.ADD_DRAW_TIME,
+  //         payload: drawTime,
+  //       });
+  //       setTimeInput('');
+  //     }
+  //   }
+  // };
 
   const handleAddTime = async () => {
     if (timeInput) {
       const drawTime = `${timeInput} ${isPM ? 'PM' : 'AM'}`;
       
       // Check if drawTime already exists in drawTimes
-      if (drawTimes.some(time => time.drawDate === drawTime)) {
+      if (drawTimes.includes(drawTime)) {
         alert("This time already exists in the schedule.");
         return;
       }
@@ -48,8 +64,6 @@ const CreateTime = () => {
           payload: drawTime,
         });
         setTimeInput('');
-        // Update local drawTimes state after adding a new time
-        setDrawTimes(prevTimes => [...prevTimes, { drawDate: drawTime }]);
       }
     }
   };
@@ -150,20 +164,22 @@ const CreateTime = () => {
               }}
             >
               {drawTimes.length > 0 ? (
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">Draw Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {drawTimes.map((time, index) => (
-                      <tr key={time.drawId}>
-                        <td>{time.drawDate}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <ul className="list-group">
+                  {drawTimes.map((time, index) => (
+                    <li
+                      key={index}
+                      className="list-group-item list-group-item-action"
+                      style={{
+                        backgroundColor: '#e1f5fe',
+                        transition: 'background-color 0.3s ease',
+                      }}
+                      onMouseOver={(e) => (e.target.style.backgroundColor = '#b2ebf2')}
+                      onMouseOut={(e) => (e.target.style.backgroundColor = '#e1f5fe')}
+                    >
+                      {time}
+                    </li>
+                  ))}
+                </ul>
               ) : (
                 <p style={{ color: '#666' }}>No draw times scheduled for today.</p>
               )}
