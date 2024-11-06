@@ -207,7 +207,7 @@ export async function CreateDrawTime(body, isToast = true) {
   }
 }
 
-export async function GetDrawTime(body, isToast = true) {
+export async function GetDrawTime(body, isToast = false) {
   try {
     const callParams = await getAuthCallParams(strings.GET, body, isToast);
     const response = await makeCall(urls.GetScheduleTime, callParams, isToast);
@@ -227,7 +227,7 @@ export async function CustomWining(body, isToast = true) {
   }
 }
 
-export async function GetWiningResult(body, isToast = true) {
+export async function GetWiningResult(body, isToast = false) {
   try {
     const callParams = await getAuthCallParams(strings.GET, body, isToast);
     const response = await makeCall(urls.GetResult, callParams, isToast);

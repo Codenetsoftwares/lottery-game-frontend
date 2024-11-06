@@ -25,7 +25,7 @@ const CreateMarket = () => {
 
   useEffect(() => {
     if (isSubmitted) {
-      window.location.reload();
+      // window.location.reload();
     }
   }, [isSubmitted]);
 
