@@ -56,7 +56,7 @@ const Result = () => {
         <h2>Prize Results</h2>
       </div>
       
-      {result && result.data && result.data.length > 0 ? ( // Render only if data is available
+      {result && result.length > 0 ? ( // Render only if data is available
         <div className="accordion mb-4" id="resultAccordion">
           <div className="accordion-item">
             <h2 className="accordion-header" id="headingOne">
@@ -67,7 +67,7 @@ const Result = () => {
                 aria-expanded={openAccordion}
                 aria-controls="collapseOne"
               >
-                {new Date(result.date).toLocaleDateString()} - {result.announceTime}
+                {new Date(result[0].date).toLocaleDateString()} - {result[0].announceTime}
               </button>
             </h2>
             <div
@@ -77,7 +77,7 @@ const Result = () => {
               data-bs-parent="#resultAccordion"
             >
               <div className="accordion-body">
-                {result.data.map((prize, index) => (
+                {result.map((prize, index) => (
                   <div key={index} className="border rounded-3 mb-3 p-3" style={{ backgroundColor: '#e6f7ff' }}>
                     <h4>{prize.prizeCategory}</h4>
                     <p><strong>Prize Amount:</strong> ₹{prize.prizeAmount.toFixed(2)}</p>
