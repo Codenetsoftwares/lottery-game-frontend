@@ -149,7 +149,7 @@ const Login = () => {
                         type="password"
                         name="password"
                         className="form-control"
-                        placeholder="Password"
+                        placeholder="Enter Your Password"
                         style={{
                           padding: "15px",
                           borderRadius: "5px",
@@ -179,12 +179,7 @@ const Login = () => {
                     >
                       Log in
                     </button>
-                    {error && (
-                      <p className="text-center fw-bold text-danger mt-2">
-                        {error}
-                      </p>
-                    )}
-                   
+                    
                   </form>
                 </div>
               </div>

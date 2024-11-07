@@ -3,6 +3,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./Search.css";
 import { LotteryRange, SearchLotteryTicket } from "../../Utils/apiService";
 import { getLotteryRange } from "../../Utils/getInitialState";
+import {
+  generateGroups,
+  generateNumbers,
+  generateSeries,
+} from "../../Utils/helper";
+import useDebouncedFilter from "../../Utils/customHook/useDebouncedFilter";
 
 const Search = () => {
   const [sem, setSem] = useState("");
@@ -21,9 +27,13 @@ const Search = () => {
   const [filteredSeries, setFilteredSeries] = useState([]);
   const [debounceTimeout, setDebounceTimeout] = useState(null);
 
+  const { debouncedFilter } = useDebouncedFilter();
+
   useEffect(() => {
     handleLotteryRange();
   }, []);
+
+  // console.log("generateGroups", lotteryRange, filteredGroups);
 
   const handleLotteryRange = async () => {
     const data = await LotteryRange();
@@ -41,122 +51,51 @@ const Search = () => {
       generateNumbers(data.data.number_start, data.data.number_end)
     );
     setFilteredGroups(
-      generateGroups(data.data.group_start || 0, data.data.group_end || 0)
+      generateGroups(data.data.group_start, data.data.group_end)
     );
     setFilteredSeries(
-      generateSeries(data.data.series_start || "A", data.data.series_end || "Z")
+      generateSeries(data.data.series_start, data.data.series_end)
     );
   };
-
-  const generateSeries = (seriesStart, seriesEnd) => {
-    const letters = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
-    const startIndex = letters.indexOf(seriesStart);
-    const endIndex = letters.indexOf(seriesEnd);
-
-    // Check if start or end index is invalid or if startIndex is greater than endIndex
-    if (startIndex === -1 || endIndex === -1 || startIndex > endIndex) {
-      console.error(
-        "Invalid range: ensure the start and end are within the allowed range and in the correct order."
-      );
-      return null; // or return an empty array `[]` if preferred
-    }
-
-    // Return the sliced array based on the start and end indices
-    return letters.slice(startIndex, endIndex + 1);
-  };
-
-  // Generate groups within a specified range
-  const generateGroups = (start, end) => {
-    return Array.from({ length: Math.abs(end - start) + 1 }, (_, i) =>
-      (i + start).toString()
-    );
-  };
-  const debouncedFilter = useCallback(
-    (value, type) => {
-      if (debounceTimeout) {
-        clearTimeout(debounceTimeout); // Clear previous timeout
-      }
-      console.log("data", value, type);
-      const timeout = setTimeout(() => {
-        let filtered = [];
-        switch (type) {
-          case "number":
-            if (value) {
-              filtered = generateNumbers(
-                lotteryRange.number_start,
-                lotteryRange.number_end
-              ).filter((num) => num.toString().startsWith(value));
-              setFilteredNumbers(filtered);
-            } else {
-              // Reset to all groups if input is empty
-              setFilteredGroups(
-                generateNumbers(
-                  lotteryRange.number_start,
-                  lotteryRange.number_end
-                )
-              );
-            }
-            break;
-          case "group":
-            if (value) {
-              filtered = generateGroups(
-                lotteryRange.group_start,
-                lotteryRange.group_end
-              ).filter((group) => group.startsWith(value));
-              console.log("filtered", filtered);
-
-              setFilteredGroups(filtered);
-            } else {
-              // Reset to all groups if input is empty
-              setFilteredGroups(
-                generateGroups(lotteryRange.group_start, lotteryRange.group_end)
-              );
-            }
-            break;
-          case "series":
-            if (value) {
-              filtered = generateSeries(
-                lotteryRange.series_start,
-                lotteryRange.series_end
-              ).filter((series) => series.startsWith(value));
-              console.log("filtered", filtered);
-              setFilteredSeries(filtered);
-            } else {
-              // Reset to all series if input is empty
-              setFilteredSeries(
-                generateSeries(
-                  lotteryRange.series_start,
-                  lotteryRange.series_end
-                )
-              );
-            }
-            break;
-          default:
-            break;
-        }
-      }, 1500);
-
-      setDebounceTimeout(timeout);
-    },
-    [lotteryRange, debounceTimeout, filteredGroups, filteredSeries]
+  console.log(
+    generateSeries(lotteryRange.series_start, lotteryRange.series_end),
+    lotteryRange.series_start,
+    lotteryRange.series_end
   );
-
   const handleNumberInputChange = (e) => {
     const inputValue = e.target.value;
     setNumber(inputValue);
-    debouncedFilter(inputValue, "number"); // Pass type as "number"
+
+    debouncedFilter(
+      inputValue,
+      () => generateNumbers(lotteryRange.number_start, lotteryRange.number_end),
+      1500,
+      setFilteredNumbers
+    ); // Pass type as "number"
   };
 
   const handleGroupInputChange = (e) => {
     const inputValue = e.target.value;
     setGroup(inputValue);
-    debouncedFilter(inputValue, "group"); // Pass type as "group"
+
+    debouncedFilter(
+      inputValue,
+      () => generateNumbers(lotteryRange.group_start, lotteryRange.group_end),
+      1500,
+      setFilteredGroups
+    ); // Pass type as "group"
   };
 
   const handleSeriesInputChange = (e) => {
     const inputValue = e.target.value;
     setSeries(inputValue);
-    debouncedFilter(inputValue, "series"); // Pass type as "series"
+
+    debouncedFilter(
+      inputValue,
+      () => generateSeries(lotteryRange.series_start, lotteryRange.series_end),
+      1500,
+      setFilteredSeries
+    ); // Pass type as "series"
   };
 
   // Validation function
@@ -175,15 +114,6 @@ const Search = () => {
     if (activePicker !== "group") setIsGroupPickerVisible(false);
     if (activePicker !== "series") setIsSeriesPickerVisible(false);
     if (activePicker !== "number") setIsNumberPickerVisible(false);
-  };
-
-  const generateNumbers = (start, end) => {
-    const actualStart = Math.min(start, end);
-    const actualEnd = Math.max(start, end);
-    return Array.from(
-      { length: actualEnd - actualStart + 1 },
-      (_, i) => i + actualStart
-    );
   };
 
   const groupLength =

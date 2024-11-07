@@ -17,10 +17,11 @@ const Win = () => {
     const initialPrizes = drawTimes.reduce((acc, time) => {
       acc[time] = {
         1: { amount: "", ticketNumbers: [""] }, // Add an input for the 1st prize ticket number
-        2: { amount: "", ticketNumbers: Array(10).fill("") },
+        2: { amount: "", ticketNumbers: [""] }, // Add an input for the 1st prize ticket number
         3: { amount: "", ticketNumbers: Array(10).fill("") },
         4: { amount: "", ticketNumbers: Array(10).fill("") },
-        5: { amount: "", ticketNumbers: Array(50).fill("") },
+        5: { amount: "", ticketNumbers: Array(10).fill("") },
+        6: { amount: "", ticketNumbers: Array(50).fill("") },
       };
       return acc;
     }, {});
@@ -87,10 +88,12 @@ const Win = () => {
           rank === "1"
             ? "First Prize"
             : rank === "2"
-            ? "Second Prize"
+            ? "Complementary"
             : rank === "3"
-            ? "Third Prize"
+            ? "Second Prize"
             : rank === "4"
+            ? "Third Prize"
+            : rank === "5"
             ? "Fourth Prize"
             : "Fifth Prize";
 
@@ -133,10 +136,14 @@ const Win = () => {
 
   const prizeData = {
     1: { rank: "1st", description: "Top prize for the winner" },
-    2: { rank: "2nd", description: "Prize for 10 winners" },
-    3: { rank: "3rd", description: "Prize for 10 winners" },
-    4: { rank: "4th", description: "Prize for 10 winners" },
-    5: { rank: "5th", description: "Prize for 50 winners" },
+    2: {
+      rank: " Complementary ",
+      description: "Prize for the winner",
+    },
+    3: { rank: "2nd", description: "Prize for 10 winners" },
+    4: { rank: "3rd", description: "Prize for 10 winners" },
+    5: { rank: "4th", description: "Prize for 10 winners" },
+    6: { rank: "5th", description: "Prize for 50 winners" },
   };
 
   return (
@@ -200,7 +207,7 @@ const Win = () => {
                         </Accordion.Header>
                         <Accordion.Body>
                           {/* For the 1st Prize, include ticket number input */}
-                          {key === "1" && (
+                          {["1", "2"].includes(key) && (
                             <div>
                               <Form.Label
                                 style={{ color: "#555", fontSize: "0.9rem" }}
@@ -209,9 +216,16 @@ const Win = () => {
                               </Form.Label>
                               <Form.Control
                                 type="text"
-                                value={prizes[time]?.[key]?.ticketNumbers[0] || ""}
+                                value={
+                                  prizes[time]?.[key]?.ticketNumbers[0] || ""
+                                }
                                 onChange={(e) =>
-                                  handleTicketChange(time, key, 0, e.target.value)
+                                  handleTicketChange(
+                                    time,
+                                    key,
+                                    0,
+                                    e.target.value
+                                  )
                                 }
                                 placeholder="Enter ticket number"
                                 style={{
@@ -243,7 +257,7 @@ const Win = () => {
                           />
 
                           {/* Ticket Numbers Input for other prizes */}
-                          {key !== "1" && (
+                          {!["1", "2"].includes(key) && (
                             <div>
                               <Form.Label
                                 style={{ color: "#555", fontSize: "0.9rem" }}
