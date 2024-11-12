@@ -57,11 +57,7 @@ const Search = () => {
       generateSeries(data.data.series_start, data.data.series_end)
     );
   };
-  console.log(
-    generateSeries(lotteryRange.series_start, lotteryRange.series_end),
-    lotteryRange.series_start,
-    lotteryRange.series_end
-  );
+ 
   const handleNumberInputChange = (e) => {
     const inputValue = e.target.value;
     setNumber(inputValue);
