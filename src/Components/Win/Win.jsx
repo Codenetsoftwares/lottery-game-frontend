@@ -12,20 +12,21 @@ const Win = () => {
   const [prizes, setPrizes] = useState({});
   const [errors, setErrors] = useState({}); // State for error messages
 
-  useEffect(() => {
-    // Initialize prize state based on drawTimes
-    const initialPrizes = drawTimes.reduce((acc, time) => {
-      acc[time] = {
-        1: { amount: "", ticketNumbers: [""] }, // Add an input for the 1st prize ticket number
-        2: { amount: "", ticketNumbers: Array(10).fill("") },
-        3: { amount: "", ticketNumbers: Array(10).fill("") },
-        4: { amount: "", ticketNumbers: Array(10).fill("") },
-        5: { amount: "", ticketNumbers: Array(50).fill("") },
-      };
-      return acc;
-    }, {});
-    setPrizes(initialPrizes);
-  }, [drawTimes]);
+ useEffect(() => {
+   const initialPrizes = drawTimes.reduce((acc, time) => {
+     acc[time] = {
+       1: { amount: "", complementaryAmount: "", ticketNumbers: [""] }, // Add complementaryAmount for the 1st prize
+       2: { amount: "", ticketNumbers: [""] },
+       3: { amount: "", ticketNumbers: Array(10).fill("") },
+       4: { amount: "", ticketNumbers: Array(10).fill("") },
+       5: { amount: "", ticketNumbers: Array(10).fill("") },
+       6: { amount: "", ticketNumbers: Array(50).fill("") },
+     };
+     return acc;
+   }, {});
+   setPrizes(initialPrizes);
+ }, [drawTimes]);
+
 
   // Validation function to check for special characters
   const validateInput = (value) => {
@@ -78,10 +79,28 @@ const Win = () => {
     }
   };
 
+  const handleComplementaryChange = (time, rank, value) => {
+    if (validateInput(value)) {
+      setErrors((prevErrors) => ({ ...prevErrors, [time]: undefined })); // Clear error if valid
+      setPrizes((prevPrizes) => ({
+        ...prevPrizes,
+        [time]: {
+          ...prevPrizes[time],
+          [rank]: { ...prevPrizes[time][rank], complementaryAmount: value },
+        },
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [time]: "Invalid input. Please avoid special characters.",
+      }));
+    }
+  };
+
+
   const submitPrizes = async (time) => {
-    // Only submit prizes for the current draw time
     for (let rank in prizes[time]) {
-      const { amount, ticketNumbers } = prizes[time][rank];
+      const { amount, complementaryAmount, ticketNumbers } = prizes[time][rank];
       if (amount) {
         const prizeCategory =
           rank === "1"
@@ -94,7 +113,6 @@ const Win = () => {
             ? "Fourth Prize"
             : "Fifth Prize";
 
-        // Filter out any empty ticket numbers and trim whitespace
         const validTickets = ticketNumbers
           .map((ticket) => ticket.trim())
           .filter((ticket) => ticket !== "");
@@ -103,11 +121,16 @@ const Win = () => {
           const requestBody = {
             prizeCategory,
             prizeAmount: parseFloat(amount) || 0,
-            ticketNumber: validTickets, // Include all valid ticket numbers in an array
-            announceTime: time, // Add the respective draw time to the request body
+            ticketNumber: validTickets,
+            announceTime: time,
           };
 
-          // Send the request with the prize data
+          // Add complementaryPrize to the request body if it's the first prize
+          if (rank === "1" && complementaryAmount) {
+            requestBody.complementaryPrize =
+              parseFloat(complementaryAmount) || 0;
+          }
+
           const response = await CustomWining(requestBody);
 
           if (response) {
@@ -130,6 +153,7 @@ const Win = () => {
       }
     }
   };
+
 
   const prizeData = {
     1: { rank: "1st", description: "Top prize for the winner" },
@@ -200,7 +224,7 @@ const Win = () => {
                         </Accordion.Header>
                         <Accordion.Body>
                           {/* For the 1st Prize, include ticket number input */}
-                          {key === "1" && (
+                          {["1"].includes(key) && (
                             <div>
                               <Form.Label
                                 style={{ color: "#555", fontSize: "0.9rem" }}
@@ -209,9 +233,16 @@ const Win = () => {
                               </Form.Label>
                               <Form.Control
                                 type="text"
-                                value={prizes[time]?.[key]?.ticketNumbers[0] || ""}
+                                value={
+                                  prizes[time]?.[key]?.ticketNumbers[0] || ""
+                                }
                                 onChange={(e) =>
-                                  handleTicketChange(time, key, 0, e.target.value)
+                                  handleTicketChange(
+                                    time,
+                                    key,
+                                    0,
+                                    e.target.value
+                                  )
                                 }
                                 placeholder="Enter ticket number"
                                 style={{
@@ -220,9 +251,35 @@ const Win = () => {
                                   marginBottom: "15px",
                                 }}
                               />
+                              <Form.Label
+                                style={{ color: "#555", fontSize: "0.9rem" }}
+                              >
+                                Enter Complementary Amount:
+                              </Form.Label>
+                              <Form.Control
+                                type="text"
+                                value={
+                                  prizes[time]?.[key]?.complementaryAmount || ""
+                                }
+                                onChange={(e) =>
+                                  handleComplementaryChange(
+                                    time,
+                                    key,
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="Enter complementary amount"
+                                style={{
+                                  borderRadius: "8px",
+                                  fontSize: "0.95rem",
+                                  marginBottom: "15px",
+                                }}
+                              />
                             </div>
                           )}
+
                           {/* Prize Amount Input */}
+
                           <Form.Label
                             style={{ color: "#555", fontSize: "0.9rem" }}
                           >
@@ -243,7 +300,7 @@ const Win = () => {
                           />
 
                           {/* Ticket Numbers Input for other prizes */}
-                          {key !== "1" && (
+                          {!["1"].includes(key) && (
                             <div>
                               <Form.Label
                                 style={{ color: "#555", fontSize: "0.9rem" }}

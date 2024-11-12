@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import "./CreateMarket.css"; // Import custom styles
 import { generateLotteryNumber } from "../../Utils/apiService";
 import { toast } from "react-toastify";
+import useDebouncedFilter from "../../Utils/customHook/useDebouncedFilter";
+import { generateNumbers } from "../../Utils/helper";
 
 const CreateMarket = () => {
   const [groupFrom, setGroupFrom] = useState("");
@@ -23,11 +25,49 @@ const CreateMarket = () => {
   const [isNumberToPickerVisible, setIsNumberToPickerVisible] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false); // New state to trigger reload
 
+  const [filterGroupFrom, setFilterGroupFrom] = useState([]);
+  const [filterSeriesFrom, setFilterSeriesFrom] = useState([]);
+  const [filterNumberFrom, setFilterNumberFrom] = useState([]);
+  const [filterGroupTo, setFilterGroupTo] = useState([]);
+  const [filterSeriesTo, setFilterSeriesTo] = useState([]);
+  const [filterNumberTo, setFilterNumberTo] = useState([]);
+
+  const rangeStart = 1;
+  const rangeEnd = 99999;
+
+  const { debouncedFilter } = useDebouncedFilter();
+
   useEffect(() => {
     if (isSubmitted) {
       // window.location.reload();
     }
   }, [isSubmitted]);
+
+  useEffect(() => {
+    // Groups: 38 to 99
+    const groupsTo = Array.from({ length: 99 }, (_, i) => (i + 1).toString());
+    setFilterGroupFrom(groupsTo);
+    const groupsFrom = Array.from({ length: 99 }, (_, i) => (i + 1).toString());
+    setFilterGroupTo(groupsFrom);
+
+    // Series: A to L, excluding I and F
+    const lettersFrom = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
+    setFilterSeriesFrom(lettersFrom);
+    const lettersTo = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
+    setFilterSeriesTo(lettersTo);
+
+    // Numbers: 0 to 99999 (or any specified range)
+    const numbersFrom = Array.from(
+      { length: rangeEnd - rangeStart + 1 },
+      (_, i) => i + rangeStart
+    );
+    setFilterNumberFrom(numbersFrom);
+    const numbersTo = Array.from(
+      { length: rangeEnd - rangeStart + 1 },
+      (_, i) => i + rangeStart
+    );
+    setFilterNumberTo(numbersTo);
+  }, []);
 
   const handleGroupSelect = (value, type) => {
     if (type === "from") {
@@ -59,6 +99,96 @@ const CreateMarket = () => {
     }
   };
 
+  const handleGroupFromInputChange = (e) => {
+    const inputValue = e.target.value;
+     setGroupFrom(inputValue);
+
+     debouncedFilter(
+       inputValue,
+       () => Array.from({ length: 99 }, (_, i) => (i + 1).toString()),
+       1500,
+       setFilterGroupFrom
+     ); // Pass type as "group"
+  };
+
+  const handleGroupToInputChange = (e) => {
+    const inputValue = e.target.value;
+     setGroupTo(inputValue);
+
+     debouncedFilter(
+       inputValue,
+       () => Array.from({ length: 62 }, (_, i) => (i + 38).toString()),
+       1500,
+       setFilterGroupTo
+     ); // Pass type as "group"
+  };
+
+  const handleSeriesFromInputChange = (e) => {
+    const inputValue = e.target.value;
+     setSeriesFrom(inputValue);
+
+     debouncedFilter(
+       inputValue,
+       () => {
+         const lettersFrom = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
+         return lettersFrom;
+       },
+       1500,
+       setFilterSeriesFrom
+     );
+ // Pass type as "series"
+  };
+
+  const handleSeriesToInputChange = (e) => {
+    const inputValue = e.target.value;
+     setSeriesTo(inputValue);
+
+     debouncedFilter(
+       inputValue,
+       () => {
+         const lettersFrom = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
+         return lettersFrom;
+       },
+       1500,
+       setFilterSeriesFrom
+     );
+ // Pass type as "series"
+  };
+
+  const handleNumberFromInputChange = (e) => {
+    const inputValue = e.target.value;
+     setNumberFrom(inputValue);
+
+     debouncedFilter(
+       inputValue,
+       () =>
+         Array.from(
+           { length: rangeEnd - rangeStart + 1 },
+           (_, i) => i + rangeStart
+         ),
+       1500,
+       setFilterNumberFrom
+     ); // Pass type as "number"
+  };
+
+   const handleNumberToInputChange = (e) => {
+     const inputValue = e.target.value;
+      setNumberTo(inputValue);
+
+      debouncedFilter(
+        inputValue,
+        () =>
+          Array.from(
+            { length: rangeEnd - rangeStart + 1 },
+            (_, i) => i + rangeStart
+          ),
+        1500,
+        setFilterNumberTo
+      ); // Pass type as "number"
+   };
+
+  
+
   const validateForm = () => {
     if (
       !groupFrom ||
@@ -87,7 +217,6 @@ const CreateMarket = () => {
   };
 
   // Function to handle form submission
-
   const handleSubmit = async () => {
     const error = validateForm();
     if (error) {
@@ -122,11 +251,10 @@ const CreateMarket = () => {
   };
 
   // Group Grid (38 to 99)
-  const renderGroupGrid = (type) => {
-    const groups = Array.from({ length: 62 }, (_, i) => (i + 38).toString()); // Generate groups from 38 to 99
+  const renderGroupFromGrid = (type) => {
     return (
       <div className="calendar-grid group-grid">
-        {groups.map((group) => (
+        {filterGroupFrom.map((group) => (
           <button
             key={group}
             className="calendar-cell"
@@ -139,12 +267,28 @@ const CreateMarket = () => {
     );
   };
 
+  const renderGroupToGrid = (type) => {
+    return (
+      <div className="calendar-grid group-grid">
+        {filterGroupTo.map((group) => (
+          <button
+            key={group}
+            className="calendar-cell"
+            onClick={() => handleGroupSelect(group, type)}
+          >
+            {group}
+          </button>
+        ))}
+      </div>
+    );
+  };
+
+
   // Series Grid (A to L, excluding I and F)
-  const renderSeriesGrid = (type) => {
-    const letters = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
+  const renderSeriesFromGrid = (type) => {
     return (
       <div className="calendar-grid series-grid">
-        {letters.map((letter) => (
+        {filterSeriesFrom.map((letter) => (
           <button
             key={letter}
             className="calendar-cell"
@@ -157,21 +301,27 @@ const CreateMarket = () => {
     );
   };
 
-  // Numbers grid picker (0 to 99999)
-  const renderNumberGrid = (
-    type,
-    rangeStart = 0,
-    rangeEnd = 99999,
-    isFormatted = true
-  ) => {
-    const numbers = Array.from(
-      { length: rangeEnd - rangeStart + 1 },
-      (_, i) => i + rangeStart
-    );
+   const renderSeriesToGrid = (type) => {
+     return (
+       <div className="calendar-grid series-grid">
+         {filterSeriesFrom.map((letter) => (
+           <button
+             key={letter}
+             className="calendar-cell"
+             onClick={() => handleSeriesSelect(letter, type)}
+           >
+             {letter}
+           </button>
+         ))}
+       </div>
+     );
+   };
 
+  // Numbers grid picker (0 to 99999)
+  const renderNumberFromGrid = (type, isFormatted = true) => {
     return (
       <div className="calendar-grid number-grid">
-        {numbers.map((number) => (
+        {filterNumberFrom.map((number) => (
           <button
             key={number}
             className="calendar-cell"
@@ -193,6 +343,30 @@ const CreateMarket = () => {
       </div>
     );
   };
+
+const renderNumberToGrid = (type, isFormatted = true) => {
+  return (
+    <div className="calendar-grid number-grid">
+      {filterNumberTo.map((number) => (
+        <button
+          key={number}
+          className="calendar-cell"
+          onClick={() =>
+            handleNumberSelect(
+              isFormatted
+                ? number.toString().padStart(5, "0")
+                : number.toString(),
+              type
+            )
+          }
+        >
+          {isFormatted ? number.toString().padStart(5, "0") : number.toString()}{" "}
+          {/* Show as 5 digits for numbers */}
+        </button>
+      ))}
+    </div>
+  );
+};
 
   return (
     <div style={{ minHeight: "75vh", backgroundColor: "#f0f4f8" }}>
@@ -252,12 +426,11 @@ const CreateMarket = () => {
                     className="form-control"
                     value={groupFrom}
                     onFocus={() => setIsGroupFromPickerVisible(true)}
-                    readOnly
+                    onChange={handleGroupFromInputChange}
                   />
                   {isGroupFromPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderGroupGrid("from", 38, 99, false)}{" "}
-                      {/* Display range 38 to 99 without formatting */}
+                      {renderGroupFromGrid("from", 38, 99, false)}{" "}
                     </div>
                   )}
                 </div>
@@ -274,17 +447,15 @@ const CreateMarket = () => {
                     className="form-control"
                     value={groupTo}
                     onFocus={() => setIsGroupToPickerVisible(true)}
-                    readOnly
+                    onChange={handleGroupToInputChange}
                   />
                   {isGroupToPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderGroupGrid("to", 38, 99, false)}{" "}
-                      {/* Display range 38 to 99 without formatting */}
+                      {renderGroupToGrid("to", 38, 99, false)}{" "}
                     </div>
                   )}
                 </div>
               </div>
-              {/* <small className="text-muted mb-4">Group range from 38 to 99</small> */}
             </div>
 
             {/* Series From and To */}
@@ -300,11 +471,11 @@ const CreateMarket = () => {
                     className="form-control"
                     value={seriesFrom}
                     onFocus={() => setIsSeriesFromPickerVisible(true)}
-                    readOnly
+                    onChange={handleSeriesFromInputChange}
                   />
                   {isSeriesFromPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderSeriesGrid("from")}
+                      {renderSeriesFromGrid("from")}
                     </div>
                   )}
                 </div>
@@ -321,16 +492,15 @@ const CreateMarket = () => {
                     className="form-control"
                     value={seriesTo}
                     onFocus={() => setIsSeriesToPickerVisible(true)}
-                    readOnly
+                    onChange={handleSeriesToInputChange}
                   />
                   {isSeriesToPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderSeriesGrid("to")}
+                      {renderSeriesToGrid("to")}
                     </div>
                   )}
                 </div>
               </div>
-              {/* <small className="text-muted mb-4">Series range from A to L (excluding I & F)</small> */}
             </div>
 
             {/* Number From and To */}
@@ -346,12 +516,11 @@ const CreateMarket = () => {
                     className="form-control"
                     value={numberFrom}
                     onFocus={() => setIsNumberFromPickerVisible(true)}
-                    readOnly
+                    onChange={handleNumberFromInputChange}
                   />
                   {isNumberFromPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderNumberGrid("from", 0, 99999, true)}{" "}
-                      {/* Display range 0 to 99999 with formatting */}
+                      {renderNumberFromGrid("from", 0, 99999, true)}{" "}
                     </div>
                   )}
                 </div>
@@ -368,12 +537,11 @@ const CreateMarket = () => {
                     className="form-control"
                     value={numberTo}
                     onFocus={() => setIsNumberToPickerVisible(true)}
-                    readOnly
+                    onChange={handleNumberToInputChange}
                   />
                   {isNumberToPickerVisible && (
                     <div className="picker-dropdown">
-                      {renderNumberGrid("to", 0, 99999, true)}{" "}
-                      {/* Display range 0 to 99999 with formatting */}
+                      {renderNumberToGrid("to", 0, 99999, true)}{" "}
                     </div>
                   )}
                 </div>
