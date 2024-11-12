@@ -22,6 +22,12 @@ const CreateMarket = () => {
     useState(false);
   const [isNumberToPickerVisible, setIsNumberToPickerVisible] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false); // New state to trigger reload
+  const [selectedDate, setSelectedDate] = useState(""); // Date state
+  const [timerFrom, setTimerFrom] = useState(""); // New state for timer from
+  const [timerTo, setTimerTo] = useState("");     // New state for timer to
+  const [dropdownFromVisible, setDropdownFromVisible] = useState(false); // Track dropdown visibility for From
+  const [dropdownToVisible, setDropdownToVisible] = useState(false); // Track dropdown visibility for To
+
 
   useEffect(() => {
     if (isSubmitted) {
@@ -66,7 +72,9 @@ const CreateMarket = () => {
       !seriesFrom ||
       !seriesTo ||
       !numberFrom ||
-      !numberTo
+      !numberTo|| 
+      !timerFrom || 
+      !timerTo
     ) {
       return "All fields must be filled out.";
     }
@@ -81,6 +89,9 @@ const CreateMarket = () => {
 
     if (parseInt(numberTo) < parseInt(numberFrom)) {
       return "Number 'To' must be greater than or equal to Number 'From'.";
+    }
+    if (parseInt(timerTo) < parseInt(timerFrom)) {
+      return "Timer 'To' must be greater than or equal to Timer 'From'.";
     }
 
     return null;
@@ -108,6 +119,12 @@ const CreateMarket = () => {
         min: numberFrom,
         max: numberTo,
       },
+
+      timer: {
+        from: timerFrom,
+        to: timerTo,
+      },
+      date: selectedDate,
     };
 
     console.log("Request Body:", requestBody);
@@ -121,9 +138,48 @@ const CreateMarket = () => {
     }
   };
 
-  // Group Grid (38 to 99)
+
+  // Generate time options for every minute in a 12-hour format (AM/PM)
+  const generateTimeOptions = () => {
+    const options = [];
+    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD
+    for (let hour = 0; hour < 24; hour++) {
+      for (let minute = 0; minute < 60; minute++) {
+        const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+        const formattedMinute = minute.toString().padStart(2, "0");
+        const period = hour < 12 ? "AM" : "PM";
+        const displayTime = `${formattedHour}:${formattedMinute} ${period}`;
+
+        // Format for ISO
+        const isoTime = new Date(`${today}T${hour.toString().padStart(2, "0")}:${formattedMinute}:00`).toISOString();
+        
+        options.push({ displayTime, isoTime });
+      }
+    }
+    return options;
+  };
+
+  const timeOptions = generateTimeOptions();
+
+    // Handle change in manual input and synchronize with the dropdown options
+    const handleManualInput = (value, setter) => {
+      setter(value);
+      setDropdownFromVisible(false); // Close the dropdown on manual input for From
+      setDropdownToVisible(false); // Close the dropdown on manual input for To
+    };
+
+    const handleSelectTime = (selectedTime, setterFrom, setterTo, isFrom) => {
+      if (isFrom) {
+        setterFrom(selectedTime.displayTime); // Set the selected time in the 'From' input
+      } else {
+        setterTo(selectedTime.displayTime); // Set the selected time in the 'To' input
+      }
+      setDropdownFromVisible(false); // Close dropdown after selecting a time for 'From'
+      setDropdownToVisible(false); // Close dropdown after selecting a time for 'To'
+    };
+  // Group Grid (01 to 99)
   const renderGroupGrid = (type) => {
-    const groups = Array.from({ length: 62 }, (_, i) => (i + 38).toString()); // Generate groups from 38 to 99
+    const groups = Array.from({ length: 99 }, (_, i) => (i + 1).toString()); // Generate groups from 38 to 99
     return (
       <div className="calendar-grid group-grid">
         {groups.map((group) => (
@@ -139,9 +195,9 @@ const CreateMarket = () => {
     );
   };
 
-  // Series Grid (A to L, excluding I and F)
+  // Series Grid (A to Z)
   const renderSeriesGrid = (type) => {
-    const letters = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
+    const letters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)); // Generates letters A to Z
     return (
       <div className="calendar-grid series-grid">
         {letters.map((letter) => (
@@ -238,6 +294,19 @@ const CreateMarket = () => {
             >
               Choose Your Group, Series, and Number
             </h3>
+              {/* Date Input */}
+              <div className="mb-3">
+              <label htmlFor="date" className="form-label" style={{ color: "#4682B4" }}>
+                Select Date
+              </label>
+              <input
+                type="date"
+                className="form-control"
+                id="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+              />
+            </div>
 
             {/* Group From and To */}
             <div className="mb-3">
@@ -380,6 +449,87 @@ const CreateMarket = () => {
               </div>
               {/* <small className="text-muted mb-4">Number range from 00000 to 99999</small> */}
             </div>
+    {/* Timer From and To */}
+    <div className="mb-3">
+              <div className="d-flex justify-content-center mb-2">
+                {/* Timer From */}
+                <div className="mx-1" style={{ width: "40%", position: "relative"}}>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Timer From (hh:mm AM/PM)"
+                    value={timerFrom}
+                    onClick={() => setDropdownFromVisible(true)} // Show dropdown for From when clicked
+                    onChange={(e) => handleManualInput(e.target.value, setTimerFrom)}
+                    style={{ width: "100%" }}
+                  />
+                  {/* Dropdown Below the Input */}
+                  {dropdownFromVisible && (
+                    <div
+                      className="dropdown-menu show"
+                      style={{
+                        position: "absolute",
+                        top: "100%",
+                        left: "0",
+                        width: "100%",
+                        height: "200px", // Fixed height
+                        overflowY: "auto", // Scrollable dropdown
+                      }}
+                    >
+                      {timeOptions.map((time, index) => (
+                        <button
+                          key={index}
+                          className="dropdown-item"
+                          onClick={() => handleSelectTime(time, setTimerFrom, setTimerTo, true)}
+                        >
+                          {time.displayTime}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <span className="mx-1" style={{ lineHeight: "2.4rem" }}>-</span>
+
+                {/* Timer To */}
+                <div className="mx-1" style={{ width: "40%", position: "relative" }}>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter Timer To (hh:mm AM/PM)"
+                    value={timerTo}
+                    onClick={() => setDropdownToVisible(true)} // Show dropdown for To when clicked
+                    onChange={(e) => handleManualInput(e.target.value, setTimerTo, false )}
+                    style={{ width: "100%" }}
+                  />
+                  {/* Dropdown Below the Input */}
+                  {dropdownToVisible && (
+                    <div
+                      className="dropdown-menu show"
+                      style={{
+                        position: "absolute",
+                        top: "100%",
+                        left: "0",
+                        width: "100%",
+                        height: "200px", // Fixed height
+                        overflowY: "auto", // Scrollable dropdown
+                      }}
+                    >
+                      {timeOptions.map((time, index) => (
+                        <button
+                          key={index}
+                          className="dropdown-item"
+                          onClick={() => handleSelectTime(time, setTimerFrom, setTimerTo)}
+                        >
+                          {time.displayTime}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
 
             {/* Submit Button */}
             <button
