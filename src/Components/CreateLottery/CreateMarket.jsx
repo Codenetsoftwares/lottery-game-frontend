@@ -123,7 +123,7 @@ const CreateMarket = () => {
 
      debouncedFilter(
        inputValue,
-       () => Array.from({ length: 62 }, (_, i) => (i + 38).toString()),
+       () => Array.from({ length: 99 }, (_, i) => (i + 1).toString()),
        1500,
        setFilterGroupTo
      ); // Pass type as "group"
@@ -156,7 +156,7 @@ const CreateMarket = () => {
          return lettersFrom;
        },
        1500,
-       setFilterSeriesFrom
+       setFilterSeriesTo
      );
  // Pass type as "series"
   };
@@ -306,9 +306,11 @@ const CreateMarket = () => {
       setDropdownFromVisible(false); // Close dropdown after selecting a time for 'From'
       setDropdownToVisible(false); // Close dropdown after selecting a time for 'To'
     };
+
+
+
   // Group Grid (01 to 99)
   const renderGroupFromGrid = (type) => {
-    const groups = Array.from({ length: 99 }, (_, i) => (i + 1).toString()); // Generate groups from 38 to 99
     return (
       <div className="calendar-grid group-grid">
         {filterGroupFrom.map((group) => (
@@ -325,7 +327,6 @@ const CreateMarket = () => {
   };
 
   const renderGroupToGrid = (type) => {
-    const groups = Array.from({ length: 99 }, (_, i) => (i + 1).toString()); // Generate groups from 38 to 99
     return (
       <div className="calendar-grid group-grid">
         {filterGroupTo.map((group) => (
@@ -362,7 +363,7 @@ const CreateMarket = () => {
    const renderSeriesToGrid = (type) => {
      return (
        <div className="calendar-grid series-grid">
-         {filterSeriesFrom.map((letter) => (
+         {filterSeriesTo.map((letter) => (
            <button
              key={letter}
              className="calendar-cell"
@@ -470,9 +471,13 @@ const renderNumberToGrid = (type, isFormatted = true) => {
             >
               Choose Your Group, Series, and Number
             </h3>
-              {/* Date Input */}
-              <div className="mb-3">
-              <label htmlFor="date" className="form-label" style={{ color: "#4682B4" }}>
+            {/* Date Input */}
+            <div className="mb-3">
+              <label
+                htmlFor="date"
+                className="form-label"
+                style={{ color: "#4682B4" }}
+              >
                 Select Date
               </label>
               <input
@@ -501,7 +506,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                   />
                   {isGroupFromPickerVisible && (
                     <div className="picker-dropdown">
-                      {/* {renderGroupFromGrid("from", 38, 99, false)}{" "} */}
+                      {renderGroupFromGrid("from", 38, 99, false)}{" "}
                     </div>
                   )}
                 </div>
@@ -522,7 +527,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                   />
                   {isGroupToPickerVisible && (
                     <div className="picker-dropdown">
-                      {/* {renderGroupToGrid("to", 38, 99, false)}{" "} */}
+                      {renderGroupToGrid("to", 38, 99, false)}{" "}
                     </div>
                   )}
                 </div>
@@ -619,18 +624,23 @@ const renderNumberToGrid = (type, isFormatted = true) => {
               </div>
               {/* <small className="text-muted mb-4">Number range from 00000 to 99999</small> */}
             </div>
-    {/* Timer From and To */}
-    <div className="mb-3">
+            {/* Timer From and To */}
+            <div className="mb-3">
               <div className="d-flex justify-content-center mb-2">
                 {/* Timer From */}
-                <div className="mx-1" style={{ width: "40%", position: "relative"}}>
+                <div
+                  className="mx-1"
+                  style={{ width: "40%", position: "relative" }}
+                >
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Enter Timer From (hh:mm AM/PM)"
                     value={timerFrom}
                     onClick={() => setDropdownFromVisible(true)} // Show dropdown for From when clicked
-                    onChange={(e) => handleManualInput(e.target.value, setTimerFrom)}
+                    onChange={(e) =>
+                      handleManualInput(e.target.value, setTimerFrom)
+                    }
                     style={{ width: "100%" }}
                   />
                   {/* Dropdown Below the Input */}
@@ -650,7 +660,14 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                         <button
                           key={index}
                           className="dropdown-item"
-                          onClick={() => handleSelectTime(time, setTimerFrom, setTimerTo, true)}
+                          onClick={() =>
+                            handleSelectTime(
+                              time,
+                              setTimerFrom,
+                              setTimerTo,
+                              true
+                            )
+                          }
                         >
                           {time.displayTime}
                         </button>
@@ -659,17 +676,24 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                   )}
                 </div>
 
-                <span className="mx-1" style={{ lineHeight: "2.4rem" }}>-</span>
+                <span className="mx-1" style={{ lineHeight: "2.4rem" }}>
+                  -
+                </span>
 
                 {/* Timer To */}
-                <div className="mx-1" style={{ width: "40%", position: "relative" }}>
+                <div
+                  className="mx-1"
+                  style={{ width: "40%", position: "relative" }}
+                >
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Enter Timer To (hh:mm AM/PM)"
                     value={timerTo}
                     onClick={() => setDropdownToVisible(true)} // Show dropdown for To when clicked
-                    onChange={(e) => handleManualInput(e.target.value, setTimerTo, false )}
+                    onChange={(e) =>
+                      handleManualInput(e.target.value, setTimerTo, false)
+                    }
                     style={{ width: "100%" }}
                   />
                   {/* Dropdown Below the Input */}
@@ -689,7 +713,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                         <button
                           key={index}
                           className="dropdown-item"
-                          onClick={() => handleSelectTime(time, setTimerFrom, setTimerTo)}
+                          onClick={() =>
+                            handleSelectTime(time, setTimerFrom, setTimerTo)
+                          }
                         >
                           {time.displayTime}
                         </button>
@@ -699,7 +725,6 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                 </div>
               </div>
             </div>
-
 
             {/* Submit Button */}
             <button
