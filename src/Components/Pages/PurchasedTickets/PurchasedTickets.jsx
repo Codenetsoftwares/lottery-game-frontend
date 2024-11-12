@@ -76,14 +76,14 @@ const PurchasedTickets = () => {
     setPagination((prev) => ({ ...prev, page: newPage }));
   };
 
-  if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center">
-        <Spinner animation="border" role="status" />
-        <span className="ml-2">Loading...</span>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="d-flex justify-content-center align-items-center">
+  //       <Spinner animation="border" role="status" />
+  //       <span className="ml-2">Loading...</span>
+  //     </div>
+  //   );
+  // }
 
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
   const endIndex = Math.min(pagination.page * pagination.limit, pagination.totalItems);
