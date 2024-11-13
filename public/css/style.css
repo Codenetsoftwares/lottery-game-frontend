@@ -1830,7 +1830,7 @@ th:focus {
   font-weight: 500;
   margin-top: 25px;
   color: #707070;
-  text-align: center;
+  /* text-align: center; */
 }
 
 /* line 1314, G:/admin_project/8 admin/management_html/scss/_reset.scss */
