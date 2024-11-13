@@ -247,3 +247,13 @@ export async function LotteryRange(body = {}, isToast = false) {
     throw error;
   }
 }
+
+export async function AllActiveLotteryMarkets(body = {}, isToast = false) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, body, isToast);
+    const response = await makeCall(urls.allActiveLotteryMarket, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
