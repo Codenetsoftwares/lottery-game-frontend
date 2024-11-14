@@ -22,7 +22,7 @@ class UrlConstant {
   PurchasedLotteryHistory = `${this.url_dev}/admin/purchase-history`;
   lotteryClock = `${this.url_dev}/admin/draw-dates`;
   GetScheduleTime = `${this.url_dev}/draw-dates`;
-  CustomWinningPrize = `${this.url_dev}/admin/results-declaration`;
+  CustomWinningPrize = `${this.url_dev}/${this.admin}/results-declaration`;
   GetResult = `${this.url_dev}/admin/prize-results`;
   lotteryRange = `${this.url_dev}/get-range`;
   allActiveLotteryMarket = `${this.url_dev}/${this.admin}/getAll-markets`;

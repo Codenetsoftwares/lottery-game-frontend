@@ -220,7 +220,7 @@ export async function GetDrawTime(body, isToast = false) {
 export async function CustomWining(body, isToast = true) {
   try {
     const callParams = await getAuthCallParams(strings.POST, body, isToast);
-    const response = await makeCall(urls.CustomWinningPrize, callParams, isToast);
+    const response = await makeCall(`${urls.CustomWinningPrize}/${body.marketId}`, callParams, isToast);
     return response;
   } catch (error) {
     throw error;

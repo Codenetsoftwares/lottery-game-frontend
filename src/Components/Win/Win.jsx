@@ -22,17 +22,18 @@ useEffect(() => {
     const initialPrizes = allActiveMarket.reduce((acc, market) => {
       acc[market.marketName] = {
         1: { amount: "", complementaryAmount: "", ticketNumbers: [""] }, 
-        2: { amount: "", ticketNumbers: [""] },
+        2: { amount: "", ticketNumbers: Array(10).fill("") },
         3: { amount: "", ticketNumbers: Array(10).fill("") },
         4: { amount: "", ticketNumbers: Array(10).fill("") },
-        5: { amount: "", ticketNumbers: Array(10).fill("") },
-        6: { amount: "", ticketNumbers: Array(50).fill("") },
+        5: { amount: "", ticketNumbers: Array(50).fill("") },
       };
       return acc;
     }, {});
     setPrizes(initialPrizes);
   }
 }, [allActiveMarket]); 
+
+console.log("prizes", prizes);
 
 const handleGetAllLotteryMarket = async () => {
   try {
@@ -116,7 +117,7 @@ console.log("prizeData", prizes);
     }
   };
 
-  const submitPrizes = async (time) => {
+  const submitPrizes = async (time,id) => {
     for (let rank in prizes[time]) {
       const { amount, complementaryAmount, ticketNumbers } = prizes[time][rank];
       if (amount) {
@@ -140,7 +141,7 @@ console.log("prizeData", prizes);
             prizeCategory,
             prizeAmount: parseFloat(amount) || 0,
             ticketNumber: validTickets,
-            announceTime: time,
+            marketId: id,
           };
 
           // Add complementaryPrize to the request body if it's the first prize
@@ -370,7 +371,7 @@ console.log("prizeData", prizes);
                 <div className="text-center mt-3">
                   <Button
                     variant="primary"
-                    onClick={() => submitPrizes(data.marketName)} // Pass the correct time
+                    onClick={() => submitPrizes(data.marketName,data.marketId)} // Pass the correct time
                     style={{
                       padding: "10px 20px",
                       borderRadius: "8px",
