@@ -42,6 +42,7 @@ const CreateMarket = () => {
   const [dropdownFromVisible, setDropdownFromVisible] = useState(false); // Track dropdown visibility for From
   const [dropdownToVisible, setDropdownToVisible] = useState(false); // Track dropdown visibility for To
   const [activePicker, setActivePicker] = useState(null);
+  const [errors, setErrors] = useState("")
   const groupFromRef = useRef(null);
   const groupToRef = useRef(null);
   const seriesFromRef = useRef(null);
@@ -96,7 +97,6 @@ const CreateMarket = () => {
         timerFromRef.current && !timerFromRef.current.contains(event.target) &&
         timerToRef.current && !timerToRef.current.contains(event.target)
       ) {
-        console.log("clicked")
         setActivePicker(null);
 
       }
@@ -260,9 +260,31 @@ const CreateMarket = () => {
 
     return null;
   };
-
+  const validateFields = () => {
+    const handleError = {};
+  
+    // Clear previous errors
+    setErrors({});
+  
+    // Validation checks
+    if (!groupFrom) handleError.groupFrom = "Group From is required";
+    if (!groupTo) handleError.groupTo = "Group To is required";
+    if (!seriesFrom) handleError.seriesFrom = "Series From is required";
+    if (!seriesTo) handleError.seriesTo = "Series To is required";
+    if (!numberFrom) handleError.numberFrom = "Number From is required";
+    if (!numberTo) handleError.numberTo = "Number To is required";
+    if (!timerFrom) handleError.timerFrom = "Timer From is required";
+    if (!timerTo) handleError.timerTo = "Timer To is required";
+  
+    if (Object.keys(handleError).length > 0) {
+      setErrors(handleError);
+      return false; // Validation failed
+    }
+    return true; // Validation passed
+  };
   // Function to handle form submission
   const handleSubmit = async () => {
+    if (!validateFields()) return;
     const error = validateForm();
     if (error) {
       toast.error(error);
@@ -547,6 +569,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                       {renderGroupFromGrid("from", 38, 99, false)}{" "}
                     </div>
                   )}
+                   {errors.groupFrom && (
+                  <small className="text-danger">{errors.groupFrom}</small>
+                )}
                 </div>
                 <span className="mx-1" style={{ lineHeight: "2.4rem" }}>
                   -
@@ -569,6 +594,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                       {renderGroupToGrid("to", 38, 99, false)}{" "}
                     </div>
                   )}
+                   {errors.groupTo && (
+                  <small className="text-danger">{errors.groupTo}</small>
+                )}
                 </div>
               </div>
             </div>
@@ -594,6 +622,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                       {renderSeriesFromGrid("from")}
                     </div>
                   )}
+                  {errors.seriesFrom && (
+                  <small className="text-danger">{errors.seriesFrom}</small>
+                )}
                 </div>
                 <span className="mx-1" style={{ lineHeight: "2.4rem" }}>
                   -
@@ -616,6 +647,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                       {renderSeriesToGrid("to")}
                     </div>
                   )}
+                  {errors.seriesTo && (
+                  <small className="text-danger">{errors.seriesTo}</small>
+                )}
                 </div>
               </div>
             </div>
@@ -641,6 +675,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                       {renderNumberFromGrid("from", 0, 99999, true)}{" "}
                     </div>
                   )}
+                  {errors.numberFrom && (
+                  <small className="text-danger">{errors.numberFrom}</small>
+                )}
                 </div>
                 <span className="mx-1" style={{ lineHeight: "2.4rem" }}>
                   -
@@ -663,6 +700,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                       {renderNumberToGrid("to", 0, 99999, true)}{" "}
                     </div>
                   )}
+                   {errors.numberTo && (
+                  <small className="text-danger">{errors.numberTo}</small>
+                )}
                 </div>
               </div>
               {/* <small className="text-muted mb-4">Number range from 00000 to 99999</small> */}
@@ -716,8 +756,12 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                           {time.displayTime}
                         </button>
                       ))}
+                      
                     </div>
                   )}
+                  {errors.timerFrom && (
+                  <small className="text-danger">{errors.timerFrom}</small>
+                )}
                 </div>
 
                 <span className="mx-1" style={{ lineHeight: "2.4rem" }}>
@@ -765,8 +809,12 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                           {time.displayTime}
                         </button>
                       ))}
+                      
                     </div>
                   )}
+                  {errors.timerTo && (
+                  <small className="text-danger">{errors.timerTo}</small>
+                )}
                 </div>
               </div>
             </div>
