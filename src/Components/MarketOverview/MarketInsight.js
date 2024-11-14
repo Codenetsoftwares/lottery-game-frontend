@@ -1,22 +1,58 @@
-import React, { useState } from 'react';
-import { Card, Col, Row, Container, Badge, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './MarketInsight.css';
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  Col,
+  Row,
+  Container,
+  Badge,
+  Button,
+  Accordion,
+} from "react-bootstrap";
+import moment from "moment";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css"; // Import Bootstrap icons
+import "./MarketInsight.css";
+import { GetMarketTimings, GetPurchaseOverview } from "../../Utils/apiService";
 
 const MarketInsight = () => {
-  const drawTimes = Array.from({ length: 15 }, (_, i) => ({
-    id: i + 1,
-    name: `Market Draw ${i + 1}`,
-  }));
-
+  const [marketTimes, setMarketTimes] = useState([]);
   const [selectedMarket, setSelectedMarket] = useState(null);
   const [showStats, setShowStats] = useState(false);
+  const [purchasedTickets, setPurchasedTickets] = useState([]); // To store the purchased tickets data
 
-  const userStatsTemplate = [
-    { icon: 'fas fa-users', title: 'Total Players', value: '50,000' },
-    { icon: 'fas fa-trophy', title: 'Total Winnings', value: '$2,500,000' },
-    { icon: 'fas fa-chart-line', title: 'Active Players', value: '3,200' },
-  ];
+  useEffect(() => {
+    const fetchMarketTimings = async () => {
+      try {
+        const response = await GetMarketTimings();
+        if (response.success) {
+          setMarketTimes(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching market timings:", error);
+      }
+    };
+
+    fetchMarketTimings();
+  }, []);
+
+  useEffect(() => {
+    if (selectedMarket) {
+      const fetchPurchasedTickets = async () => {
+        try {
+          const response = await GetPurchaseOverview({
+            marketId: selectedMarket.marketId,
+          });
+          if (response.success) {
+            setPurchasedTickets(response.data.tickets || []); // Update the state with purchased ticket data
+          }
+        } catch (error) {
+          console.error("Error fetching purchased tickets:", error);
+        }
+      };
+
+      fetchPurchasedTickets();
+    }
+  }, [selectedMarket]); // Runs when selectedMarket changes
 
   const handleMarketClick = (market) => {
     setSelectedMarket(market);
@@ -29,16 +65,16 @@ const MarketInsight = () => {
       <aside className="alt-sidebar p-4">
         <h5 className="text-center text-white">Lottery Markets</h5>
         <div className="market-card-grid">
-          {drawTimes.map((market) => (
+          {marketTimes.map((market) => (
             <Card
-              key={market.id}
-              className="market-card"
+              key={market.marketId}
+              className="market-card shadow"
               onClick={() => handleMarketClick(market)}
             >
               <Card.Body>
-                <Card.Title>{market.name}</Card.Title>
-                <Badge bg="light" text="dark">
-                  {Math.floor(Math.random() * 1000 + 100)} players
+                <Card.Title>{market.marketName}</Card.Title>
+                <Badge bg="light" text="dark" className="mb-2">
+                  {`ID: ${market.marketId.slice(-6).toUpperCase()}`}
                 </Badge>
               </Card.Body>
             </Card>
@@ -50,36 +86,132 @@ const MarketInsight = () => {
       <main className="alt-main-content p-4">
         {showStats && selectedMarket ? (
           <div className="stats-popup">
-            <h3 className="market-title">{selectedMarket.name} Stats</h3>
-            <Row className="stats-grid">
-              {userStatsTemplate.map((stat, index) => (
-                <Col key={index} md={4} className="mb-3">
-                  <Card className="stat-card">
-                    <Card.Body>
-                      <i className={`bi ${stat.icon} stat-icon`}></i>
-                      <Card.Title className="stat-title">{stat.title}</Card.Title>
-                      <Card.Text className="stat-value">{stat.value}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
+            <h3 className="market-title text-center mb-4">
+              {selectedMarket.marketName} Stats
+            </h3>
+            <Row>
+              {/* Group Range Card */}
+              <Col md={6} className="mb-3">
+                <Card className="stat-card group-card shadow">
+                  <Card.Body className="d-flex align-items-center">
+                    <i className="bi bi-people-fill stat-icon me-3"></i>
+                    <div>
+                      <p className="mb-1">
+                        <strong>Group Range</strong>
+                      </p>
+                      <p>
+                        Start: {selectedMarket.group_start} | End:{" "}
+                        {selectedMarket.group_end}
+                      </p>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              {/* Series Range Card */}
+              <Col md={6} className="mb-3">
+                <Card className="stat-card series-card shadow">
+                  <Card.Body className="d-flex align-items-center">
+                    <i className="bi bi-bar-chart-fill stat-icon me-3"></i>
+                    <div>
+                      <p className="mb-1">
+                        <strong>Series Range</strong>
+                      </p>
+                      <p>
+                        Start: {selectedMarket.series_start} | End:{" "}
+                        {selectedMarket.series_end}
+                      </p>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              {/* Number Range Card */}
+              <Col md={6} className="mb-3">
+                <Card className="stat-card number-card shadow">
+                  <Card.Body className="d-flex align-items-center">
+                    <i className="bi bi-123 stat-icon me-3"></i>
+                    <div>
+                      <p className="mb-1">
+                        <strong>Number Range</strong>
+                      </p>
+                      <p>
+                        Start: {selectedMarket.number_start} | End:{" "}
+                        {selectedMarket.number_end}
+                      </p>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              {/* Time Range Card */}
+              <Col md={6} className="mb-3">
+                <Card className="stat-card time-card shadow">
+                  <Card.Body className="d-flex align-items-center">
+                    <i className="bi bi-clock-fill stat-icon me-3"></i>
+                    <div>
+                      <p className="mb-1">
+                        <strong>Time Range</strong>
+                      </p>
+                      <p>
+                        Start:{" "}
+                        {moment(selectedMarket.start_time).format("HH:mm")} |
+                        End: {moment(selectedMarket.end_time).format("HH:mm")}
+                      </p>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
             </Row>
+
+            {/* Accordion for Purchased Tickets */}
+
+            <Accordion defaultActiveKey="0">
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>Purchased Tickets</Accordion.Header>
+                <Accordion.Body>
+                  {purchasedTickets.length > 0 ? (
+                    <div className="ticket-grid">
+                      {purchasedTickets.map((ticket, index) => (
+                        <div key={index} className="ticket-card">
+                          <Card className="ticket-card-item shadow-sm">
+                            <Card.Body>
+                              {/* Display all ticket numbers in a grid */}
+                              <div className="ticket-numbers">
+                                {ticket.ticketList.map((ticketNumber, idx) => (
+                                  <span key={idx} className="ticket-number">
+                                    {ticketNumber}
+                                  </span>
+                                ))}
+                              </div>
+                            </Card.Body>
+                          </Card>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>No purchased tickets available for this market.</p>
+                  )}
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
+
             <Button
               variant="outline-primary"
               className="close-btn mt-4"
               onClick={() => setShowStats(false)}
             >
-              Close Stats
+              Close Details
             </Button>
           </div>
         ) : (
           <Card className="welcome-card shadow-sm">
             <Card.Body>
               <Card.Title className="welcome-title">
-                Welcome to the Lottery Dashboard!
+                Welcome to the Lottery Market Overview!
               </Card.Title>
               <Card.Text className="welcome-text">
-                Select a market from the sidebar to view its statistics.
+                Select a market from the left sidebar to view its details.
               </Card.Text>
             </Card.Body>
           </Card>
