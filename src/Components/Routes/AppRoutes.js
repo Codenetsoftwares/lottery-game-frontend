@@ -16,6 +16,7 @@ import PurchasedTickets from '../Pages/PurchasedTickets/PurchasedTickets';
 import Search from '../Search/Search';
 import CreateTime from '../CreateDrawTime/CreateTime';
 import MarketInsight from '../MarketOverview/MarketInsight';
+import SearchLottery from '../Pages/SearchLotteryPage/SearchLottery';
 
 const AppRoutes = () => {
   return (
@@ -43,7 +44,7 @@ const AppRoutes = () => {
             <Route path="/purchase-history" element={<PurchasedTickets />} />
             <Route path="/results" element={<Result />} />
             <Route path="/win" element={<Win />} />
-            <Route path="/search-lottery" element={<Search />} />
+            <Route path="/search-lottery" element={<SearchLottery/>} />
             {/* <Route path="/lucky-hour" element={<CreateTime/>}/>  not in use anymore  */} 
             <Route path="/Market-overview" element={<MarketInsight/>} />
          

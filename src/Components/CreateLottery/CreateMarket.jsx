@@ -117,7 +117,6 @@ const CreateMarket = () => {
   };
 
   const handleSeriesSelect = (value, type) => {
-    
     if (type === "from") {
       setSeriesFrom(value);
       setIsSeriesFromPickerVisible(false);
@@ -401,8 +400,8 @@ const CreateMarket = () => {
             key={group}
             className="calendar-cell"
             onClick={() => {
-              handleGroupSelect(group, type); // Call your existing selection handler
-              setActivePicker(null); // Close the dropdown after selection
+              handleGroupSelect(group, type); 
+              setActivePicker(null); 
             }}
           >
             {group}

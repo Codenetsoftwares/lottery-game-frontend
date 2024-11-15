@@ -1,32 +1,52 @@
 import React, { useState, useEffect } from "react";
 import { Accordion, Button, Form } from "react-bootstrap";
 import { useAppContext } from "../../contextApi/context";
-import { CustomWining } from "../../Utils/apiService";
+import { AllActiveLotteryMarkets, CustomWining } from "../../Utils/apiService";
 import strings from "../../Utils/constant/stringConstant";
 
 const Win = () => {
   const { store, dispatch } = useAppContext();
-  const drawTimes = store.drawTimes || []; // ["1.00 AM", "1.30 AM"]
+  const drawTimes = store.drawTimes || []; // ["1.00 AM", "1.30 AM"]  
 
   // Initialize state for prize amounts and ticket numbers
   const [prizes, setPrizes] = useState({});
+ const [allActiveMarket, setAllActiveMarket] = useState([]);
   const [errors, setErrors] = useState({}); // State for error messages
 
- useEffect(() => {
-   const initialPrizes = drawTimes.reduce((acc, time) => {
-     acc[time] = {
-       1: { amount: "", complementaryAmount: "", ticketNumbers: [""] }, // Add complementaryAmount for the 1st prize
-       2: { amount: "", ticketNumbers: [""] },
-       3: { amount: "", ticketNumbers: Array(10).fill("") },
-       4: { amount: "", ticketNumbers: Array(10).fill("") },
-       5: { amount: "", ticketNumbers: Array(10).fill("") },
-       6: { amount: "", ticketNumbers: Array(50).fill("") },
-     };
-     return acc;
-   }, {});
-   setPrizes(initialPrizes);
- }, [drawTimes]);
+useEffect(() => {
+  handleGetAllLotteryMarket();
+}, []);
 
+useEffect(() => {
+  if (allActiveMarket.length > 0) {
+    const initialPrizes = allActiveMarket.reduce((acc, market) => {
+      acc[market.marketName] = {
+        1: { amount: "", complementaryAmount: "", ticketNumbers: [""] }, 
+        2: { amount: "", ticketNumbers: Array(10).fill("") },
+        3: { amount: "", ticketNumbers: Array(10).fill("") },
+        4: { amount: "", ticketNumbers: Array(10).fill("") },
+        5: { amount: "", ticketNumbers: Array(50).fill("") },
+      };
+      return acc;
+    }, {});
+    setPrizes(initialPrizes);
+  }
+}, [allActiveMarket]); 
+
+console.log("prizes", prizes);
+
+const handleGetAllLotteryMarket = async () => {
+  try {
+    const allmarket = await AllActiveLotteryMarkets();
+    console.log("allmarket", allmarket);
+    setAllActiveMarket(allmarket.data); 
+  } catch (error) {
+    console.error("Error fetching lottery markets:", error);
+  }
+};
+
+
+console.log("prizeData", prizes);
 
   // Validation function to check for special characters
   const validateInput = (value) => {
@@ -36,7 +56,7 @@ const Win = () => {
 
   const handlePrizeChange = (time, rank, value) => {
     if (validateInput(value)) {
-      setErrors((prevErrors) => ({ ...prevErrors, [time]: undefined })); // Clear error if valid
+      setErrors((prevErrors) => ({ ...prevErrors, [time]: undefined })); 
       setPrizes((prevPrizes) => ({
         ...prevPrizes,
         [time]: {
@@ -54,7 +74,7 @@ const Win = () => {
 
   const handleTicketChange = (time, rank, index, value) => {
     if (validateInput(value)) {
-      setErrors((prevErrors) => ({ ...prevErrors, [time]: undefined })); // Clear error if valid
+      setErrors((prevErrors) => ({ ...prevErrors, [time]: undefined })); 
       setPrizes((prevPrizes) => {
         const updatedTickets = [
           ...(prevPrizes[time][rank]?.ticketNumbers || []),
@@ -97,8 +117,7 @@ const Win = () => {
     }
   };
 
-
-  const submitPrizes = async (time) => {
+  const submitPrizes = async (time,id) => {
     for (let rank in prizes[time]) {
       const { amount, complementaryAmount, ticketNumbers } = prizes[time][rank];
       if (amount) {
@@ -122,7 +141,7 @@ const Win = () => {
             prizeCategory,
             prizeAmount: parseFloat(amount) || 0,
             ticketNumber: validTickets,
-            announceTime: time,
+            marketId: id,
           };
 
           // Add complementaryPrize to the request body if it's the first prize
@@ -153,7 +172,6 @@ const Win = () => {
       }
     }
   };
-
 
   const prizeData = {
     1: { rank: "1st", description: "Top prize for the winner" },
@@ -201,19 +219,21 @@ const Win = () => {
         className="border border-3 rounded-4 shadow-lg p-4"
         style={{ width: "90%", maxWidth: "1000px", backgroundColor: "#ffffff" }}
       >
-        {drawTimes.length > 0 ? (
+        {allActiveMarket.length > 0 ? (
           <div>
-            {drawTimes.map((time, index) => (
+            {allActiveMarket.map((data, index) => (
               <div
                 key={index}
                 className="mb-4 p-3 rounded-3 shadow-sm"
                 style={{ backgroundColor: "#e6f7ff" }}
               >
-                <h4 style={{ color: "#007bb5", fontWeight: "bold" }}>{time}</h4>
+                <h4 style={{ color: "#007bb5", fontWeight: "bold" }}>
+                  {data.marketName}
+                </h4>
 
-                {errors[time] && (
+                {/* {errors[time] && (
                   <div className="text-danger mb-2">{errors[time]}</div>
-                )}
+                )} */}
 
                 <Accordion defaultActiveKey="0">
                   {Object.entries(prizeData).map(
@@ -234,11 +254,12 @@ const Win = () => {
                               <Form.Control
                                 type="text"
                                 value={
-                                  prizes[time]?.[key]?.ticketNumbers[0] || ""
+                                  prizes[data.marketName]?.[key]
+                                    ?.ticketNumbers[0] || ""
                                 }
                                 onChange={(e) =>
                                   handleTicketChange(
-                                    time,
+                                    data.marketName,
                                     key,
                                     0,
                                     e.target.value
@@ -259,11 +280,12 @@ const Win = () => {
                               <Form.Control
                                 type="text"
                                 value={
-                                  prizes[time]?.[key]?.complementaryAmount || ""
+                                  prizes[data.marketName]?.[key]
+                                    ?.complementaryAmount || ""
                                 }
                                 onChange={(e) =>
                                   handleComplementaryChange(
-                                    time,
+                                    data.marketName,
                                     key,
                                     e.target.value
                                   )
@@ -287,9 +309,13 @@ const Win = () => {
                           </Form.Label>
                           <Form.Control
                             type="text"
-                            value={prizes[time]?.[key]?.amount || ""}
+                            value={prizes[data.marketName]?.[key]?.amount || ""}
                             onChange={(e) =>
-                              handlePrizeChange(time, key, e.target.value)
+                              handlePrizeChange(
+                                data.marketName,
+                                key,
+                                e.target.value
+                              )
                             }
                             placeholder="Enter amount"
                             style={{
@@ -309,29 +335,30 @@ const Win = () => {
                                 {prizeData[key].description}):
                               </Form.Label>
                               <div className="d-flex flex-wrap gap-2 mt-1">
-                                {(prizes[time]?.[key]?.ticketNumbers || []).map(
-                                  (ticket, idx) => (
-                                    <Form.Control
-                                      key={idx}
-                                      type="text"
-                                      value={ticket}
-                                      onChange={(e) =>
-                                        handleTicketChange(
-                                          time,
-                                          key,
-                                          idx,
-                                          e.target.value
-                                        )
-                                      }
-                                      placeholder={`Ticket ${idx + 1}`}
-                                      style={{
-                                        borderRadius: "8px",
-                                        fontSize: "0.85rem",
-                                        width: "calc(20% - 10px)",
-                                      }}
-                                    />
-                                  )
-                                )}
+                                {(
+                                  prizes[data.marketName]?.[key]
+                                    ?.ticketNumbers || []
+                                ).map((ticket, idx) => (
+                                  <Form.Control
+                                    key={idx}
+                                    type="text"
+                                    value={ticket}
+                                    onChange={(e) =>
+                                      handleTicketChange(
+                                        data.marketName,
+                                        key,
+                                        idx,
+                                        e.target.value
+                                      )
+                                    }
+                                    placeholder={`Ticket ${idx + 1}`}
+                                    style={{
+                                      borderRadius: "8px",
+                                      fontSize: "0.85rem",
+                                      width: "calc(20% - 10px)",
+                                    }}
+                                  />
+                                ))}
                               </div>
                             </div>
                           )}
@@ -344,14 +371,14 @@ const Win = () => {
                 <div className="text-center mt-3">
                   <Button
                     variant="primary"
-                    onClick={() => submitPrizes(time)} // Pass the correct time
+                    onClick={() => submitPrizes(data.marketName,data.marketId)} // Pass the correct time
                     style={{
                       padding: "10px 20px",
                       borderRadius: "8px",
                       fontSize: "1rem",
                     }}
                   >
-                    Submit Prizes for {time}
+                    Submit Prizes for {data.marketName}
                   </Button>
                 </div>
               </div>

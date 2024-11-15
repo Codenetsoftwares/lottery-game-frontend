@@ -10,7 +10,21 @@ import {
 } from "../../Utils/helper";
 import useDebouncedFilter from "../../Utils/customHook/useDebouncedFilter";
 
-const Search = () => {
+const Search = ({
+  filteredNumbers,
+  filteredGroups,
+  filteredSeries,
+  setFilteredNumbers,
+  setFilteredGroups,
+  setFilteredSeries,
+  lotteryRange,
+}) => {
+  console.log(
+    "filteredNumbers",
+    filteredNumbers,
+    filteredGroups,
+    filteredSeries
+  );
   const [sem, setSem] = useState("");
   const [group, setGroup] = useState("");
   const [series, setSeries] = useState("");
@@ -21,43 +35,9 @@ const Search = () => {
   const [responseData, setResponseData] = useState(null);
   const [showSearch, setShowSearch] = useState(true);
   const [errors, setErrors] = useState({});
-  const [lotteryRange, setLotteryRange] = useState(getLotteryRange);
-  const [filteredNumbers, setFilteredNumbers] = useState([]);
-  const [filteredGroups, setFilteredGroups] = useState([]);
-  const [filteredSeries, setFilteredSeries] = useState([]);
-  const [debounceTimeout, setDebounceTimeout] = useState(null);
 
   const { debouncedFilter } = useDebouncedFilter();
 
-  useEffect(() => {
-    handleLotteryRange();
-  }, []);
-
-  // console.log("generateGroups", lotteryRange, filteredGroups);
-
-  const handleLotteryRange = async () => {
-    const data = await LotteryRange();
-    setLotteryRange({
-      group_start: data.data.group_start,
-      group_end: data.data.group_end,
-      series_start: data.data.series_start,
-      series_end: data.data.series_end,
-      number_start: data.data.number_start,
-      number_end: data.data.number_end,
-    });
-
-    // Initialize the filtered numbers based on the fetched range
-    setFilteredNumbers(
-      generateNumbers(data.data.number_start, data.data.number_end)
-    );
-    setFilteredGroups(
-      generateGroups(data.data.group_start, data.data.group_end)
-    );
-    setFilteredSeries(
-      generateSeries(data.data.series_start, data.data.series_end)
-    );
-  };
- 
   const handleNumberInputChange = (e) => {
     const inputValue = e.target.value;
     setNumber(inputValue);
@@ -223,7 +203,7 @@ const Search = () => {
   return (
     <div
       className="container-fluid d-flex justify-content-center"
-      style={{ minHeight: "75vh", backgroundColor: "#f0f4f8" }}
+      style={{ minHeight: "55vh", backgroundColor: "#f0f4f8" }}
     >
       <div
         className="border border-3 rounded-3 shadow-lg"
