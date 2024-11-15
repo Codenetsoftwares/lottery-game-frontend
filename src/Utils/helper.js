@@ -1,5 +1,5 @@
 export const generateSeries = (seriesStart, seriesEnd) => {
-    const letters = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
+    const letters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
     const startIndex = letters.indexOf(seriesStart);
     const endIndex = letters.indexOf(seriesEnd);
     console.log("start", startIndex, letters.indexOf(seriesEnd), seriesStart, seriesEnd)

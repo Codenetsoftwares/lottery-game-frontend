@@ -1,9 +1,9 @@
 class UrlConstant {
-  constructor() {}
-//url was commented
+  constructor() { }
+  //url was commented
   //  url_dev = "https://lottery.server.dummydoma.in/api";
   url_dev = 'http://localhost:8080/api';
-
+  admin = 'admin'
   // admin api
 
   login = `${this.url_dev}/login`;
@@ -17,14 +17,15 @@ class UrlConstant {
   getSelectSem = `${this.url_dev}/generate-tickets`;
   SingleDeleteCard = `${this.url_dev}/delete-particularLottery`;
   SingleEditCard = `${this.url_dev}/edit-particularLottery`;
-  generateNumber= `${this.url_dev}/generate-ticket`;
-  searchTicket=`${this.url_dev}/admin/search-ticket`;
-  PurchasedLotteryHistory=`${this.url_dev}/admin/purchase-history`;
+  generateNumber = `${this.url_dev}/generate-ticket`;
+  searchTicket = `${this.url_dev}/admin/search-ticket`;
+  PurchasedLotteryHistory = `${this.url_dev}/admin/purchase-history`;
   lotteryClock = `${this.url_dev}/admin/draw-dates`;
   GetScheduleTime = `${this.url_dev}/draw-dates`;
-  CustomWinningPrize=`${this.url_dev}/admin/results-declaration`;
+  CustomWinningPrize = `${this.url_dev}/${this.admin}/results-declaration`;
   GetResult = `${this.url_dev}/admin/prize-results`;
   lotteryRange = `${this.url_dev}/get-range`;
+  allActiveLotteryMarket = `${this.url_dev}/${this.admin}/getAll-markets`;
   getMarketTime = `${this.url_dev}/get-range`;
   getPurchaseDetails= `${this.url_dev}/tickets/purchases`;
 
