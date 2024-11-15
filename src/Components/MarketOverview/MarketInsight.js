@@ -65,20 +65,33 @@ const MarketInsight = () => {
       <aside className="alt-sidebar p-4">
         <h5 className="text-center text-white">Lottery Markets</h5>
         <div className="market-card-grid">
-          {marketTimes.map((market) => (
-            <Card
-              key={market.marketId}
-              className="market-card shadow"
-              onClick={() => handleMarketClick(market)}
+          {marketTimes.length > 0 ? (
+            marketTimes.map((market) => (
+              <Card
+                key={market.marketId}
+                className="market-card shadow"
+                onClick={() => handleMarketClick(market)}
+              >
+                <Card.Body>
+                  <Card.Title>{market.marketName}</Card.Title>
+                  <Badge bg="light" text="dark" className="mb-2">
+                    {`ID: ${market.marketId.slice(-6).toUpperCase()}`}
+                  </Badge>
+                </Card.Body>
+              </Card>
+            ))
+          ) : (
+            <div
+              className="d-flex justify-content-center align-items-center"
+              style={{ minHeight: "480px", width: "100%" }}
             >
-              <Card.Body>
-                <Card.Title>{market.marketName}</Card.Title>
-                <Badge bg="light" text="dark" className="mb-2">
-                  {`ID: ${market.marketId.slice(-6).toUpperCase()}`}
-                </Badge>
-              </Card.Body>
-            </Card>
-          ))}
+              <h4 className="text-center fw-bold">
+                No <br />
+                Market <br />
+                Available
+              </h4>
+            </div>
+          )}
         </div>
       </aside>
 
@@ -213,6 +226,13 @@ const MarketInsight = () => {
               <Card.Text className="welcome-text">
                 Select a market from the left sidebar to view its details.
               </Card.Text>
+              {marketTimes.length === 0 && !showStats && (
+                <div className="d-flex justify-content-center align-items-center">
+                  <h4 className="text-center text-dark fw-bold">
+                    No Market Available
+                  </h4>
+                </div>
+              )}
             </Card.Body>
           </Card>
         )}
