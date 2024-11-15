@@ -123,14 +123,14 @@ const Login = () => {
                 </div>
                 <div className="modal-body" style={{ padding: "30px" }}>
                   <form onSubmit={handleSubmit}>
-                    <div className="mb-2">
+                    <div className="mb-3">
                       <input
                         type="text"
                         name="userName"
-                        className="form-control"
-                        placeholder="Enter Your Username"
+                        className="form-control mb-0"
+                        placeholder="Enter Username"
                         style={{
-                          padding: "15px",
+                          
                           borderRadius: "5px",
                           border: "1px solid",
                         }}
@@ -139,17 +139,17 @@ const Login = () => {
                         onBlur={handleBlur}
                       />
                       {errors.userName && touched.userName && (
-                        <p className="text-center fw-bold text-danger">
+                        <p className=" fw-bold text-danger mb-0 mt-0">
                           {errors.userName}
                         </p>
                       )}
                     </div>
-                    <div className="mb-2">
+                    <div className="mb-3">
                       <input
                         type="password"
                         name="password"
-                        className="form-control"
-                        placeholder="Enter Your Password"
+                        className="form-control mb-0"
+                        placeholder="Enter Password"
                         style={{
                           padding: "15px",
                           borderRadius: "5px",
@@ -160,7 +160,7 @@ const Login = () => {
                         onBlur={handleBlur}
                       />
                       {errors.password && touched.password && (
-                        <p className="text-center fw-bold text-danger">
+                        <p className=" fw-bold text-danger mb-0 mt-0">
                           {errors.password}
                         </p>
                       )}

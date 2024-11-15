@@ -257,3 +257,27 @@ export async function AllActiveLotteryMarkets(body = {}, isToast = false) {
     throw error;
   }
 }
+
+export async function GetMarketTimings(body = {}, isToast = false) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, body, isToast);
+    const response = await makeCall(urls.getMarketTime, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function GetPurchaseOverview(body = {}, isToast = false) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, body, isToast);
+    const response = await makeCall(
+      `${urls.getPurchaseDetails}/${body.marketId}`,
+      callParams,
+      isToast
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}

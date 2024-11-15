@@ -41,6 +41,15 @@ const CreateMarket = () => {
   const [timerTo, setTimerTo] = useState("");     // New state for timer to
   const [dropdownFromVisible, setDropdownFromVisible] = useState(false); // Track dropdown visibility for From
   const [dropdownToVisible, setDropdownToVisible] = useState(false); // Track dropdown visibility for To
+  const [activePicker, setActivePicker] = useState(null);
+  const groupFromRef = useRef(null);
+  const groupToRef = useRef(null);
+  const seriesFromRef = useRef(null);
+  const seriesToRef = useRef(null);
+  const numberFromRef = useRef(null);
+  const numberToRef = useRef(null);
+  const timerFromRef = useRef(null);
+  const timerToRef = useRef(null);
 
 
   useEffect(() => {
@@ -73,6 +82,30 @@ const CreateMarket = () => {
       (_, i) => i + rangeStart
     );
     setFilterNumberTo(numbersTo);
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        groupFromRef.current && !groupFromRef.current.contains(event.target) &&
+        groupToRef.current && !groupToRef.current.contains(event.target) &&
+        seriesFromRef.current && !seriesFromRef.current.contains(event.target) &&
+        seriesToRef.current && !seriesToRef.current.contains(event.target) &&
+        numberFromRef.current && !numberFromRef.current.contains(event.target) &&
+        numberToRef.current && !numberToRef.current.contains(event.target) &&
+        timerFromRef.current && !timerFromRef.current.contains(event.target) &&
+        timerToRef.current && !timerToRef.current.contains(event.target)
+      ) {
+        console.log("clicked")
+        setActivePicker(null);
+
+      }
+    }
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const handleGroupSelect = (value, type) => {
@@ -317,7 +350,10 @@ const CreateMarket = () => {
           <button
             key={group}
             className="calendar-cell"
-            onClick={() => handleGroupSelect(group, type)}
+            onClick={() => {
+              handleGroupSelect(group, type); 
+              setActivePicker(null); 
+            }}
           >
             {group}
           </button>
@@ -333,7 +369,7 @@ const CreateMarket = () => {
           <button
             key={group}
             className="calendar-cell"
-            onClick={() => handleGroupSelect(group, type)}
+            onClick={() => { handleGroupSelect(group, type); setActivePicker(null);}}
           >
             {group}
           </button>
@@ -351,7 +387,7 @@ const CreateMarket = () => {
           <button
             key={letter}
             className="calendar-cell"
-            onClick={() => handleSeriesSelect(letter, type)}
+            onClick={() => {handleSeriesSelect(letter, type); setActivePicker(null);}}
           >
             {letter}
           </button>
@@ -367,7 +403,7 @@ const CreateMarket = () => {
            <button
              key={letter}
              className="calendar-cell"
-             onClick={() => handleSeriesSelect(letter, type)}
+             onClick={() => {handleSeriesSelect(letter, type); setActivePicker(null)}}
            >
              {letter}
            </button>
@@ -384,13 +420,13 @@ const CreateMarket = () => {
           <button
             key={number}
             className="calendar-cell"
-            onClick={() =>
-              handleNumberSelect(
-                isFormatted
-                  ? number.toString().padStart(5, "0")
-                  : number.toString(),
-                type
-              )
+            onClick={() => {handleNumberSelect(
+              isFormatted
+                ? number.toString().padStart(5, "0")
+                : number.toString(),
+              type
+            ); setActivePicker(null)}
+              
             }
           >
             {isFormatted
@@ -410,13 +446,13 @@ const renderNumberToGrid = (type, isFormatted = true) => {
         <button
           key={number}
           className="calendar-cell"
-          onClick={() =>
-            handleNumberSelect(
-              isFormatted
-                ? number.toString().padStart(5, "0")
-                : number.toString(),
-              type
-            )
+          onClick={() => {handleNumberSelect(
+            isFormatted
+              ? number.toString().padStart(5, "0")
+              : number.toString(),
+            type
+          ); setActivePicker(null)}
+            
           }
         >
           {isFormatted ? number.toString().padStart(5, "0") : number.toString()}{" "}
@@ -493,18 +529,19 @@ const renderNumberToGrid = (type, isFormatted = true) => {
             <div className="mb-3">
               <div className="d-flex justify-content-center mb-2">
                 <div
-                  className="position-relative mx-1"
-                  style={{ width: "40%" }}
+                  className="position-relative mx-1" ref={groupFromRef}
+                  style={{ width: "40%" }} 
                 >
                   <input
                     type="text"
                     placeholder="From"
                     className="form-control"
                     value={groupFrom}
-                    onFocus={() => setIsGroupFromPickerVisible(true)}
+                    onFocus={() => setActivePicker("groupFrom")}
+                    onClick={() => setIsGroupFromPickerVisible(true)}
                     onChange={handleGroupFromInputChange}
                   />
-                  {isGroupFromPickerVisible && (
+                  {activePicker === "groupFrom" && (
                     <div className="picker-dropdown">
                       {renderGroupFromGrid("from", 38, 99, false)}{" "}
                     </div>
@@ -514,7 +551,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                   -
                 </span>
                 <div
-                  className="position-relative mx-1"
+                  className="position-relative mx-1" ref={groupToRef}
                   style={{ width: "40%" }}
                 >
                   <input
@@ -522,10 +559,11 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                     placeholder="To"
                     className="form-control"
                     value={groupTo}
-                    onFocus={() => setIsGroupToPickerVisible(true)}
+                    onFocus={() => setActivePicker("groupTo")}
+                    onClick={() => setIsGroupToPickerVisible(true)}
                     onChange={handleGroupToInputChange}
                   />
-                  {isGroupToPickerVisible && (
+                  {activePicker === "groupTo" && (
                     <div className="picker-dropdown">
                       {renderGroupToGrid("to", 38, 99, false)}{" "}
                     </div>
@@ -538,7 +576,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
             <div className="mb-3">
               <div className="d-flex justify-content-center mb-2">
                 <div
-                  className="position-relative mx-1"
+                  className="position-relative mx-1" ref={seriesFromRef}
                   style={{ width: "40%" }}
                 >
                   <input
@@ -546,10 +584,11 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                     placeholder="Series From"
                     className="form-control"
                     value={seriesFrom}
-                    onFocus={() => setIsSeriesFromPickerVisible(true)}
+                    onFocus={() => setActivePicker("seriesFrom")}
+                    onClick={() => setIsSeriesFromPickerVisible(true)}
                     onChange={handleSeriesFromInputChange}
                   />
-                  {isSeriesFromPickerVisible && (
+                  {activePicker === "seriesFrom" && (
                     <div className="picker-dropdown">
                       {renderSeriesFromGrid("from")}
                     </div>
@@ -559,7 +598,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                   -
                 </span>
                 <div
-                  className="position-relative mx-1"
+                  className="position-relative mx-1"  ref={seriesToRef}
                   style={{ width: "40%" }}
                 >
                   <input
@@ -567,10 +606,11 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                     placeholder="Series To"
                     className="form-control"
                     value={seriesTo}
-                    onFocus={() => setIsSeriesToPickerVisible(true)}
+                    onFocus={() => setActivePicker("seriesTo")}
+                    onClick={() => setIsSeriesToPickerVisible(true)}
                     onChange={handleSeriesToInputChange}
                   />
-                  {isSeriesToPickerVisible && (
+                  {activePicker === "seriesTo" && (
                     <div className="picker-dropdown">
                       {renderSeriesToGrid("to")}
                     </div>
@@ -583,7 +623,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
             <div className="mb-3">
               <div className="d-flex justify-content-center mb-2">
                 <div
-                  className="position-relative mx-1"
+                  className="position-relative mx-1" ref={numberFromRef}
                   style={{ width: "40%" }}
                 >
                   <input
@@ -591,10 +631,11 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                     placeholder="Number From"
                     className="form-control"
                     value={numberFrom}
-                    onFocus={() => setIsNumberFromPickerVisible(true)}
+                    onFocus={() => setActivePicker("numberFrom")}
+                    onClick={() => setIsNumberFromPickerVisible(true)}
                     onChange={handleNumberFromInputChange}
                   />
-                  {isNumberFromPickerVisible && (
+                  {activePicker === "numberFrom" && (
                     <div className="picker-dropdown">
                       {renderNumberFromGrid("from", 0, 99999, true)}{" "}
                     </div>
@@ -604,7 +645,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                   -
                 </span>
                 <div
-                  className="position-relative mx-1"
+                  className="position-relative mx-1" ref={numberToRef}
                   style={{ width: "40%" }}
                 >
                   <input
@@ -612,10 +653,11 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                     placeholder="Number To"
                     className="form-control"
                     value={numberTo}
-                    onFocus={() => setIsNumberToPickerVisible(true)}
+                    onFocus={() => setActivePicker("numberTo")}
+                    onClick={() => setIsNumberToPickerVisible(true)}
                     onChange={handleNumberToInputChange}
                   />
-                  {isNumberToPickerVisible && (
+                  {activePicker === "numberTo" && (
                     <div className="picker-dropdown">
                       {renderNumberToGrid("to", 0, 99999, true)}{" "}
                     </div>
@@ -629,14 +671,15 @@ const renderNumberToGrid = (type, isFormatted = true) => {
               <div className="d-flex justify-content-center mb-2">
                 {/* Timer From */}
                 <div
-                  className="mx-1"
-                  style={{ width: "40%", position: "relative" }}
+                  className="mx-1" ref={timerFromRef}
+                  style={{ width: "40%", position: "relative" }} 
                 >
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Enter Timer From (hh:mm AM/PM)"
                     value={timerFrom}
+                    onFocus={() => setActivePicker("timerFrom")}
                     onClick={() => setDropdownFromVisible(true)} // Show dropdown for From when clicked
                     onChange={(e) =>
                       handleManualInput(e.target.value, setTimerFrom)
@@ -644,7 +687,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                     style={{ width: "100%" }}
                   />
                   {/* Dropdown Below the Input */}
-                  {dropdownFromVisible && (
+                  {activePicker === "timerFrom" && (
                     <div
                       className="dropdown-menu show"
                       style={{
@@ -682,7 +725,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
 
                 {/* Timer To */}
                 <div
-                  className="mx-1"
+                  className="mx-1" ref={timerToRef}
                   style={{ width: "40%", position: "relative" }}
                 >
                   <input
@@ -690,6 +733,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                     className="form-control"
                     placeholder="Enter Timer To (hh:mm AM/PM)"
                     value={timerTo}
+                    onFocus={() => setActivePicker("timerTo")}
                     onClick={() => setDropdownToVisible(true)} // Show dropdown for To when clicked
                     onChange={(e) =>
                       handleManualInput(e.target.value, setTimerTo, false)
@@ -697,7 +741,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                     style={{ width: "100%" }}
                   />
                   {/* Dropdown Below the Input */}
-                  {dropdownToVisible && (
+                  {activePicker === "timerTo" && (
                     <div
                       className="dropdown-menu show"
                       style={{
