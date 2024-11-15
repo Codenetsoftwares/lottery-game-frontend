@@ -271,47 +271,59 @@ const CreateMarket = () => {
   
     if (Object.keys(handleError).length > 0) {
       setErrors(handleError);
-      return false; // Validation failed
+      return false;
     }
-    return true; // Validation passed
+    return true;
   };
-  // Function to handle form submission
-  const handleSubmit = async () => {
-    if (!validateFields()) return;
-    const error = validateForm();
-    if (error) {
-      toast.error(error);
-      return;
-    }
 
-    // Function to convert "2:42 AM"/"4:00 PM" format to "2024-11-07T08:00:00Z" format with the date
-    // const convertToISODateTime = (timeString, date) => {
-    //   const [time, period] = timeString.split(" ");
-    //   let [hours, minutes] = time.split(":").map(Number);
+// Function to format a date to "YYYY-MM-DD"
+const formatDateToYYYYMMDD = (date) => {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
-    //   if (period === "PM" && hours !== 12) {
-    //     hours += 12;
-    //   } else if (period === "AM" && hours === 12) {
-    //     hours = 0;
-    //   }
+// Function to convert "hh:mm AM/PM" format to ISO datetime string
+const convertToISODateTime = (time, date) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    throw new Error("Invalid date format. Expected format: YYYY-MM-DD");
+  }
 
-    //   // Construct the ISO datetime string with the provided date
-    //   return `${date}T${hours.toString().padStart(2, "0")}:${minutes
-    //     .toString()
-    //     .padStart(2, "0")}:00Z`;
-    // };
-    const convertToISODateTime = (time) => {
-      const date = new Date();
-      const [hours, minutes, period] = time.match(/(\d+):(\d+)\s?(AM|PM)/i).slice(1);
-      const isPM = period.toUpperCase() === "PM";
-      const adjustedHours = (parseInt(hours) % 12) + (isPM ? 12 : 0);
-    
-      date.setHours(adjustedHours, parseInt(minutes), 0, 0);
-      console.log('Converted time to ISO:', date.toISOString());
-      return date.toISOString(); // Return the ISO formatted date
-    };
-    
+  const match = time.match(/(\d+):(\d+)\s?(AM|PM)/i);
+  if (!match) {
+    throw new Error("Invalid time format. Expected format: hh:mm AM/PM");
+  }
 
+  const [_, hours, minutes, period] = match;
+  const isPM = period.toUpperCase() === "PM";
+  const adjustedHours = (parseInt(hours) % 12) + (isPM ? 12 : 0);
+
+  const dateTimeString = `${date}T${adjustedHours.toString().padStart(2, '0')}:${minutes.padStart(2, '0')}:00`;
+  const dateTime = new Date(dateTimeString);
+
+  if (isNaN(dateTime)) {
+    throw new Error("Invalid time value. Failed to create a valid Date object.");
+  }
+
+  const isoDateTime = new Date(dateTime.getTime() - dateTime.getTimezoneOffset() * 60000).toISOString();
+  console.log('Converted time to ISO:', isoDateTime);
+  return isoDateTime;
+};
+
+// Your handleSubmit function
+const handleSubmit = async () => {
+  if (!validateFields()) return;
+  const error = validateForm();
+  if (error) {
+    toast.error(error);
+    return;
+  }
+
+  // Format today's date as "YYYY-MM-DD"
+  const selectedDate = formatDateToYYYYMMDD(new Date());
+
+  try {
     const requestBody = {
       group: {
         min: parseInt(groupFrom),
@@ -325,25 +337,21 @@ const CreateMarket = () => {
         min: numberFrom,
         max: numberTo,
       },
-
-      start_time: convertToISODateTime(timerFrom),
-      end_time: convertToISODateTime(timerTo),
-
-      marketName: marketName, // Ensure this is in "YYYY-MM-DD" format
+      start_time: convertToISODateTime(timerFrom, selectedDate),
+      end_time: convertToISODateTime(timerTo, selectedDate),
+      marketName: marketName,
     };
 
     console.log("Request Body:", requestBody);
 
-    try {
-      const response = await generateLotteryNumber(requestBody);
-      console.log("Success:", response);
-      setIsSubmitted(true);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+    const response = await generateLotteryNumber(requestBody);
+    console.log("Success:", response);
+    setIsSubmitted(true);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
-  // Make sure `selectedDate` is passed as "YYYY-MM-DD" for correct ISO formatting
 
   // Generate time options for every minute in a 12-hour format (AM/PM)
   const generateTimeOptions = () => {
