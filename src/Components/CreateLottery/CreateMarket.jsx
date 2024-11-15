@@ -32,13 +32,12 @@ const CreateMarket = () => {
   const [filterSeriesTo, setFilterSeriesTo] = useState([]);
   const [filterNumberTo, setFilterNumberTo] = useState([]);
 
-  const rangeStart = 1;
+  const rangeStart = 0;
   const rangeEnd = 99999;
-
   const { debouncedFilter } = useDebouncedFilter();
-  const [selectedDate, setSelectedDate] = useState(""); // Date state
+  const [marketName,setMarketName]=useState("");
   const [timerFrom, setTimerFrom] = useState(""); // New state for timer from
-  const [timerTo, setTimerTo] = useState("");     // New state for timer to
+  const [timerTo, setTimerTo] = useState(""); // New state for timer to
   const [dropdownFromVisible, setDropdownFromVisible] = useState(false); // Track dropdown visibility for From
   const [dropdownToVisible, setDropdownToVisible] = useState(false); // Track dropdown visibility for To
   const [activePicker, setActivePicker] = useState(null);
@@ -51,7 +50,6 @@ const CreateMarket = () => {
   const numberToRef = useRef(null);
   const timerFromRef = useRef(null);
   const timerToRef = useRef(null);
-
 
   useEffect(() => {
     if (isSubmitted) {
@@ -75,12 +73,12 @@ const CreateMarket = () => {
     // Numbers: 0 to 99999 (or any specified range)
     const numbersFrom = Array.from(
       { length: rangeEnd - rangeStart + 1 },
-      (_, i) => i + rangeStart
+      (_, i) => (i + rangeStart).toString().padStart(5, "0")
     );
     setFilterNumberFrom(numbersFrom);
     const numbersTo = Array.from(
       { length: rangeEnd - rangeStart + 1 },
-      (_, i) => i + rangeStart
+      (_, i) => (i + rangeStart).toString().padStart(5, "0")
     );
     setFilterNumberTo(numbersTo);
   }, []);
@@ -141,93 +139,89 @@ const CreateMarket = () => {
 
   const handleGroupFromInputChange = (e) => {
     const inputValue = e.target.value;
-     setGroupFrom(inputValue);
+    setGroupFrom(inputValue);
 
-     debouncedFilter(
-       inputValue,
-       () => Array.from({ length: 99 }, (_, i) => (i + 1).toString()),
-       1500,
-       setFilterGroupFrom
-     ); // Pass type as "group"
+    debouncedFilter(
+      inputValue,
+      () => Array.from({ length: 99 }, (_, i) => (i + 1).toString()),
+      1500,
+      setFilterGroupFrom
+    ); // Pass type as "group"
   };
 
   const handleGroupToInputChange = (e) => {
     const inputValue = e.target.value;
-     setGroupTo(inputValue);
+    setGroupTo(inputValue);
 
-     debouncedFilter(
-       inputValue,
-       () => Array.from({ length: 99 }, (_, i) => (i + 1).toString()),
-       1500,
-       setFilterGroupTo
-     ); // Pass type as "group"
+    debouncedFilter(
+      inputValue,
+      () => Array.from({ length: 99 }, (_, i) => (i + 1).toString()),
+      1500,
+      setFilterGroupTo
+    ); // Pass type as "group"
   };
 
   const handleSeriesFromInputChange = (e) => {
     const inputValue = e.target.value;
-     setSeriesFrom(inputValue);
+    setSeriesFrom(inputValue);
 
-     debouncedFilter(
-       inputValue,
-       () => {
-         const lettersFrom = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
-         return lettersFrom;
-       },
-       1500,
-       setFilterSeriesFrom
-     );
- // Pass type as "series"
+    debouncedFilter(
+      inputValue,
+      () => {
+        const lettersFrom = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
+        return lettersFrom;
+      },
+      1500,
+      setFilterSeriesFrom
+    );
+    // Pass type as "series"
   };
 
   const handleSeriesToInputChange = (e) => {
     const inputValue = e.target.value;
-     setSeriesTo(inputValue);
+    setSeriesTo(inputValue);
 
-     debouncedFilter(
-       inputValue,
-       () => {
-         const lettersFrom = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
-         return lettersFrom;
-       },
-       1500,
-       setFilterSeriesTo
-     );
- // Pass type as "series"
+    debouncedFilter(
+      inputValue,
+      () => {
+        const lettersFrom = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
+        return lettersFrom;
+      },
+      1500,
+      setFilterSeriesTo
+    );
+    // Pass type as "series"
   };
 
   const handleNumberFromInputChange = (e) => {
     const inputValue = e.target.value;
-     setNumberFrom(inputValue);
+    setNumberFrom(inputValue);
 
-     debouncedFilter(
-       inputValue,
-       () =>
-         Array.from(
-           { length: rangeEnd - rangeStart + 1 },
-           (_, i) => i + rangeStart
-         ),
-       1500,
-       setFilterNumberFrom
-     ); // Pass type as "number"
+    debouncedFilter(
+      inputValue,
+      () =>
+        Array.from({ length: rangeEnd - rangeStart + 1 }, (_, i) =>
+          (i + rangeStart).toString().padStart(5, "0")
+        ),
+      1500,
+      setFilterNumberFrom
+    ); // Pass type as "number"
   };
 
-   const handleNumberToInputChange = (e) => {
-     const inputValue = e.target.value;
-      setNumberTo(inputValue);
+  const handleNumberToInputChange = (e) => {
+    const inputValue = e.target.value;
+    setNumberTo(inputValue);
 
-      debouncedFilter(
-        inputValue,
-        () =>
-          Array.from(
-            { length: rangeEnd - rangeStart + 1 },
-            (_, i) => i + rangeStart
-          ),
-        1500,
-        setFilterNumberTo
-      ); // Pass type as "number"
-   };
-
-  
+    debouncedFilter(
+      inputValue,
+      () =>
+        Array.from({ length: rangeEnd - rangeStart + 1 }, (_, i) =>
+          (i + rangeStart).toString().padStart(5, "0")
+        ),
+      1500,
+      setFilterNumberTo
+    ); // Pass type as "number"
+  };
 
   const validateForm = () => {
     if (
@@ -236,8 +230,8 @@ const CreateMarket = () => {
       !seriesFrom ||
       !seriesTo ||
       !numberFrom ||
-      !numberTo|| 
-      !timerFrom || 
+      !numberTo ||
+      !timerFrom ||
       !timerTo
     ) {
       return "All fields must be filled out.";
@@ -291,6 +285,34 @@ const CreateMarket = () => {
       return;
     }
 
+    // Function to convert "2:42 AM"/"4:00 PM" format to "2024-11-07T08:00:00Z" format with the date
+    // const convertToISODateTime = (timeString, date) => {
+    //   const [time, period] = timeString.split(" ");
+    //   let [hours, minutes] = time.split(":").map(Number);
+
+    //   if (period === "PM" && hours !== 12) {
+    //     hours += 12;
+    //   } else if (period === "AM" && hours === 12) {
+    //     hours = 0;
+    //   }
+
+    //   // Construct the ISO datetime string with the provided date
+    //   return `${date}T${hours.toString().padStart(2, "0")}:${minutes
+    //     .toString()
+    //     .padStart(2, "0")}:00Z`;
+    // };
+    const convertToISODateTime = (time) => {
+      const date = new Date();
+      const [hours, minutes, period] = time.match(/(\d+):(\d+)\s?(AM|PM)/i).slice(1);
+      const isPM = period.toUpperCase() === "PM";
+      const adjustedHours = (parseInt(hours) % 12) + (isPM ? 12 : 0);
+    
+      date.setHours(adjustedHours, parseInt(minutes), 0, 0);
+      console.log('Converted time to ISO:', date.toISOString());
+      return date.toISOString(); // Return the ISO formatted date
+    };
+    
+
     const requestBody = {
       group: {
         min: parseInt(groupFrom),
@@ -305,11 +327,10 @@ const CreateMarket = () => {
         max: numberTo,
       },
 
-      timer: {
-        from: timerFrom,
-        to: timerTo,
-      },
-      date: selectedDate,
+      start_time: convertToISODateTime(timerFrom),
+      end_time: convertToISODateTime(timerTo),
+
+      marketName: marketName, // Ensure this is in "YYYY-MM-DD" format
     };
 
     console.log("Request Body:", requestBody);
@@ -323,6 +344,7 @@ const CreateMarket = () => {
     }
   };
 
+  // Make sure `selectedDate` is passed as "YYYY-MM-DD" for correct ISO formatting
 
   // Generate time options for every minute in a 12-hour format (AM/PM)
   const generateTimeOptions = () => {
@@ -336,8 +358,10 @@ const CreateMarket = () => {
         const displayTime = `${formattedHour}:${formattedMinute} ${period}`;
 
         // Format for ISO
-        const isoTime = new Date(`${today}T${hour.toString().padStart(2, "0")}:${formattedMinute}:00`).toISOString();
-        
+        const isoTime = new Date(
+          `${today}T${hour.toString().padStart(2, "0")}:${formattedMinute}:00`
+        ).toISOString();
+
         options.push({ displayTime, isoTime });
       }
     }
@@ -346,24 +370,27 @@ const CreateMarket = () => {
 
   const timeOptions = generateTimeOptions();
 
-    // Handle change in manual input and synchronize with the dropdown options
-    const handleManualInput = (value, setter) => {
-      setter(value);
-      setDropdownFromVisible(false); // Close the dropdown on manual input for From
-      setDropdownToVisible(false); // Close the dropdown on manual input for To
-    };
+  // Handle change in manual input and synchronize with the dropdown options
+  const handleManualInput = (value, setter) => {
+    console.log('====>>> value on onchange', value);
+    setter(value); // Ensure that setter directly updates the state
+    console.log('====>>> value after setter', value);
+    setDropdownFromVisible(false); // Close the dropdown on manual input for From
+    setDropdownToVisible(false); // Close the dropdown on manual input for To
+  };
+  
 
-    const handleSelectTime = (selectedTime, setterFrom, setterTo, isFrom) => {
-      if (isFrom) {
-        setterFrom(selectedTime.displayTime); // Set the selected time in the 'From' input
-      } else {
-        setterTo(selectedTime.displayTime); // Set the selected time in the 'To' input
-      }
-      setDropdownFromVisible(false); // Close dropdown after selecting a time for 'From'
-      setDropdownToVisible(false); // Close dropdown after selecting a time for 'To'
-    };
-
-
+  const handleSelectTime = (selectedTime, setterFrom, setterTo, isFrom) => {
+    console.log('===>> line316', selectedTime, setterFrom, setterTo, isFrom);
+    if (isFrom) {
+      setterFrom(selectedTime.displayTime); // Set the selected time in the 'From' input
+    } else {
+      setterTo(selectedTime.displayTime); // Set the selected time in the 'To' input
+    }
+    setDropdownFromVisible(false); // Close dropdown after selecting a time for 'From'
+    setDropdownToVisible(false); // Close dropdown after selecting a time for 'To'
+  };
+  
 
   // Group Grid (01 to 99)
   const renderGroupFromGrid = (type) => {
@@ -401,7 +428,6 @@ const CreateMarket = () => {
     );
   };
 
-
   // Series Grid (A to L, excluding I and F)
   const renderSeriesFromGrid = (type) => {
     return (
@@ -419,6 +445,7 @@ const CreateMarket = () => {
     );
   };
 
+
    const renderSeriesToGrid = (type) => {
      return (
        <div className="calendar-grid series-grid">
@@ -435,7 +462,9 @@ const CreateMarket = () => {
      );
    };
 
-  // Numbers grid picker (0 to 99999)
+ 
+
+  // Numbers grid picker (00000 to 99999)
   const renderNumberFromGrid = (type, isFormatted = true) => {
     return (
       <div className="calendar-grid number-grid">
@@ -462,6 +491,7 @@ const CreateMarket = () => {
     );
   };
 
+
 const renderNumberToGrid = (type, isFormatted = true) => {
   return (
     <div className="calendar-grid number-grid">
@@ -485,6 +515,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
     </div>
   );
 };
+
 
   return (
     <div style={{ minHeight: "75vh", backgroundColor: "#f0f4f8" }}>
@@ -511,7 +542,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
       {/* Main Content */}
       <div
         className="d-flex align-items-center justify-content-center"
-        style={{ height: "calc(75vh - 75px)", padding: "50px 0" }}
+        style={{ padding: "42px 0" }}
       >
         <div
           className="shadow-lg rounded-3"
@@ -531,7 +562,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
               Choose Your Group, Series, and Number
             </h3>
             {/* Date Input */}
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label
                 htmlFor="date"
                 className="form-label"
@@ -545,6 +576,15 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                 id="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
+              />
+            </div> */}
+            <div className="mb-3">
+              <label htmlFor="" className="form-label"></label>
+              <input
+                type=""
+                className="form-control"
+                placeholder="Market Name"
+                onChange={(e) => setMarketName(e.target.value)} // Updated onChange
               />
             </div>
 
