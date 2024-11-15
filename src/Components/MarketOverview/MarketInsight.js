@@ -82,10 +82,10 @@ const MarketInsight = () => {
             ))
           ) : (
             <div
-              className="d-flex justify-content-center align-items-center"
+              className="d-flex justify-content-center align-items-center "
               style={{ minHeight: "480px", width: "100%" }}
             >
-              <h4 className="text-center fw-bold">
+              <h4 className="text-center fw-bold text-black bg-white p-5 rounded-5">
                 No <br />
                 Market <br />
                 Available

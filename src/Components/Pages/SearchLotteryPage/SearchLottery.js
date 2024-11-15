@@ -88,13 +88,17 @@ const SearchLottery = () => {
                             </Card>
                         ))
                     ) : (
-                        <Card className="welcome-card shadow-sm">
-                            <Card.Body>
-                                <Card.Title className="welcome-title">
-                                    No Market Available
-                                </Card.Title>
-                            </Card.Body>
-                        </Card>
+                        <div
+                        className="d-flex justify-content-center align-items-center"
+                        style={{ minHeight: "480px", width: "100%" }}
+                      >
+                        <h4 className="text-center fw-bold bg-white p-5 rounded-5">
+                          No <br />
+                          Market <br />
+                          Available
+                        </h4>
+                      </div>
+                 
                     )}
                 </div>
             </aside>
