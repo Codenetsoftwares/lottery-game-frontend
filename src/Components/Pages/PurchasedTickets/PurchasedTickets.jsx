@@ -1,16 +1,17 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useAppContext } from '../../../contextApi/context';
-import { PurchasedTicketsHistory } from '../../../Utils/apiService';
-import strings from '../../../Utils/constant/stringConstant';
-import { Table, Spinner } from 'react-bootstrap';
-import './PurchasedLotteries.css';
-import Pagination from '../../Common/Pagination';
-import debounce from 'lodash.debounce';
+import React, { useEffect, useState, useCallback } from "react";
+import { useAppContext } from "../../../contextApi/context";
+import { PurchasedTicketsHistory } from "../../../Utils/apiService";
+import strings from "../../../Utils/constant/stringConstant";
+import { Table, Spinner } from "react-bootstrap";
+import "./PurchasedLotteries.css";
+import Pagination from "../../Common/Pagination";
+import debounce from "lodash.debounce";
 
 const PurchasedTickets = () => {
   const { dispatch } = useAppContext();
   const [purchasedTickets, setPurchasedTickets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loader, setLoader] = useState(false);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
@@ -19,7 +20,7 @@ const PurchasedTickets = () => {
   });
 
   const [dropdownOpen, setDropdownOpen] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   const toggleDropdown = (id) => {
     setDropdownOpen(dropdownOpen === id ? null : id);
@@ -28,14 +29,14 @@ const PurchasedTickets = () => {
   // Debounce the search function to reduce API calls
   const fetchPurchasedLotteryTickets = useCallback(
     debounce(async (searchTerm) => {
-      setLoading(true);
+      setLoader(true);
       const response = await PurchasedTicketsHistory({
         page: pagination.page,
         limit: pagination.limit,
         searchBySem: searchTerm,
       });
 
-      console.log('====>>> response from purchased tickets', response);
+      console.log("====>>> response from purchased tickets", response);
 
       if (response && response.success) {
         setPurchasedTickets(response.data || []);
@@ -50,9 +51,10 @@ const PurchasedTickets = () => {
           payload: response.data,
         });
       } else {
-        console.error('Failed to fetch purchased tickets');
+        console.error("Failed to fetch purchased tickets");
       }
 
+      setLoader(false);
       setLoading(false);
     }, 500), // Adjust debounce time to 500ms or any suitable time for your case
     [pagination.page, pagination.limit, dispatch]
@@ -86,19 +88,22 @@ const PurchasedTickets = () => {
   }
 
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
-  const endIndex = Math.min(pagination.page * pagination.limit, pagination.totalItems);
+  const endIndex = Math.min(
+    pagination.page * pagination.limit,
+    pagination.totalItems
+  );
 
   return (
     <div
       className="container mt-4 p-3"
       style={{
-        background: '#e6f7ff',
-        borderRadius: '10px',
-        boxShadow: '0 0 15px rgba(0,0,0,0.1)',
+        background: "#e6f7ff",
+        borderRadius: "10px",
+        boxShadow: "0 0 15px rgba(0,0,0,0.1)",
       }}
     >
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 style={{ color: '#4682B4' }}>Purchased Lottery Tickets</h2>
+        <h2 style={{ color: "#4682B4" }}>Purchased Lottery Tickets</h2>
         <div className="w-50">
           <input
             type="text"
@@ -114,10 +119,10 @@ const PurchasedTickets = () => {
       <Table striped hover responsive bordered className="table-sm">
         <thead
           style={{
-            backgroundColor: '#4682B4',
-            color: '#fff',
-            fontWeight: 'bold',
-            textAlign: 'center',
+            backgroundColor: "#4682B4",
+            color: "#fff",
+            fontWeight: "bold",
+            textAlign: "center",
           }}
         >
           <tr>
@@ -129,53 +134,65 @@ const PurchasedTickets = () => {
             <th>User Name</th>
           </tr>
         </thead>
-        <tbody style={{ textAlign: 'center' }}>
-        {purchasedTickets.length > 0 ? (
-  purchasedTickets.map((ticket, index) => (
-    <tr key={index}>
-      <td>{startIndex + index}</td>
-      <td>{ticket.drawDate}</td>
-      <td>{ticket.sem}</td> 
-      <td>
-        <div className="dropdown" style={{ position: 'relative' }}>
-          <button
-            className="btn btn-link dropdown-toggle"
-            type="button"
-            onClick={() => toggleDropdown(index)}
-          >
-            View Tickets
-          </button>
-          <div
-            className="custom-dropdown-content"
-            style={{
-              height: dropdownOpen === index ? '150px' : '0',
-              overflow: 'hidden',
-              transition: 'height 0.3s ease',
-            }}
-          >
-            {dropdownOpen === index && (
-              <div className="custom-dropdown-menu">
-                <span className="dropdown-item-text">Ticket Numbers:</span>
-                <div className="dropdown-divider" />
-                {ticket.tickets.length > 0 ? (
-                  ticket.tickets.map((number, i) => (
-                    <span key={i} className="dropdown-item">
-                      {number}
-                    </span>
-                  ))
-                ) : (
-                  <span className="dropdown-item text-muted">No ticket numbers available</span>
-                )}
-              </div>
-            )}
-          </div>
+        <tbody style={{ textAlign: "center" }}>
+          {loader ? (
+    <tr>
+      <td colSpan="6">
+        <div className="d-flex justify-content-center align-items-center">
+          <span className="ms-2">Loading tickets...</span>
         </div>
       </td>
-      <td>{ticket.price}</td>
-      <td>{ticket.userName || 'N/A'}</td>
     </tr>
-  ))
-) : (
+  ):purchasedTickets.length > 0 ? (
+            purchasedTickets.map((ticket, index) => (
+              <tr key={index}>
+                <td>{startIndex + index}</td>
+                <td>{ticket.drawDate}</td>
+                <td>{ticket.sem}</td>
+                <td>
+                  <div className="dropdown" style={{ position: "relative" }}>
+                    <button
+                      className="btn btn-link dropdown-toggle"
+                      type="button"
+                      onClick={() => toggleDropdown(index)}
+                    >
+                      View Tickets
+                    </button>
+                    <div
+                      className="custom-dropdown-content"
+                      style={{
+                        height: dropdownOpen === index ? "150px" : "0",
+                        overflow: "hidden",
+                        transition: "height 0.3s ease",
+                      }}
+                    >
+                      {dropdownOpen === index && (
+                        <div className="custom-dropdown-menu">
+                          <span className="dropdown-item-text">
+                            Ticket Numbers:
+                          </span>
+                          <div className="dropdown-divider" />
+                          {ticket.tickets.length > 0 ? (
+                            ticket.tickets.map((number, i) => (
+                              <span key={i} className="dropdown-item">
+                                {number}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="dropdown-item text-muted">
+                              No ticket numbers available
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </td>
+                <td>{ticket.price}</td>
+                <td>{ticket.userName || "N/A"}</td>
+              </tr>
+            ))
+          ) : (
             <tr>
               <td colSpan="6" className="text-center">
                 No tickets found.
