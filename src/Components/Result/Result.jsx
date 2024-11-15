@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { GetWiningResult } from '../../Utils/apiService';
+import {  Spinner } from 'react-bootstrap';
 
 const Result = () => {
   const [result, setResult] = useState(null); // Holds the result object
@@ -28,16 +29,12 @@ const Result = () => {
 
   if (loading) {
     return (
-      <div className="container-fluid d-flex justify-content-center">
-        <div className="border border-3 rounded-3" style={{ padding: '20px', width: '80%', maxWidth: '600px' }}>
-          <div className="text-center py-5">
-            <h4>Loading results...</h4>
-          </div>
-        </div>
+      <div className="d-flex justify-content-center align-items-center">
+        <Spinner animation="border" role="status" />
+        <h4 className="ms-2 d-inline-block">Fetching results...</h4>
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="container-fluid d-flex justify-content-center">

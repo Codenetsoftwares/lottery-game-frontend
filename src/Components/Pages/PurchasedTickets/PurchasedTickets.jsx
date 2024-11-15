@@ -76,14 +76,14 @@ const PurchasedTickets = () => {
     setPagination((prev) => ({ ...prev, page: newPage }));
   };
 
-  // if (loading) {
-  //   return (
-  //     <div className="d-flex justify-content-center align-items-center">
-  //       <Spinner animation="border" role="status" />
-  //       <span className="ml-2">Loading...</span>
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        <Spinner animation="border" role="status" />
+        <h4 className="ms-2 d-inline-block">Loading...</h4>
+      </div>
+    );
+  }
 
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
   const endIndex = Math.min(pagination.page * pagination.limit, pagination.totalItems);
@@ -130,43 +130,52 @@ const PurchasedTickets = () => {
           </tr>
         </thead>
         <tbody style={{ textAlign: 'center' }}>
-          {purchasedTickets.length > 0 ? (
-            purchasedTickets.map((ticket, index) => (
-              <tr key={index}>
-                <td>{startIndex + index}</td>
-                <td>{ticket.drawDate}</td>
-                <td>{ticket.sem}</td> 
-                <td>
-                  <div className="dropdown" style={{ position: 'relative' }}>
-                    <button
-                      className="btn btn-link dropdown-toggle"
-                      type="button"
-                      onClick={() => toggleDropdown(index)}
-                    >
-                      View Tickets
-                    </button>
-                    {dropdownOpen === index && (
-                      <div className="custom-dropdown-menu">
-                        <span className="dropdown-item-text">Ticket Numbers:</span>
-                        <div className="dropdown-divider" />
-                        {ticket.tickets.length > 0 ? (
-                          ticket.tickets.map((number, i) => (
-                            <span key={i} className="dropdown-item">
-                              {number}
-                            </span>
-                          ))
-                        ) : (
-                          <span className="dropdown-item text-muted">No ticket numbers available</span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </td>
-                <td>{ticket.price}</td>
-                <td>{ticket.userName || 'N/A'}</td>
-              </tr>
-            ))
-          ) : (
+        {purchasedTickets.length > 0 ? (
+  purchasedTickets.map((ticket, index) => (
+    <tr key={index}>
+      <td>{startIndex + index}</td>
+      <td>{ticket.drawDate}</td>
+      <td>{ticket.sem}</td> 
+      <td>
+        <div className="dropdown" style={{ position: 'relative' }}>
+          <button
+            className="btn btn-link dropdown-toggle"
+            type="button"
+            onClick={() => toggleDropdown(index)}
+          >
+            View Tickets
+          </button>
+          <div
+            className="custom-dropdown-content"
+            style={{
+              height: dropdownOpen === index ? '150px' : '0',
+              overflow: 'hidden',
+              transition: 'height 0.3s ease',
+            }}
+          >
+            {dropdownOpen === index && (
+              <div className="custom-dropdown-menu">
+                <span className="dropdown-item-text">Ticket Numbers:</span>
+                <div className="dropdown-divider" />
+                {ticket.tickets.length > 0 ? (
+                  ticket.tickets.map((number, i) => (
+                    <span key={i} className="dropdown-item">
+                      {number}
+                    </span>
+                  ))
+                ) : (
+                  <span className="dropdown-item text-muted">No ticket numbers available</span>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </td>
+      <td>{ticket.price}</td>
+      <td>{ticket.userName || 'N/A'}</td>
+    </tr>
+  ))
+) : (
             <tr>
               <td colSpan="6" className="text-center">
                 No tickets found.

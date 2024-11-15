@@ -8,7 +8,7 @@ const AdminLayout = () => {
     <div className="d-flex flex-column vh-100">
       {/* Sticky Top Navigation */}
       <div
-        className="sticky-top"
+        className="sticky-top" 
         style={{
           zIndex: 1030,
           backgroundColor: '#fff', // Background to prevent transparency

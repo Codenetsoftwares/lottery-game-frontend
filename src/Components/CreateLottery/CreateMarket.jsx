@@ -32,16 +32,16 @@ const CreateMarket = () => {
   const [filterSeriesTo, setFilterSeriesTo] = useState([]);
   const [filterNumberTo, setFilterNumberTo] = useState([]);
 
-  const rangeStart = 1;
+  const rangeStart = 0;
   const rangeEnd = 99999;
-
   const { debouncedFilter } = useDebouncedFilter();
-  const [selectedDate, setSelectedDate] = useState(""); // Date state
+  const [marketName,setMarketName]=useState("");
   const [timerFrom, setTimerFrom] = useState(""); // New state for timer from
-  const [timerTo, setTimerTo] = useState("");     // New state for timer to
+  const [timerTo, setTimerTo] = useState(""); // New state for timer to
   const [dropdownFromVisible, setDropdownFromVisible] = useState(false); // Track dropdown visibility for From
   const [dropdownToVisible, setDropdownToVisible] = useState(false); // Track dropdown visibility for To
   const [activePicker, setActivePicker] = useState(null);
+  const [errors, setErrors] = useState("")
   const groupFromRef = useRef(null);
   const groupToRef = useRef(null);
   const seriesFromRef = useRef(null);
@@ -50,7 +50,6 @@ const CreateMarket = () => {
   const numberToRef = useRef(null);
   const timerFromRef = useRef(null);
   const timerToRef = useRef(null);
-
 
   useEffect(() => {
     if (isSubmitted) {
@@ -74,12 +73,12 @@ const CreateMarket = () => {
     // Numbers: 0 to 99999 (or any specified range)
     const numbersFrom = Array.from(
       { length: rangeEnd - rangeStart + 1 },
-      (_, i) => i + rangeStart
+      (_, i) => (i + rangeStart).toString().padStart(5, "0")
     );
     setFilterNumberFrom(numbersFrom);
     const numbersTo = Array.from(
       { length: rangeEnd - rangeStart + 1 },
-      (_, i) => i + rangeStart
+      (_, i) => (i + rangeStart).toString().padStart(5, "0")
     );
     setFilterNumberTo(numbersTo);
   }, []);
@@ -96,7 +95,6 @@ const CreateMarket = () => {
         timerFromRef.current && !timerFromRef.current.contains(event.target) &&
         timerToRef.current && !timerToRef.current.contains(event.target)
       ) {
-        console.log("clicked")
         setActivePicker(null);
 
       }
@@ -140,93 +138,89 @@ const CreateMarket = () => {
 
   const handleGroupFromInputChange = (e) => {
     const inputValue = e.target.value;
-     setGroupFrom(inputValue);
+    setGroupFrom(inputValue);
 
-     debouncedFilter(
-       inputValue,
-       () => Array.from({ length: 99 }, (_, i) => (i + 1).toString()),
-       1500,
-       setFilterGroupFrom
-     ); // Pass type as "group"
+    debouncedFilter(
+      inputValue,
+      () => Array.from({ length: 99 }, (_, i) => (i + 1).toString()),
+      1500,
+      setFilterGroupFrom
+    ); // Pass type as "group"
   };
 
   const handleGroupToInputChange = (e) => {
     const inputValue = e.target.value;
-     setGroupTo(inputValue);
+    setGroupTo(inputValue);
 
-     debouncedFilter(
-       inputValue,
-       () => Array.from({ length: 99 }, (_, i) => (i + 1).toString()),
-       1500,
-       setFilterGroupTo
-     ); // Pass type as "group"
+    debouncedFilter(
+      inputValue,
+      () => Array.from({ length: 99 }, (_, i) => (i + 1).toString()),
+      1500,
+      setFilterGroupTo
+    ); // Pass type as "group"
   };
 
   const handleSeriesFromInputChange = (e) => {
     const inputValue = e.target.value;
-     setSeriesFrom(inputValue);
+    setSeriesFrom(inputValue);
 
-     debouncedFilter(
-       inputValue,
-       () => {
-         const lettersFrom = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
-         return lettersFrom;
-       },
-       1500,
-       setFilterSeriesFrom
-     );
- // Pass type as "series"
+    debouncedFilter(
+      inputValue,
+      () => {
+        const lettersFrom = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
+        return lettersFrom;
+      },
+      1500,
+      setFilterSeriesFrom
+    );
+    // Pass type as "series"
   };
 
   const handleSeriesToInputChange = (e) => {
     const inputValue = e.target.value;
-     setSeriesTo(inputValue);
+    setSeriesTo(inputValue);
 
-     debouncedFilter(
-       inputValue,
-       () => {
-         const lettersFrom = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
-         return lettersFrom;
-       },
-       1500,
-       setFilterSeriesTo
-     );
- // Pass type as "series"
+    debouncedFilter(
+      inputValue,
+      () => {
+        const lettersFrom = ["A", "B", "C", "D", "E", "G", "H", "J", "K", "L"];
+        return lettersFrom;
+      },
+      1500,
+      setFilterSeriesTo
+    );
+    // Pass type as "series"
   };
 
   const handleNumberFromInputChange = (e) => {
     const inputValue = e.target.value;
-     setNumberFrom(inputValue);
+    setNumberFrom(inputValue);
 
-     debouncedFilter(
-       inputValue,
-       () =>
-         Array.from(
-           { length: rangeEnd - rangeStart + 1 },
-           (_, i) => i + rangeStart
-         ),
-       1500,
-       setFilterNumberFrom
-     ); // Pass type as "number"
+    debouncedFilter(
+      inputValue,
+      () =>
+        Array.from({ length: rangeEnd - rangeStart + 1 }, (_, i) =>
+          (i + rangeStart).toString().padStart(5, "0")
+        ),
+      1500,
+      setFilterNumberFrom
+    ); // Pass type as "number"
   };
 
-   const handleNumberToInputChange = (e) => {
-     const inputValue = e.target.value;
-      setNumberTo(inputValue);
+  const handleNumberToInputChange = (e) => {
+    const inputValue = e.target.value;
+    setNumberTo(inputValue);
 
-      debouncedFilter(
-        inputValue,
-        () =>
-          Array.from(
-            { length: rangeEnd - rangeStart + 1 },
-            (_, i) => i + rangeStart
-          ),
-        1500,
-        setFilterNumberTo
-      ); // Pass type as "number"
-   };
-
-  
+    debouncedFilter(
+      inputValue,
+      () =>
+        Array.from({ length: rangeEnd - rangeStart + 1 }, (_, i) =>
+          (i + rangeStart).toString().padStart(5, "0")
+        ),
+      1500,
+      setFilterNumberTo
+    ); // Pass type as "number"
+  };
 
   const validateForm = () => {
     if (
@@ -235,8 +229,8 @@ const CreateMarket = () => {
       !seriesFrom ||
       !seriesTo ||
       !numberFrom ||
-      !numberTo|| 
-      !timerFrom || 
+      !numberTo ||
+      !timerFrom ||
       !timerTo
     ) {
       return "All fields must be filled out.";
@@ -259,15 +253,77 @@ const CreateMarket = () => {
 
     return null;
   };
-
-  // Function to handle form submission
-  const handleSubmit = async () => {
-    const error = validateForm();
-    if (error) {
-      toast.error(error);
-      return;
+  const validateFields = () => {
+    const handleError = {};
+  
+    // Clear previous errors
+    setErrors({});
+  
+    // Validation checks
+    if (!groupFrom) handleError.groupFrom = "Group From is required";
+    if (!groupTo) handleError.groupTo = "Group To is required";
+    if (!seriesFrom) handleError.seriesFrom = "Series From is required";
+    if (!seriesTo) handleError.seriesTo = "Series To is required";
+    if (!numberFrom) handleError.numberFrom = "Number From is required";
+    if (!numberTo) handleError.numberTo = "Number To is required";
+    if (!timerFrom) handleError.timerFrom = "Timer From is required";
+    if (!timerTo) handleError.timerTo = "Timer To is required";
+  
+    if (Object.keys(handleError).length > 0) {
+      setErrors(handleError);
+      return false;
     }
+    return true;
+  };
 
+// Function to format a date to "YYYY-MM-DD"
+const formatDateToYYYYMMDD = (date) => {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+// Function to convert "hh:mm AM/PM" format to ISO datetime string
+const convertToISODateTime = (time, date) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    throw new Error("Invalid date format. Expected format: YYYY-MM-DD");
+  }
+
+  const match = time.match(/(\d+):(\d+)\s?(AM|PM)/i);
+  if (!match) {
+    throw new Error("Invalid time format. Expected format: hh:mm AM/PM");
+  }
+
+  const [_, hours, minutes, period] = match;
+  const isPM = period.toUpperCase() === "PM";
+  const adjustedHours = (parseInt(hours) % 12) + (isPM ? 12 : 0);
+
+  const dateTimeString = `${date}T${adjustedHours.toString().padStart(2, '0')}:${minutes.padStart(2, '0')}:00`;
+  const dateTime = new Date(dateTimeString);
+
+  if (isNaN(dateTime)) {
+    throw new Error("Invalid time value. Failed to create a valid Date object.");
+  }
+
+  const isoDateTime = new Date(dateTime.getTime() - dateTime.getTimezoneOffset() * 60000).toISOString();
+  console.log('Converted time to ISO:', isoDateTime);
+  return isoDateTime;
+};
+
+// Your handleSubmit function
+const handleSubmit = async () => {
+  if (!validateFields()) return;
+  const error = validateForm();
+  if (error) {
+    toast.error(error);
+    return;
+  }
+
+  // Format today's date as "YYYY-MM-DD"
+  const selectedDate = formatDateToYYYYMMDD(new Date());
+
+  try {
     const requestBody = {
       group: {
         min: parseInt(groupFrom),
@@ -281,24 +337,20 @@ const CreateMarket = () => {
         min: numberFrom,
         max: numberTo,
       },
-
-      timer: {
-        from: timerFrom,
-        to: timerTo,
-      },
-      date: selectedDate,
+      start_time: convertToISODateTime(timerFrom, selectedDate),
+      end_time: convertToISODateTime(timerTo, selectedDate),
+      marketName: marketName,
     };
 
     console.log("Request Body:", requestBody);
 
-    try {
-      const response = await generateLotteryNumber(requestBody);
-      console.log("Success:", response);
-      setIsSubmitted(true);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+    const response = await generateLotteryNumber(requestBody);
+    console.log("Success:", response);
+    setIsSubmitted(true);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
 
   // Generate time options for every minute in a 12-hour format (AM/PM)
@@ -313,8 +365,10 @@ const CreateMarket = () => {
         const displayTime = `${formattedHour}:${formattedMinute} ${period}`;
 
         // Format for ISO
-        const isoTime = new Date(`${today}T${hour.toString().padStart(2, "0")}:${formattedMinute}:00`).toISOString();
-        
+        const isoTime = new Date(
+          `${today}T${hour.toString().padStart(2, "0")}:${formattedMinute}:00`
+        ).toISOString();
+
         options.push({ displayTime, isoTime });
       }
     }
@@ -323,24 +377,27 @@ const CreateMarket = () => {
 
   const timeOptions = generateTimeOptions();
 
-    // Handle change in manual input and synchronize with the dropdown options
-    const handleManualInput = (value, setter) => {
-      setter(value);
-      setDropdownFromVisible(false); // Close the dropdown on manual input for From
-      setDropdownToVisible(false); // Close the dropdown on manual input for To
-    };
+  // Handle change in manual input and synchronize with the dropdown options
+  const handleManualInput = (value, setter) => {
+    console.log('====>>> value on onchange', value);
+    setter(value); // Ensure that setter directly updates the state
+    console.log('====>>> value after setter', value);
+    setDropdownFromVisible(false); // Close the dropdown on manual input for From
+    setDropdownToVisible(false); // Close the dropdown on manual input for To
+  };
+  
 
-    const handleSelectTime = (selectedTime, setterFrom, setterTo, isFrom) => {
-      if (isFrom) {
-        setterFrom(selectedTime.displayTime); // Set the selected time in the 'From' input
-      } else {
-        setterTo(selectedTime.displayTime); // Set the selected time in the 'To' input
-      }
-      setDropdownFromVisible(false); // Close dropdown after selecting a time for 'From'
-      setDropdownToVisible(false); // Close dropdown after selecting a time for 'To'
-    };
-
-
+  const handleSelectTime = (selectedTime, setterFrom, setterTo, isFrom) => {
+    console.log('===>> line316', selectedTime, setterFrom, setterTo, isFrom);
+    if (isFrom) {
+      setterFrom(selectedTime.displayTime); // Set the selected time in the 'From' input
+    } else {
+      setterTo(selectedTime.displayTime); // Set the selected time in the 'To' input
+    }
+    setDropdownFromVisible(false); // Close dropdown after selecting a time for 'From'
+    setDropdownToVisible(false); // Close dropdown after selecting a time for 'To'
+  };
+  
 
   // Group Grid (01 to 99)
   const renderGroupFromGrid = (type) => {
@@ -378,7 +435,6 @@ const CreateMarket = () => {
     );
   };
 
-
   // Series Grid (A to L, excluding I and F)
   const renderSeriesFromGrid = (type) => {
     return (
@@ -396,6 +452,7 @@ const CreateMarket = () => {
     );
   };
 
+
    const renderSeriesToGrid = (type) => {
      return (
        <div className="calendar-grid series-grid">
@@ -412,7 +469,9 @@ const CreateMarket = () => {
      );
    };
 
-  // Numbers grid picker (0 to 99999)
+ 
+
+  // Numbers grid picker (00000 to 99999)
   const renderNumberFromGrid = (type, isFormatted = true) => {
     return (
       <div className="calendar-grid number-grid">
@@ -439,6 +498,7 @@ const CreateMarket = () => {
     );
   };
 
+
 const renderNumberToGrid = (type, isFormatted = true) => {
   return (
     <div className="calendar-grid number-grid">
@@ -462,6 +522,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
     </div>
   );
 };
+
 
   return (
     <div style={{ minHeight: "75vh", backgroundColor: "#f0f4f8" }}>
@@ -488,7 +549,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
       {/* Main Content */}
       <div
         className="d-flex align-items-center justify-content-center"
-        style={{ height: "calc(75vh - 75px)", padding: "50px 0" }}
+        style={{ padding: "42px 0" }}
       >
         <div
           className="shadow-lg rounded-3"
@@ -508,7 +569,7 @@ const renderNumberToGrid = (type, isFormatted = true) => {
               Choose Your Group, Series, and Number
             </h3>
             {/* Date Input */}
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label
                 htmlFor="date"
                 className="form-label"
@@ -522,6 +583,15 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                 id="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
+              />
+            </div> */}
+            <div className="mb-3">
+              <label htmlFor="" className="form-label"></label>
+              <input
+                type=""
+                className="form-control"
+                placeholder="Market Name"
+                onChange={(e) => setMarketName(e.target.value)} // Updated onChange
               />
             </div>
 
@@ -546,6 +616,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                       {renderGroupFromGrid("from", 38, 99, false)}{" "}
                     </div>
                   )}
+                   {errors.groupFrom && (
+                  <small className="text-danger">{errors.groupFrom}</small>
+                )}
                 </div>
                 <span className="mx-1" style={{ lineHeight: "2.4rem" }}>
                   -
@@ -568,6 +641,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                       {renderGroupToGrid("to", 38, 99, false)}{" "}
                     </div>
                   )}
+                   {errors.groupTo && (
+                  <small className="text-danger">{errors.groupTo}</small>
+                )}
                 </div>
               </div>
             </div>
@@ -593,6 +669,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                       {renderSeriesFromGrid("from")}
                     </div>
                   )}
+                  {errors.seriesFrom && (
+                  <small className="text-danger">{errors.seriesFrom}</small>
+                )}
                 </div>
                 <span className="mx-1" style={{ lineHeight: "2.4rem" }}>
                   -
@@ -615,6 +694,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                       {renderSeriesToGrid("to")}
                     </div>
                   )}
+                  {errors.seriesTo && (
+                  <small className="text-danger">{errors.seriesTo}</small>
+                )}
                 </div>
               </div>
             </div>
@@ -640,6 +722,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                       {renderNumberFromGrid("from", 0, 99999, true)}{" "}
                     </div>
                   )}
+                  {errors.numberFrom && (
+                  <small className="text-danger">{errors.numberFrom}</small>
+                )}
                 </div>
                 <span className="mx-1" style={{ lineHeight: "2.4rem" }}>
                   -
@@ -662,6 +747,9 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                       {renderNumberToGrid("to", 0, 99999, true)}{" "}
                     </div>
                   )}
+                   {errors.numberTo && (
+                  <small className="text-danger">{errors.numberTo}</small>
+                )}
                 </div>
               </div>
               {/* <small className="text-muted mb-4">Number range from 00000 to 99999</small> */}
@@ -715,8 +803,12 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                           {time.displayTime}
                         </button>
                       ))}
+                      
                     </div>
                   )}
+                  {errors.timerFrom && (
+                  <small className="text-danger">{errors.timerFrom}</small>
+                )}
                 </div>
 
                 <span className="mx-1" style={{ lineHeight: "2.4rem" }}>
@@ -764,8 +856,12 @@ const renderNumberToGrid = (type, isFormatted = true) => {
                           {time.displayTime}
                         </button>
                       ))}
+                      
                     </div>
                   )}
+                  {errors.timerTo && (
+                  <small className="text-danger">{errors.timerTo}</small>
+                )}
                 </div>
               </div>
             </div>

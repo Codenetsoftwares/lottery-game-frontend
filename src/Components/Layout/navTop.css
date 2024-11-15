@@ -26,7 +26,6 @@
   font-size: 16px;
   text-transform: uppercase;
   text-decoration: none;
-  color: #ffffff; /* White text for clear contrast */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,6 +40,12 @@
 .nav-options .nav-link:hover span {
   text-decoration: underline; /* Underline only the text on hover */
 }
+.nav-link.active-link {
+  background-color: #fff;
+  /* padding-bottom: 5px; */
+  padding: 10px;
+  border-radius: 5px;
+}
 
 /* Styling for the icons */
 .nav-options .nav-link .nav-icon {
@@ -51,7 +56,7 @@
 
 /* Different colors for each option */
 .nav-options .nav-link.dashboard {
-  color: #87cefa; /* Light sky blue */
+  color: #4b9cd3; /* Light sky blue */
 }
 
 .nav-options .nav-link.create-lottery {
@@ -63,7 +68,7 @@
 }
 
 .nav-options .nav-link.win {
-  color: #ffd700; /* Gold */
+  color: #FF9800; /* Gold */
 }
 
 .nav-options .nav-link.purchase-history {
@@ -73,7 +78,9 @@
 .nav-options .nav-link.search-lottery {
   color: #8a2be2; /* Blue-violet for a distinctive look */
 }
-
+.nav-options .nav-link.market-overview{
+  color: rgb(221 125 119);
+}
 /* Blinking effect for Results */
 .blink {
   animation: colorChange 1.5s linear infinite;
@@ -187,8 +194,6 @@
   font-size: 34px; /* Slightly larger icon for emphasis */
   margin-bottom: 5px;
 }
-
-
 
 /* Ensure all icons align consistently */
 .nav-options .nav-link .nav-icon {
