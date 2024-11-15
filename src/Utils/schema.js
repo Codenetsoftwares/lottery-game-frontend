@@ -10,3 +10,12 @@ export const LoginSchema = Yup.object().shape({
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
 });
+
+export const searchLottery = Yup.object({
+    sem: Yup.string().required('SEM is required.'),
+    group: Yup.string().required('Group is required.'),
+    series: Yup.string().required('Series is required.'),
+    number: Yup.string()
+      .matches(/^\d{5}$/, 'A valid 5-digit number is required.')
+      .required('Number is required.'),
+  });

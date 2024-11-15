@@ -9,6 +9,9 @@ import {
   generateSeries,
 } from "../../Utils/helper";
 import useDebouncedFilter from "../../Utils/customHook/useDebouncedFilter";
+import { getInitialLotteryValues } from "../../Utils/getInitialState.js";
+import { searchLottery } from "../../Utils/schema";
+import { useFormik } from "formik";
 
 const Search = ({
   filteredNumbers,
@@ -38,6 +41,30 @@ const Search = ({
 
   const { debouncedFilter } = useDebouncedFilter();
 
+  const formik = useFormik({
+    initialValues: getInitialLotteryValues(),
+    validationSchema: searchLottery, 
+    onSubmit: async (values, { resetForm }) => {
+      const requestBody = {
+        group: values.group ? String(values.group) : null,
+        series: values.series ? String(values.series) : null,
+        number: values.number ? String(values.number) : null,
+        sem: values.sem ? String(values.sem) : null,
+      };
+
+      try {
+        const response = await SearchLotteryTicket(requestBody);
+        setResponseData(response.data);
+        setShowSearch(false);
+
+       
+        resetForm();
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    },
+  });
+
   const handleNumberInputChange = (e) => {
     const inputValue = e.target.value;
     setNumber(inputValue);
@@ -47,7 +74,7 @@ const Search = ({
       () => generateNumbers(lotteryRange.number_start, lotteryRange.number_end),
       1500,
       setFilteredNumbers
-    ); // Pass type as "number"
+    ); 
   };
 
   const handleGroupInputChange = (e) => {
@@ -59,7 +86,7 @@ const Search = ({
       () => generateNumbers(lotteryRange.group_start, lotteryRange.group_end),
       1500,
       setFilteredGroups
-    ); // Pass type as "group"
+    ); 
   };
 
   const handleSeriesInputChange = (e) => {
@@ -71,26 +98,10 @@ const Search = ({
       () => generateSeries(lotteryRange.series_start, lotteryRange.series_end),
       1500,
       setFilteredSeries
-    ); // Pass type as "series"
+    ); 
   };
 
-  // Validation function
-  const validateFields = () => {
-    const newErrors = {};
-    if (!sem) newErrors.sem = "SEM is required.";
-    if (!group) newErrors.group = "Group is required.";
-    if (!series) newErrors.series = "Series is required.";
-    if (!number || number.length !== 5)
-      newErrors.number = "A valid 5-digit number is required.";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
-  const closeOtherPickers = (activePicker) => {
-    if (activePicker !== "group") setIsGroupPickerVisible(false);
-    if (activePicker !== "series") setIsSeriesPickerVisible(false);
-    if (activePicker !== "number") setIsNumberPickerVisible(false);
-  };
 
   const groupLength =
     Math.abs(lotteryRange.group_end - lotteryRange.group_start) + 1;
@@ -132,6 +143,7 @@ const Search = ({
             </button>
           ))
         )}
+        <h2>Number</h2>
       </div>
     );
   };
@@ -163,41 +175,22 @@ const Search = ({
     }
   };
 
-  const handleGroupSelect = (value) => {
-    setGroup(value);
-    setIsGroupPickerVisible(false);
-    closeOtherPickers("group");
+  const handleGroupSelect = (selectedGroup) => {
+    formik.setFieldValue("group", selectedGroup); // Update Formik's state
+    setGroup(selectedGroup); // Optional: if you still need local state
+    setIsGroupPickerVisible(false); // Close the dropdown
   };
 
-  const handleSeriesSelect = (value) => {
-    setSeries(value);
-    setIsSeriesPickerVisible(false);
-    closeOtherPickers("series");
+  const handleSeriesSelect = (selectedSeries) => {
+    formik.setFieldValue("series", selectedSeries); // Update Formik's state
+    setSeries(selectedSeries); // Optional: if you still need local state
+    setIsSeriesPickerVisible(false); // Close the dropdown
   };
 
   const handleNumberSelect = (value) => {
+    formik.setFieldValue("number", value);
     setNumber(value);
     setIsNumberPickerVisible(false);
-    closeOtherPickers("number");
-  };
-
-  const handleSearch = async () => {
-    if (!validateFields()) return; // Validate before searching
-
-    const requestBody = {
-      group: group ? String(group) : null,
-      series: series ? String(series) : null,
-      number: number ? String(number) : null,
-      sem: sem ? String(sem) : null,
-    };
-
-    try {
-      const response = await SearchLotteryTicket(requestBody);
-      setResponseData(response.data);
-      setShowSearch(false);
-    } catch (error) {
-      console.error("Error:", error);
-    }
   };
 
   return (
@@ -216,125 +209,131 @@ const Search = ({
       >
         {showSearch ? (
           <>
-            <div className="text-center mb-4">
-              <h2
-                className="mb-1"
-                style={{
-                  color: "#4682B4",
-                  fontWeight: "bold",
-                  letterSpacing: "1px",
-                }}
-              >
-                🔍 Search Lottery Tickets
-              </h2>
-            </div>
-
-            {/* SEM Input Field */}
-            <div className="mb-4">
-              <label
-                htmlFor="sem"
-                className="form-label"
-                style={{ color: "#4682B4", fontWeight: "bold" }}
-              >
-                Select SEM
-              </label>
-              <select
-                id="sem"
-                className="form-select"
-                value={sem}
-                onChange={handleSemChange}
-              >
-                <option value="">Choose SEM</option>
-                <option value="5">5 SEM</option>
-                <option value="10">10 SEM</option>
-                <option value="25">25 SEM</option>
-                <option value="50">50 SEM</option>
-                <option value="100">100 SEM</option>
-                <option value="200">200 SEM</option>
-              </select>
-              {errors.sem && (
-                <small className="text-danger">{errors.sem}</small>
-              )}
-            </div>
-
-            {/* Group Input */}
-            <div className="mb-3">
-              <div className="input-wrapper">
-                <input
-                  type="text"
-                  placeholder="Group"
-                  className="form-control"
-                  value={group}
-                  onFocus={() => {
-                    setIsGroupPickerVisible(true);
-                    closeOtherPickers("group"); // Close other dropdowns
+            <form onSubmit={formik.handleSubmit}>
+              <div className="text-center mb-4">
+                <h2
+                  className="mb-1"
+                  style={{
+                    color: "#4682B4",
+                    fontWeight: "bold",
+                    letterSpacing: "1px",
                   }}
-                  onChange={handleGroupInputChange}
-                />
-                {isGroupPickerVisible && (
-                  <div className="picker-dropdown">{renderGroupGrid()}</div>
-                )}
-                {errors.group && (
-                  <small className="text-danger">{errors.group}</small>
+                >
+                  🔍 Search Lottery Tickets
+                </h2>
+              </div>
+
+              {/* SEM Input Field */}
+              <div className="mb-4">
+                <label
+                  htmlFor="sem"
+                  className="form-label"
+                  style={{ color: "#4682B4", fontWeight: "bold" }}
+                >
+                  Select SEM
+                </label>
+                <select
+                  id="sem"
+                  className="form-select"
+                  value={formik.values.sem}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                >
+                  <option value="">Choose SEM</option>
+                  <option value="5">5 SEM</option>
+                  <option value="10">10 SEM</option>
+                  <option value="25">25 SEM</option>
+                  <option value="50">50 SEM</option>
+                  <option value="100">100 SEM</option>
+                  <option value="200">200 SEM</option>
+                </select>
+                {formik.touched.sem && formik.errors.sem && (
+                  <small className="text-danger">{formik.errors.sem}</small>
                 )}
               </div>
-            </div>
 
-            {/* Series Input */}
-            <div className="mb-3">
-              <div className="input-wrapper">
-                <input
-                  type="text"
-                  placeholder="Series"
-                  className="form-control"
-                  value={series}
-                  onFocus={() => {
-                    setIsSeriesPickerVisible(true);
-                    closeOtherPickers("series"); // Close other dropdowns
-                  }}
-                  onChange={handleSeriesInputChange}
-                />
-                {isSeriesPickerVisible && (
-                  <div className="picker-dropdown">{renderSeriesGrid()}</div>
-                )}
-                {errors.series && (
-                  <small className="text-danger">{errors.series}</small>
-                )}
+              {/* Group Input */}
+              <div className="mb-3">
+                <div className="input-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Group"
+                    className="form-control"
+                    value={formik.values.group}
+                    onFocus={() => {
+                      setIsGroupPickerVisible(true);
+                    }}
+                    onChange={{
+                      handleGroupInputChange,
+                    }}
+                    onBlur={formik.handleBlur}
+                  />
+                  {isGroupPickerVisible && (
+                    <div className="picker-dropdown">{renderGroupGrid()}</div>
+                  )}
+                  {formik.touched.group && formik.errors.group && (
+                    <small className="text-danger">{formik.errors.group}</small>
+                  )}
+                </div>
               </div>
-            </div>
 
-            {/* Number Input */}
-            <div className="mb-4">
-              <div className="input-wrapper">
-                <input
-                  type="text"
-                  placeholder="Number"
-                  className="form-control"
-                  value={number}
-                  onFocus={() => {
-                    setIsNumberPickerVisible(true);
-                    closeOtherPickers("number"); // Close other dropdowns
-                  }}
-                  onChange={handleNumberInputChange}
-                />
-                {isNumberPickerVisible && (
-                  <div className="picker-dropdown">{renderNumberGrid()}</div>
-                )}
-                {errors.number && (
-                  <small className="text-danger">{errors.number}</small>
-                )}
+              {/* Series Input */}
+              <div className="mb-3">
+                <div className="input-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Series"
+                    className="form-control"
+                    value={formik.values.series}
+                    onFocus={() => {
+                      setIsSeriesPickerVisible(true);
+                    }}
+                    onChange={{
+                      handleSeriesInputChange,
+                    }}
+                    onBlur={formik.handleBlur}
+                  />
+                  {isSeriesPickerVisible && (
+                    <div className="picker-dropdown">{renderSeriesGrid()}</div>
+                  )}
+                  {formik.touched.series && formik.errors.series && (
+                    <small className="text-danger">{formik.errors.series}</small>
+                  )}
+                </div>
               </div>
-            </div>
 
-            <div className="text-center">
-              <button
-                className="btn btn-primary"
-                onClick={handleSearch}
-                style={{ backgroundColor: "#4682B4" }}
-              >
-                Search
-              </button>
-            </div>
+              {/* Number Input */}
+              <div className="mb-4">
+                <div className="input-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Number"
+                    className="form-control"
+                    value={formik.values.number}
+                    onFocus={() => {
+                      setIsNumberPickerVisible(true);
+                    }}
+                    onChange={handleNumberInputChange}
+                  />
+                  {isNumberPickerVisible && (
+                    <div className="picker-dropdown">{renderNumberGrid()}</div>
+                  )}
+                  {formik.touched.number && formik.errors.number && (
+                    <small className="text-danger">{formik.errors.number}</small>
+                  )}
+                </div>
+              </div>
+
+              <div className="text-center">
+                <button
+                  className="btn btn-primary"
+                 
+                  style={{ backgroundColor: "#4682B4" }}
+                >
+                  Search
+                </button>
+              </div>
+            </form>
           </>
         ) : (
           <div className="text-center">
@@ -349,13 +348,13 @@ const Search = ({
                   responseData.tickets &&
                   responseData.tickets.length > 8
                     ? "150px"
-                    : "auto", // Apply max height for scrolling only if there are more than 8 tickets
+                    : "auto", 
                 overflowY:
                   responseData &&
                   responseData.tickets &&
                   responseData.tickets.length > 8
                     ? "auto"
-                    : "visible", // Enable Y-scroll if more than 8 tickets
+                    : "visible", 
               }}
             >
               {responseData &&
