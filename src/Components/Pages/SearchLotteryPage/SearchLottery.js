@@ -17,26 +17,26 @@ const SearchLottery = () => {
 
     const handleLotteryRange = async () => {
         const data = await LotteryRange();
-        SetAllActiveMarket(data.data)
-        setFilteredMarket(data.data[0])
+        SetAllActiveMarket(data?.data)
+        setFilteredMarket(data?.data[0])
         setLotteryRange({
-            group_start: data.data[0].group_start,
-            group_end: data.data[0].group_end,
-            series_start: data.data[0].series_start,
-            series_end: data.data[0].series_end,
-            number_start: data.data[0].number_start,
-            number_end: data.data[0].number_end,
+            group_start: data?.data[0]?.group_start,
+            group_end: data?.data[0]?.group_end,
+            series_start: data?.data[0]?.series_start,
+            series_end: data?.data[0]?.series_end,
+            number_start: data?.data[0]?.number_start,
+            number_end: data?.data[0]?.number_end,
         });
 
         // Initialize the filtered numbers based on the fetched range
         setFilteredNumbers(
-            generateNumbers(data.data[0].number_start, data.data[0].number_end)
+            generateNumbers(data.data[0]?.number_start, data.data[0]?.number_end)
         );
         setFilteredGroups(
-            generateGroups(data.data[0].group_start, data.data[0].group_end)
+            generateGroups(data.data[0]?.group_start, data.data[0]?.group_end)
         );
         setFilteredSeries(
-            generateSeries(data.data[0].series_start, data.data[0].series_end)
+            generateSeries(data.data[0]?.series_start, data.data[0]?.series_end)
         );
     };
     useEffect(() => {
