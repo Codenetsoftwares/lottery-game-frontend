@@ -355,6 +355,7 @@ const handleSubmit = async () => {
     const response = await generateLotteryNumber(requestBody);
     console.log("Success:", response);
     setIsSubmitted(true);
+    setGroupFrom(""); setGroupTo(""); setSeriesFrom(""); setSeriesTo(""); setNumberFrom(""); setNumberTo(""); setTimerFrom(""); setTimerTo(""); setMarketName("");
   } catch (error) {
     console.error("Error:", error);
   }

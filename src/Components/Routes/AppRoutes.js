@@ -17,6 +17,7 @@ import Search from '../Search/Search';
 import CreateTime from '../CreateDrawTime/CreateTime';
 import MarketInsight from '../MarketOverview/MarketInsight';
 import SearchLottery from '../Pages/SearchLotteryPage/SearchLottery';
+import PrivateRoute from '../Common/privateRouting';
 
 const AppRoutes = () => {
   return (
@@ -36,7 +37,8 @@ const AppRoutes = () => {
       <BrowserRouter>
         <Routes>
           <Route index element={<Login />} />
-          <Route path="/" element={<AdminLayout />}>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/" element={<PrivateRoute><AdminLayout /></PrivateRoute>}>
             <Route path="/dashboard" element={<DashBoard />}></Route>
             {/* <Route path="/lottery-markets" element={<LotteryMarkets />} /> old create not in use anymore */}
             <Route path="/lottery-markets" element={<CreateMarket/>} />
@@ -47,7 +49,6 @@ const AppRoutes = () => {
             <Route path="/search-lottery" element={<SearchLottery/>} />
             {/* <Route path="/lucky-hour" element={<CreateTime/>}/>  not in use anymore  */} 
             <Route path="/Market-overview" element={<MarketInsight/>} />
-         
           </Route>
           {/* not found */}
           <Route path="*" element={<NotFound />} />
@@ -56,5 +57,4 @@ const AppRoutes = () => {
     </AppProvider>
   );
 };
-
 export default AppRoutes;

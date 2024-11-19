@@ -58,6 +58,16 @@ export const getInitialValues = (body = {}) => {
   };
 };
 
+
+export const getInitialLotteryValues = () => {
+  return {
+    sem: '',
+    group: '',
+    series: '',
+    number: '',
+  }
+}
+
 export const getInitialCreateLotteryValues = (body = {}) => {
   return {
     groupFrom: "",
