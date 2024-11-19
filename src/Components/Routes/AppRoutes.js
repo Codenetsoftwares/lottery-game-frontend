@@ -37,18 +37,18 @@ const AppRoutes = () => {
       <BrowserRouter>
         <Routes>
           <Route index element={<Login />} />
-          <Route path="/" element={<AdminLayout />}>
-            <Route path="/dashboard" element={<PrivateRoute><DashBoard /></PrivateRoute>}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/" element={<PrivateRoute><AdminLayout /></PrivateRoute>}>
+            <Route path="/dashboard" element={<DashBoard />}></Route>
             {/* <Route path="/lottery-markets" element={<LotteryMarkets />} /> old create not in use anymore */}
-            <Route path="/lottery-markets" element={<PrivateRoute><CreateMarket/></PrivateRoute>} />
+            <Route path="/lottery-markets" element={<CreateMarket/>} />
             {/* <Route path="/Purchased-tickets" element={<PurchasedLotteries />} />  old purchased component not in use anymore */}
-            <Route path="/purchase-history" element={<PrivateRoute><PurchasedTickets /></PrivateRoute>} />
-            <Route path="/results" element={<PrivateRoute><Result /></PrivateRoute>} />
-            <Route path="/win" element={<PrivateRoute><Win /></PrivateRoute>} />
-            <Route path="/search-lottery" element={<PrivateRoute><SearchLottery/></PrivateRoute>} />
+            <Route path="/purchase-history" element={<PurchasedTickets />} />
+            <Route path="/results" element={<Result />} />
+            <Route path="/win" element={<Win />} />
+            <Route path="/search-lottery" element={<SearchLottery/>} />
             {/* <Route path="/lucky-hour" element={<CreateTime/>}/>  not in use anymore  */} 
-            <Route path="/Market-overview" element={<PrivateRoute><MarketInsight/></PrivateRoute>} />
-         
+            <Route path="/Market-overview" element={<MarketInsight/>} />
           </Route>
           {/* not found */}
           <Route path="*" element={<NotFound />} />
@@ -57,5 +57,4 @@ const AppRoutes = () => {
     </AppProvider>
   );
 };
-
 export default AppRoutes;

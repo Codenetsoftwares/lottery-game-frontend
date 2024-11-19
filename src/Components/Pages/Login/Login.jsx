@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import backgroundimage from "../../.././Assets/backgroundImage.jpg";
 import { useNavigate } from "react-router-dom";
 import { adminLogin } from "../../../Utils/apiService";
@@ -8,11 +8,19 @@ import strings from "../../../Utils/constant/stringConstant";
 import { getInitialValues } from "../../../Utils/getInitialState";
 import { LoginSchema } from "../../../Utils/schema";
 import { useFormik } from "formik";
+import { useLocation } from "react-router-dom";
 
 const Login = () => {
   const { dispatch } = useAppContext();
   const [error, setError] = useState(""); // For error handling
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect (()=> {
+    if (location.pathname == "/") {
+      navigate("/login")
+    }
+  }, [])
 
   const {
     values,
