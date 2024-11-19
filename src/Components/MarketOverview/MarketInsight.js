@@ -13,15 +13,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Import Bootstrap icons
 import "./MarketInsight.css";
 import { GetMarketTimings, GetPurchaseOverview } from "../../Utils/apiService";
+import {useAppContext} from "../../contextApi/context";
 
 const MarketInsight = () => {
   const [marketTimes, setMarketTimes] = useState([]);
   const [selectedMarket, setSelectedMarket] = useState(null);
   const [showStats, setShowStats] = useState(false);
-  const [purchasedTickets, setPurchasedTickets] = useState([]); // To store the purchased tickets data
+  const [purchasedTickets, setPurchasedTickets] = useState([]);
+  const {showLoader, hideLoader} = useAppContext();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMarketTimings = async () => {
+      showLoader();
       try {
         const response = await GetMarketTimings();
         if (response.success) {
@@ -29,6 +33,9 @@ const MarketInsight = () => {
         }
       } catch (error) {
         console.error("Error fetching market timings:", error);
+      } finally {
+        hideLoader();
+        setLoading(false);
       }
     };
 
@@ -38,6 +45,8 @@ const MarketInsight = () => {
   useEffect(() => {
     if (selectedMarket) {
       const fetchPurchasedTickets = async () => {
+        showLoader();
+        setLoading(true);
         try {
           const response = await GetPurchaseOverview({
             marketId: selectedMarket.marketId,
@@ -47,6 +56,9 @@ const MarketInsight = () => {
           }
         } catch (error) {
           console.error("Error fetching purchased tickets:", error);
+        } finally {
+          hideLoader();
+          setLoading(false);
         }
       };
 
@@ -54,11 +66,14 @@ const MarketInsight = () => {
     }
   }, [selectedMarket]); // Runs when selectedMarket changes
 
+ 
   const handleMarketClick = (market) => {
     setSelectedMarket(market);
     setShowStats(true);
   };
-
+  if (loading) {
+    return null;
+  }
   return (
     <Container fluid className="alt-dashboard-container">
       {/* Sidebar */}

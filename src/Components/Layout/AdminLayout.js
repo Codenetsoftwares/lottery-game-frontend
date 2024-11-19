@@ -3,6 +3,7 @@ import Footer from './Footer';
 import Layout from './Layout';
 import NavTop from './NavTop';
 
+
 const AdminLayout = () => {
   return (
     <div className="d-flex flex-column vh-100">
@@ -11,14 +12,15 @@ const AdminLayout = () => {
         className="sticky-top" 
         style={{
           zIndex: 1030,
-          backgroundColor: '#fff', // Background to prevent transparency
-          boxShadow: '0px 1px 5px rgba(0,0,0,0.1)', // Slight shadow for separation
+          backgroundColor: '#fff', 
+          boxShadow: '0px 1px 5px rgba(0,0,0,0.1)', 
         }}
       >
         <NavTop />
       </div>
 
       {/* Main Content Area */}
+
       <div
         className="flex-grow-1 overflow-auto"
         style={{
@@ -27,6 +29,7 @@ const AdminLayout = () => {
         }}
       >
         <div className="p-4" style={{ flex: 1, minHeight: 0 }}>
+
           <Layout />
         </div>
       </div>

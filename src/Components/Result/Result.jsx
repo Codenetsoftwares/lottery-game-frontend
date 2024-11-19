@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { GetWiningResult } from '../../Utils/apiService';
-import {  Spinner } from 'react-bootstrap';
+import { useAppContext } from '../../contextApi/context';
 
 const Result = () => {
-  const [result, setResult] = useState(null); // Holds the result object
-  const [loading, setLoading] = useState(true);
+  const [result, setResult] = useState(null); 
+  const { showLoader, hideLoader } = useAppContext();
   const [error, setError] = useState(null);
-  const [openAccordion, setOpenAccordion] = useState(false); // Manages accordion open/close
+  const [openAccordion, setOpenAccordion] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchResults = async () => {
+      showLoader();
+      setLoading(true);
       try {
         const response = await GetWiningResult(); 
         if (response.success) {
@@ -21,6 +24,7 @@ const Result = () => {
         setError('Error fetching prize data');
       } finally {
         setLoading(false);
+        hideLoader();
       }
     };
 
@@ -28,13 +32,9 @@ const Result = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center">
-        <Spinner animation="border" role="status" />
-        <h4 className="ms-2 d-inline-block">Fetching results...</h4>
-      </div>
-    );
+    return null;
   }
+  
   if (error) {
     return (
       <div className="container-fluid d-flex justify-content-center">
