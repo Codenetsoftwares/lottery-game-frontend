@@ -28,27 +28,19 @@ const AppProvider = ({ children }) => {
     return storedState ? JSON.parse(storedState) : initialState;
   });
 
-  // const [loading, setLoading] = useState(true);
-
   const [isLoading, setIsLoading] = useState(true);
   const showLoader = () => setIsLoading(true);
   const hideLoader = () => setIsLoading(false);
 
   useEffect(() => {
     if (store.admin.accessToken) {
-      // Save state to local storage if the user is logged in
       localStorage.setItem(strings.LOCAL_STORAGE_KEY, JSON.stringify(store));
       setIsLoading(false);
     } else {
-      // Remove state from local storage when logged out
       localStorage.removeItem(strings.LOCAL_STORAGE_KEY);
       setIsLoading(false);
     }
   }, [store]);
-
-  // if (loading) {
-  //   return <div>Loading...</div>; 
-  // }
   
 
   return <AppContext.Provider value={{ store, dispatch, isLoading, showLoader, hideLoader}}>{children} {isLoading && (
