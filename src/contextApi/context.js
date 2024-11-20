@@ -38,11 +38,11 @@ const AppProvider = ({ children }) => {
     if (store.admin.accessToken) {
       // Save state to local storage if the user is logged in
       localStorage.setItem(strings.LOCAL_STORAGE_KEY, JSON.stringify(store));
-      // setLoading(false);
+      setIsLoading(false);
     } else {
       // Remove state from local storage when logged out
       localStorage.removeItem(strings.LOCAL_STORAGE_KEY);
-      // setLoading(false);
+      setIsLoading(false);
     }
   }, [store]);
 
