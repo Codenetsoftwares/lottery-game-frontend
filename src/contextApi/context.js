@@ -30,7 +30,7 @@ const AppProvider = ({ children }) => {
 
   // const [loading, setLoading] = useState(true);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const showLoader = () => setIsLoading(true);
   const hideLoader = () => setIsLoading(false);
 
@@ -51,7 +51,7 @@ const AppProvider = ({ children }) => {
   // }
   
 
-  return <AppContext.Provider value={{ store, dispatch, showLoader, hideLoader}}>{children} {isLoading && (
+  return <AppContext.Provider value={{ store, dispatch, isLoading, showLoader, hideLoader}}>{children} {isLoading && (
     <Loader />
   )} </AppContext.Provider>;
 };

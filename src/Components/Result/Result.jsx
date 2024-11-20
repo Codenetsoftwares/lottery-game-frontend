@@ -4,7 +4,7 @@ import { useAppContext } from '../../contextApi/context';
 
 const Result = () => {
   const [result, setResult] = useState(null); 
-  const { showLoader, hideLoader } = useAppContext();
+  const { showLoader, hideLoader, isLoading } = useAppContext();
   const [error, setError] = useState(null);
   const [openAccordion, setOpenAccordion] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -12,7 +12,7 @@ const Result = () => {
   useEffect(() => {
     const fetchResults = async () => {
       showLoader();
-      setLoading(true);
+      // setLoading(true);
       try {
         const response = await GetWiningResult(); 
         if (response.success) {
@@ -23,7 +23,7 @@ const Result = () => {
       } catch (err) {
         setError('Error fetching prize data');
       } finally {
-        setLoading(false);
+        // setLoading(false);
         hideLoader();
       }
     };
@@ -31,9 +31,9 @@ const Result = () => {
     fetchResults();
   }, []);
 
-  if (loading) {
-    return null;
-  }
+  // if (loading) {
+  //   return null;
+  // }
   
   if (error) {
     return (
@@ -93,13 +93,13 @@ const Result = () => {
           </div>
         </div>
       ) : (
-        // Message displayed when no prize data is available
+        
         <div className="container-fluid d-flex justify-content-center">
-          <div className="border border-3 rounded-3" style={{ padding: '20px', width: '80%', maxWidth: '600px' }}>
+         {!isLoading &&  <div className="border border-3 rounded-3" style={{ padding: '20px', width: '80%', maxWidth: '600px' }}>
             <div className="text-center py-5">
               <h4>No prize results available at the moment.</h4>
             </div>
-          </div>
+          </div> }
         </div>
       )}
     </div>

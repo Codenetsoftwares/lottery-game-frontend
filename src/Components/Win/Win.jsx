@@ -5,9 +5,9 @@ import { AllActiveLotteryMarkets, CustomWining } from "../../Utils/apiService";
 import strings from "../../Utils/constant/stringConstant";
 
 const Win = () => {
-  const { store, dispatch, showLoader, hideLoader } = useAppContext();
+  const { store, dispatch, showLoader, hideLoader, isLoading } = useAppContext();
   const drawTimes = store.drawTimes || [];
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
   const [prizes, setPrizes] = useState({});
   const [allActiveMarket, setAllActiveMarket] = useState([]);
@@ -39,7 +39,7 @@ const Win = () => {
         return acc;
       }, {});
       setPrizes(initialPrizes);
-      setLoading(false);
+      
     }
   }, [allActiveMarket]);
 
@@ -204,9 +204,9 @@ const Win = () => {
     5: { rank: "5th", description: "Prize for 50 winners" },
   };
 
-  if (loading) {
-    return null;
-  }
+  // if (loading) {
+  //   return null;
+  // }
   return (
     <div
       className="container-fluid d-flex flex-column align-items-center"
@@ -410,8 +410,8 @@ const Win = () => {
               </div>
             ))}
           </div>
-        ) : (
-          <div>No draw times available.</div>
+        ) : ( <div className="container-fluid d-flex justify-content-center"> {!isLoading && <div>No draw times available.</div>}
+          </div>
         )}
       </div>
     </div>

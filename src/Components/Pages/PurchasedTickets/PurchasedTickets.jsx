@@ -9,9 +9,8 @@ import debounce from "lodash.debounce";
 
 const PurchasedTickets = () => {
   const { dispatch, showLoader, hideLoader } = useAppContext();
-
   const [loading, setLoading] = useState(true);
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
   const [purchasedTickets, setPurchasedTickets] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -146,11 +145,12 @@ const PurchasedTickets = () => {
                 </div>
               </td>
             </tr>
-          ) : purchasedTickets.length === 0 ? (
-            <tr>
-              <td colSpan="6" className="text-center">
+          ) : purchasedTickets.length === 0  ? (
+          
+              <tr>
+             { !loader && <td colSpan="6" className="text-center">
                 No tickets found.
-              </td>
+              </td> }
             </tr>
           ) : (
             purchasedTickets.map((ticket, index) => (
