@@ -145,7 +145,7 @@ const PurchasedTickets = () => {
                 </div>
               </td>
             </tr>
-          ) : purchasedTickets.length === 0  ? (
+          ) : purchasedTickets.length === 0 ? (
           
               <tr>
              { !loader && <td colSpan="6" className="text-center">
@@ -156,7 +156,7 @@ const PurchasedTickets = () => {
             purchasedTickets.map((ticket, index) => (
               <tr key={index}>
                 <td>{startIndex + index}</td>
-                <td>{ticket.drawDate}</td>
+                <td>{ticket.marketName || "N/A"}</td>
                 <td>{ticket.sem}</td>
                 <td>
                   <div className="dropdown" style={{ position: "relative" }}>
