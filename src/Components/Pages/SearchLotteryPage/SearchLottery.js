@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { getLotteryRange } from '../../../Utils/getInitialState';
 import { LotteryRange } from '../../../Utils/apiService';
 import { generateGroups, generateNumbers, generateSeries } from '../../../Utils/helper';
+import { useAppContext } from '../../../contextApi/context';
 
 const SearchLottery = () => {
     const [lotteryRange, setLotteryRange] = useState(getLotteryRange);
@@ -14,6 +15,7 @@ const SearchLottery = () => {
     const [filteredNumbers, setFilteredNumbers] = useState([]);
     const [filteredGroups, setFilteredGroups] = useState([]);
     const [filteredSeries, setFilteredSeries] = useState([]);
+    const { showLoader, hideLoader, isLoading } = useAppContext();
 
     const handleLotteryRange = async () => {
         const data = await LotteryRange();
@@ -41,7 +43,19 @@ const SearchLottery = () => {
     };
 
     useEffect(() => {
-        handleLotteryRange();
+        const fetchData = async () => {
+            showLoader();
+            try {
+
+                await handleLotteryRange();
+            } catch (error) {
+                console.error("Error fetching lottery markets:", error);
+            } finally {
+                hideLoader();
+            }
+        }
+        fetchData();
+
     }, []);
 
     const handleMarketClick = (market) => {
@@ -89,45 +103,46 @@ const SearchLottery = () => {
                         ))
                     ) : (
                         <div
-                        className="d-flex justify-content-center align-items-center"
-                        style={{ minHeight: "480px", width: "100%" }}
-                      >
-                        <h4 className="text-center fw-bold bg-white p-5 rounded-5">
-                          No <br />
-                          Market <br />
-                          Available
-                        </h4>
-                      </div>
-                 
+                            className="d-flex justify-content-center align-items-center"
+                            style={{ minHeight: "480px", width: "100%" }}
+                        >
+                            <h4 className="text-center fw-bold bg-white p-5 rounded-5">
+                                No <br />
+                                Market <br />
+                                Available
+                            </h4>
+                        </div>
+
                     )}
                 </div>
             </aside>
 
             {/* Main Content */}
             <main className="alt-main-content p-4">
-    {filteredMarket ? (
-        <Card className="welcome-card shadow-sm">
-            <Search 
-                filteredNumbers={filteredNumbers} 
-                filteredGroups={filteredGroups} 
-                filteredSeries={filteredSeries} 
-                setFilteredNumbers={setFilteredNumbers} 
-                setFilteredGroups={setFilteredGroups} 
-                setFilteredSeries={setFilteredSeries} 
-                lotteryRange={lotteryRange} 
-            />
-        </Card>
-    ) : (
-        <Card className="welcome-card shadow-sm">
-            <Card.Body>
-                <Card.Title className="welcome-title">
-                    No Market Available
-                </Card.Title>
-               
-            </Card.Body>
-        </Card>
-    )}
-</main>
+                {filteredMarket ? (
+                    <Card className="welcome-card shadow-sm">
+                        <Search
+                            filteredNumbers={filteredNumbers}
+                            filteredGroups={filteredGroups}
+                            filteredSeries={filteredSeries}
+                            setFilteredNumbers={setFilteredNumbers}
+                            setFilteredGroups={setFilteredGroups}
+                            setFilteredSeries={setFilteredSeries}
+                            lotteryRange={lotteryRange}
+                        />
+                    </Card>
+                ) : (
+                    <Card className="welcome-card shadow-sm">
+                        <Card.Body>
+                            {!isLoading && <Card.Title className="welcome-title">
+                                No Market Available
+                            </Card.Title>}
+
+
+                        </Card.Body>
+                    </Card>
+                )}
+            </main>
 
         </Container>
     );

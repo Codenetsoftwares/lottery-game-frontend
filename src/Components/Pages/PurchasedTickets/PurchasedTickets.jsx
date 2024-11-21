@@ -8,10 +8,10 @@ import Pagination from "../../Common/Pagination";
 import debounce from "lodash.debounce";
 
 const PurchasedTickets = () => {
-  const { dispatch } = useAppContext();
-  const [purchasedTickets, setPurchasedTickets] = useState([]);
+  const { dispatch, showLoader, hideLoader } = useAppContext();
   const [loading, setLoading] = useState(true);
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
+  const [purchasedTickets, setPurchasedTickets] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
@@ -36,8 +36,6 @@ const PurchasedTickets = () => {
         searchBySem: searchTerm,
       });
 
-      console.log("====>>> response from purchased tickets", response);
-
       if (response && response.success) {
         setPurchasedTickets(response.data || []);
         setPagination({
@@ -53,22 +51,34 @@ const PurchasedTickets = () => {
       } else {
         console.error("Failed to fetch purchased tickets");
       }
-
       setLoader(false);
-      setLoading(false);
     }, 500), // Adjust debounce time to 500ms or any suitable time for your case
     [pagination.page, pagination.limit, dispatch]
   );
 
   useEffect(() => {
-    // Fetch tickets when searchTerm or pagination changes
-    fetchPurchasedLotteryTickets(searchTerm);
+    const fetchData = async () => {
+      setLoading(true);
+      showLoader();
+      try {
+        await fetchPurchasedLotteryTickets(searchTerm);
+      } catch (error) {
+        console.error("Error fetching lottery markets:", error);
+      } finally {
+        hideLoader();
+        setLoading(false);
+      }
+    };
+
+    fetchData();
 
     return () => {
-      fetchPurchasedLotteryTickets.cancel(); // Cleanup on unmount
+      fetchPurchasedLotteryTickets.cancel(); // Cleanup on component unmount or dependency change
     };
   }, [pagination.page, pagination.limit, searchTerm]);
-
+  if (loading) {
+    return null;
+  }
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
     setPagination((prev) => ({ ...prev, page: 1 })); // Reset to the first page
@@ -77,15 +87,6 @@ const PurchasedTickets = () => {
   const handlePageChange = (newPage) => {
     setPagination((prev) => ({ ...prev, page: newPage }));
   };
-
-  if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center">
-        <Spinner animation="border" role="status" />
-        <h4 className="ms-2 d-inline-block">Loading...</h4>
-      </div>
-    );
-  }
 
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
   const endIndex = Math.min(
@@ -136,14 +137,22 @@ const PurchasedTickets = () => {
         </thead>
         <tbody style={{ textAlign: "center" }}>
           {loader ? (
-    <tr>
-      <td colSpan="6">
-        <div className="d-flex justify-content-center align-items-center">
-          <span className="ms-2">Loading tickets...</span>
-        </div>
-      </td>
-    </tr>
-  ):purchasedTickets.length > 0 ? (
+            <tr>
+              <td colSpan="6">
+                <div className="d-flex justify-content-center align-items-center">
+                  <Spinner animation="border" variant="primary" />
+                  <span className="ms-2">Loading tickets...</span>
+                </div>
+              </td>
+            </tr>
+          ) : purchasedTickets.length === 0  ? (
+          
+              <tr>
+             { !loader && <td colSpan="6" className="text-center">
+                No tickets found.
+              </td> }
+            </tr>
+          ) : (
             purchasedTickets.map((ticket, index) => (
               <tr key={index}>
                 <td>{startIndex + index}</td>
@@ -192,12 +201,6 @@ const PurchasedTickets = () => {
                 <td>{ticket.userName || "N/A"}</td>
               </tr>
             ))
-          ) : (
-            <tr>
-              <td colSpan="6" className="text-center">
-                No tickets found.
-              </td>
-            </tr>
           )}
         </tbody>
       </Table>

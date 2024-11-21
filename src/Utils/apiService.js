@@ -158,10 +158,10 @@ export async function generateLotteryNumber(body, isToast = true) {
   }
 }
 
-export async function SearchLotteryTicket(body, isToast = true) {
+export async function SearchLotteryTicket(body) {
   try {
-    const callParams = await getAuthCallParams(strings.POST, body, isToast);
-    const response = await makeCall(urls.searchTicket, callParams, isToast);
+    const callParams = await getAuthCallParams(strings.POST, body);
+    const response = await makeCall(urls.searchTicket, callParams);
     return response;
   } catch (error) {
     throw error;

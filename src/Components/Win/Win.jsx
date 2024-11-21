@@ -5,18 +5,27 @@ import { AllActiveLotteryMarkets, CustomWining } from "../../Utils/apiService";
 import strings from "../../Utils/constant/stringConstant";
 
 const Win = () => {
-  const { store, dispatch } = useAppContext();
-  const drawTimes = store.drawTimes || []; // ["1.00 AM", "1.30 AM"]
+  const { store, dispatch, showLoader, hideLoader, isLoading } = useAppContext();
+  const drawTimes = store.drawTimes || [];
+  // const [loading, setLoading] = useState(true);
 
-  // Initialize state for prize amounts and ticket numbers
   const [prizes, setPrizes] = useState({});
   const [allActiveMarket, setAllActiveMarket] = useState([]);
-  const [errors, setErrors] = useState({}); // State for error messages
-
+  const [errors, setErrors] = useState({});
   useEffect(() => {
-    handleGetAllLotteryMarket();
-  }, []);
+    const fetchData = async () => {
+      showLoader();
+      try {
+        await handleGetAllLotteryMarket(); // Ensure the async function works correctly
+      } catch (error) {
+        console.error("Error fetching lottery markets:", error);
+      } finally {
+        hideLoader();
+      }
+    };
 
+    fetchData();
+  }, []);
   useEffect(() => {
     if (allActiveMarket.length > 0) {
       const initialPrizes = allActiveMarket.reduce((acc, market) => {
@@ -30,6 +39,7 @@ const Win = () => {
         return acc;
       }, {});
       setPrizes(initialPrizes);
+      
     }
   }, [allActiveMarket]);
 
@@ -167,7 +177,7 @@ const Win = () => {
 
       // Send each result to the CustomWining API
       try {
-        const response = await CustomWining({ resultArray, marketId:id});
+        const response = await CustomWining({ resultArray, marketId: id });
         console.log(
           `API call successful for ${resultArray.prizeCategory}:`,
           response
@@ -194,6 +204,9 @@ const Win = () => {
     5: { rank: "5th", description: "Prize for 50 winners" },
   };
 
+  // if (loading) {
+  //   return null;
+  // }
   return (
     <div
       className="container-fluid d-flex flex-column align-items-center"
@@ -397,8 +410,8 @@ const Win = () => {
               </div>
             ))}
           </div>
-        ) : (
-          <div>No draw times available.</div>
+        ) : ( <div className="container-fluid d-flex justify-content-center"> {!isLoading && <div>No draw times available.</div>}
+          </div>
         )}
       </div>
     </div>
