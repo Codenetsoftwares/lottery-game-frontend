@@ -2,8 +2,21 @@ import { createContext, useContext, useReducer, useEffect, useState } from 'reac
 import { reducer } from './reducer';
 import { getAdminInitialState } from '../Utils/getInitialState';
 import strings from '../Utils/constant/stringConstant';
+import './loader.css';
 
-const AppContext = createContext();
+
+const Loader = () => (
+  <div className="loader">
+    <div className="spinner"></div>
+  </div>
+);
+
+const AppContext = createContext({
+  store: {},
+  dispatch: () => {},
+  showLoader: () => {},
+  hideLoader: () => {},
+});
 
 const initialState = {
   admin: getAdminInitialState(),
@@ -11,29 +24,28 @@ const initialState = {
 
 const AppProvider = ({ children }) => {
   const [store, dispatch] = useReducer(reducer, initialState, () => {
-    // Load state from local storage if available
     const storedState = localStorage.getItem(strings.LOCAL_STORAGE_KEY);
     return storedState ? JSON.parse(storedState) : initialState;
   });
 
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const showLoader = () => setIsLoading(true);
+  const hideLoader = () => setIsLoading(false);
 
   useEffect(() => {
     if (store.admin.accessToken) {
-      // Save state to local storage if the user is logged in
       localStorage.setItem(strings.LOCAL_STORAGE_KEY, JSON.stringify(store));
-      setLoading(false);
+      setIsLoading(false);
     } else {
-      // Remove state from local storage when logged out
       localStorage.removeItem(strings.LOCAL_STORAGE_KEY);
-      setLoading(false);
+      setIsLoading(false);
     }
   }, [store]);
-  if (loading) {
-    return <div>Loading...</div>; // Show a loading state until the state is ready
-  }
+  
 
-  return <AppContext.Provider value={{ store, dispatch }}>{children}</AppContext.Provider>;
+  return <AppContext.Provider value={{ store, dispatch, isLoading, showLoader, hideLoader}}>{children} {isLoading && (
+    <Loader />
+  )} </AppContext.Provider>;
 };
 
 const useAppContext = () => {

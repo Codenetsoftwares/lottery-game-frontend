@@ -5,48 +5,57 @@ import { AllActiveLotteryMarkets, CustomWining } from "../../Utils/apiService";
 import strings from "../../Utils/constant/stringConstant";
 
 const Win = () => {
-  const { store, dispatch } = useAppContext();
-  const drawTimes = store.drawTimes || []; // ["1.00 AM", "1.30 AM"]  
+  const { store, dispatch, showLoader, hideLoader, isLoading } = useAppContext();
+  const drawTimes = store.drawTimes || [];
+  // const [loading, setLoading] = useState(true);
 
-  // Initialize state for prize amounts and ticket numbers
   const [prizes, setPrizes] = useState({});
- const [allActiveMarket, setAllActiveMarket] = useState([]);
-  const [errors, setErrors] = useState({}); // State for error messages
+  const [allActiveMarket, setAllActiveMarket] = useState([]);
+  const [errors, setErrors] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+      showLoader();
+      try {
+        await handleGetAllLotteryMarket(); // Ensure the async function works correctly
+      } catch (error) {
+        console.error("Error fetching lottery markets:", error);
+      } finally {
+        hideLoader();
+      }
+    };
 
-useEffect(() => {
-  handleGetAllLotteryMarket();
-}, []);
+    fetchData();
+  }, []);
+  useEffect(() => {
+    if (allActiveMarket.length > 0) {
+      const initialPrizes = allActiveMarket.reduce((acc, market) => {
+        acc[market.marketName] = {
+          1: { amount: "", complementaryAmount: "", ticketNumbers: [""] },
+          2: { amount: "", ticketNumbers: Array(10).fill("") },
+          3: { amount: "", ticketNumbers: Array(10).fill("") },
+          4: { amount: "", ticketNumbers: Array(10).fill("") },
+          5: { amount: "", ticketNumbers: Array(50).fill("") },
+        };
+        return acc;
+      }, {});
+      setPrizes(initialPrizes);
+      
+    }
+  }, [allActiveMarket]);
 
-useEffect(() => {
-  if (allActiveMarket.length > 0) {
-    const initialPrizes = allActiveMarket.reduce((acc, market) => {
-      acc[market.marketName] = {
-        1: { amount: "", complementaryAmount: "", ticketNumbers: [""] }, 
-        2: { amount: "", ticketNumbers: Array(10).fill("") },
-        3: { amount: "", ticketNumbers: Array(10).fill("") },
-        4: { amount: "", ticketNumbers: Array(10).fill("") },
-        5: { amount: "", ticketNumbers: Array(50).fill("") },
-      };
-      return acc;
-    }, {});
-    setPrizes(initialPrizes);
-  }
-}, [allActiveMarket]); 
+  console.log("prizes", prizes);
 
-console.log("prizes", prizes);
+  const handleGetAllLotteryMarket = async () => {
+    try {
+      const allmarket = await AllActiveLotteryMarkets();
+      console.log("allmarket", allmarket);
+      setAllActiveMarket(allmarket.data);
+    } catch (error) {
+      console.error("Error fetching lottery markets:", error);
+    }
+  };
 
-const handleGetAllLotteryMarket = async () => {
-  try {
-    const allmarket = await AllActiveLotteryMarkets();
-    console.log("allmarket", allmarket);
-    setAllActiveMarket(allmarket.data); 
-  } catch (error) {
-    console.error("Error fetching lottery markets:", error);
-  }
-};
-
-
-console.log("prizeData", prizes);
+  console.log("prizeData", prizes);
 
   // Validation function to check for special characters
   const validateInput = (value) => {
@@ -56,7 +65,7 @@ console.log("prizeData", prizes);
 
   const handlePrizeChange = (time, rank, value) => {
     if (validateInput(value)) {
-      setErrors((prevErrors) => ({ ...prevErrors, [time]: undefined })); 
+      setErrors((prevErrors) => ({ ...prevErrors, [time]: undefined }));
       setPrizes((prevPrizes) => ({
         ...prevPrizes,
         [time]: {
@@ -74,7 +83,7 @@ console.log("prizeData", prizes);
 
   const handleTicketChange = (time, rank, index, value) => {
     if (validateInput(value)) {
-      setErrors((prevErrors) => ({ ...prevErrors, [time]: undefined })); 
+      setErrors((prevErrors) => ({ ...prevErrors, [time]: undefined }));
       setPrizes((prevPrizes) => {
         const updatedTickets = [
           ...(prevPrizes[time][rank]?.ticketNumbers || []),
@@ -117,59 +126,73 @@ console.log("prizeData", prizes);
     }
   };
 
-  const submitPrizes = async (time,id) => {
-    for (let rank in prizes[time]) {
-      const { amount, complementaryAmount, ticketNumbers } = prizes[time][rank];
-      if (amount) {
-        const prizeCategory =
-          rank === "1"
-            ? "First Prize"
-            : rank === "2"
-            ? "Second Prize"
-            : rank === "3"
-            ? "Third Prize"
-            : rank === "4"
-            ? "Fourth Prize"
-            : "Fifth Prize";
+  const submitPrizes = async (time, id) => {
+    // Check if the provided time exists as a key in the prizes object
+    if (prizes.hasOwnProperty(time)) {
+      // Store the data for the matching time into a variable
+      const timeData = prizes[time];
 
-        const validTickets = ticketNumbers
-          .map((ticket) => ticket.trim())
-          .filter((ticket) => ticket !== "");
+      // Array to store the structured data
+      const resultArray = [];
 
-        if (validTickets.length > 0) {
-          const requestBody = {
-            prizeCategory,
-            prizeAmount: parseFloat(amount) || 0,
-            ticketNumber: validTickets,
-            marketId: id,
-          };
+      for (let rank in timeData) {
+        const { amount, complementaryAmount, ticketNumbers } = timeData[rank];
+        if (amount) {
+          const prizeCategory =
+            rank === "1"
+              ? "First Prize"
+              : rank === "2"
+              ? "Second Prize"
+              : rank === "3"
+              ? "Third Prize"
+              : rank === "4"
+              ? "Fourth Prize"
+              : "Fifth Prize";
 
-          // Add complementaryPrize to the request body if it's the first prize
-          if (rank === "1" && complementaryAmount) {
-            requestBody.complementaryPrize =
-              parseFloat(complementaryAmount) || 0;
-          }
+          const validTickets = ticketNumbers
+            .map((ticket) => ticket.trim())
+            .filter((ticket) => ticket !== "");
 
-          const response = await CustomWining(requestBody);
+          if (validTickets.length > 0) {
+            const requestBody = {
+              prizeCategory,
+              prizeAmount: parseFloat(amount) || 0,
+              ticketNumber: validTickets,
+            };
 
-          if (response) {
-            validTickets.forEach((ticket) => {
-              dispatch({
-                type: strings.ADD_SUBMITTED_PRIZE,
-                payload: {
-                  ticketNumber: ticket,
-                  prizeCategory,
-                  prizeAmount: parseFloat(amount) || 0,
-                },
-              });
-              console.log(
-                `Prize for ${ticket} submitted successfully:`,
-                response
-              );
-            });
+            // Add complementaryPrize to the request body if it's the first prize
+            if (rank === "1" && complementaryAmount) {
+              requestBody.complementaryPrize =
+                parseFloat(complementaryAmount) || 0;
+            }
+
+            // Push the formatted data into the result array
+            resultArray.push(requestBody);
           }
         }
       }
+
+      // Log the structured array
+      console.log(JSON.stringify(resultArray, null, 2));
+
+      // Send each result to the CustomWining API
+      try {
+        const response = await CustomWining({ resultArray, marketId: id });
+        console.log(
+          `API call successful for ${resultArray.prizeCategory}:`,
+          response
+        );
+      } catch (error) {
+        console.error(
+          `API call failed for ${resultArray.prizeCategory}:`,
+          error
+        );
+      }
+
+      return resultArray;
+    } else {
+      console.log(`No data found for the specified time: ${time}`);
+      return [];
     }
   };
 
@@ -181,6 +204,9 @@ console.log("prizeData", prizes);
     5: { rank: "5th", description: "Prize for 50 winners" },
   };
 
+  // if (loading) {
+  //   return null;
+  // }
   return (
     <div
       className="container-fluid d-flex flex-column align-items-center"
@@ -371,7 +397,7 @@ console.log("prizeData", prizes);
                 <div className="text-center mt-3">
                   <Button
                     variant="primary"
-                    onClick={() => submitPrizes(data.marketName,data.marketId)} // Pass the correct time
+                    onClick={() => submitPrizes(data.marketName, data.marketId)} // Pass the correct time
                     style={{
                       padding: "10px 20px",
                       borderRadius: "8px",
@@ -384,8 +410,8 @@ console.log("prizeData", prizes);
               </div>
             ))}
           </div>
-        ) : (
-          <div>No draw times available.</div>
+        ) : ( <div className="container-fluid d-flex justify-content-center"> {!isLoading && <div>No draw times available.</div>}
+          </div>
         )}
       </div>
     </div>

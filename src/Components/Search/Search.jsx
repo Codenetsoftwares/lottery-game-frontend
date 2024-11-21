@@ -12,6 +12,7 @@ import useDebouncedFilter from "../../Utils/customHook/useDebouncedFilter";
 import { getInitialLotteryValues } from "../../Utils/getInitialState.js";
 import { searchLottery } from "../../Utils/schema";
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 
 const Search = ({
   filteredNumbers,
@@ -38,6 +39,8 @@ const Search = ({
   const [responseData, setResponseData] = useState(null);
   const [showSearch, setShowSearch] = useState(true);
   const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
 
   const { debouncedFilter } = useDebouncedFilter();
 
@@ -143,7 +146,6 @@ const Search = ({
             </button>
           ))
         )}
-        <h2>Number</h2>
       </div>
     );
   };
@@ -336,6 +338,10 @@ const Search = ({
             </form>
           </>
         ) : (
+          <>
+          <div style={{ transform: "scale(2)", float: "left", color: "#2B3A67" }} onClick={() => setShowSearch(true)}>
+              <i className="bi bi-arrow-left-circle-fill" style={{ float: "left" }}></i>
+          </div>
           <div className="text-center">
             <h4 style={{ color: "#4682B4", fontWeight: "bold" }}>
               Search Results:
@@ -389,6 +395,7 @@ const Search = ({
               )}
             </div>
           </div>
+          </>
         )}
       </div>
     </div>

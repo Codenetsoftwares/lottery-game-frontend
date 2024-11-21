@@ -13,15 +13,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Import Bootstrap icons
 import "./MarketInsight.css";
 import { GetMarketTimings, GetPurchaseOverview } from "../../Utils/apiService";
+import {useAppContext} from "../../contextApi/context";
 
 const MarketInsight = () => {
   const [marketTimes, setMarketTimes] = useState([]);
   const [selectedMarket, setSelectedMarket] = useState(null);
   const [showStats, setShowStats] = useState(false);
-  const [purchasedTickets, setPurchasedTickets] = useState([]); // To store the purchased tickets data
+  const [purchasedTickets, setPurchasedTickets] = useState([]);
+  const {showLoader, hideLoader} = useAppContext();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMarketTimings = async () => {
+      showLoader();
       try {
         const response = await GetMarketTimings();
         if (response.success) {
@@ -29,6 +33,9 @@ const MarketInsight = () => {
         }
       } catch (error) {
         console.error("Error fetching market timings:", error);
+      } finally {
+        hideLoader();
+        setLoading(false);
       }
     };
 
@@ -38,6 +45,8 @@ const MarketInsight = () => {
   useEffect(() => {
     if (selectedMarket) {
       const fetchPurchasedTickets = async () => {
+        showLoader();
+        setLoading(true);
         try {
           const response = await GetPurchaseOverview({
             marketId: selectedMarket.marketId,
@@ -47,6 +56,9 @@ const MarketInsight = () => {
           }
         } catch (error) {
           console.error("Error fetching purchased tickets:", error);
+        } finally {
+          hideLoader();
+          setLoading(false);
         }
       };
 
@@ -54,31 +66,47 @@ const MarketInsight = () => {
     }
   }, [selectedMarket]); // Runs when selectedMarket changes
 
+ 
   const handleMarketClick = (market) => {
     setSelectedMarket(market);
     setShowStats(true);
   };
-
+  if (loading) {
+    return null;
+  }
   return (
     <Container fluid className="alt-dashboard-container">
       {/* Sidebar */}
       <aside className="alt-sidebar p-4">
         <h5 className="text-center text-white">Lottery Markets</h5>
         <div className="market-card-grid">
-          {marketTimes.map((market) => (
-            <Card
-              key={market.marketId}
-              className="market-card shadow"
-              onClick={() => handleMarketClick(market)}
+          {marketTimes.length > 0 ? (
+            marketTimes.map((market) => (
+              <Card
+                key={market.marketId}
+                className="market-card shadow"
+                onClick={() => handleMarketClick(market)}
+              >
+                <Card.Body>
+                  <Card.Title>{market.marketName}</Card.Title>
+                  <Badge bg="light" text="dark" className="mb-2">
+                    {`ID: ${market.marketId.slice(-6).toUpperCase()}`}
+                  </Badge>
+                </Card.Body>
+              </Card>
+            ))
+          ) : (
+            <div
+              className="d-flex justify-content-center align-items-center "
+              style={{ minHeight: "480px", width: "100%" }}
             >
-              <Card.Body>
-                <Card.Title>{market.marketName}</Card.Title>
-                <Badge bg="light" text="dark" className="mb-2">
-                  {`ID: ${market.marketId.slice(-6).toUpperCase()}`}
-                </Badge>
-              </Card.Body>
-            </Card>
-          ))}
+              <h4 className="text-center fw-bold text-black bg-white p-5 rounded-5">
+                No <br />
+                Market <br />
+                Available
+              </h4>
+            </div>
+          )}
         </div>
       </aside>
 
@@ -213,6 +241,13 @@ const MarketInsight = () => {
               <Card.Text className="welcome-text">
                 Select a market from the left sidebar to view its details.
               </Card.Text>
+              {marketTimes.length === 0 && !showStats && (
+                <div className="d-flex justify-content-center align-items-center">
+                  <h4 className="text-center text-dark fw-bold">
+                    No Market Available
+                  </h4>
+                </div>
+              )}
             </Card.Body>
           </Card>
         )}
