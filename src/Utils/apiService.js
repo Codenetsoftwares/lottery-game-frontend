@@ -233,10 +233,12 @@ export async function CustomWining(body, isToast = true) {
   }
 }
 
-export async function GetWiningResult(body, isToast = false) {
+export async function GetWiningResult(body) {
   try {
-    const callParams = await getAuthCallParams(strings.GET, body, isToast);
-    const response = await makeCall(urls.GetResult, callParams, isToast);
+    const callParams = await getAuthCallParams(strings.GET, body);
+    const response = await makeCall(
+      `${urls.GetResult}/${body.marketId}`, 
+      callParams);
     return response;
   } catch (error) {
     throw error;
@@ -281,6 +283,20 @@ export async function GetPurchaseOverview(body = {}, isToast = false) {
       `${urls.getPurchaseDetails}/${body.marketId}`,
       callParams,
       isToast
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function GetResultMarket(body = {}) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, body);
+    const response = await makeCall(
+      `${urls.getResultMarkets}?date=${body.date}`,
+      callParams,
+   
     );
     return response;
   } catch (error) {

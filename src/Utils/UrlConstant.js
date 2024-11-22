@@ -23,11 +23,12 @@ class UrlConstant {
   lotteryClock = `${this.url_dev}/admin/draw-dates`;
   GetScheduleTime = `${this.url_dev}/draw-dates`;
   CustomWinningPrize = `${this.url_dev}/${this.admin}/results-declaration`;
-  GetResult = `${this.url_dev}/admin/prize-results`;
+  GetResult = `${this.url_dev}/lottery-results`;
   lotteryRange = `${this.url_dev}/get-range`;
   allActiveLotteryMarket = `${this.url_dev}/${this.admin}/getAll-markets`;
   getMarketTime = `${this.url_dev}/get-range`;
   getPurchaseDetails= `${this.url_dev}/tickets/purchases`;
+  getResultMarkets= `${this.url_dev}/admin/dateWise-markets`
 
 }
 

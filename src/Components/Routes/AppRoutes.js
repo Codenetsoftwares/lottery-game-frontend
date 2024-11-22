@@ -45,8 +45,8 @@ const AppRoutes = () => {
             <Route path="/lottery-markets" element={<CreateMarket/>} />
             {/* <Route path="/Purchased-tickets" element={<PurchasedLotteries />} />  old purchased component not in use anymore */}
             <Route path="/purchase-history" element={<PurchasedTickets />} />
-            {/* <Route path="/results" element={<Result />} /> */}
-            <Route path="/results" element={<DemoResult />} />
+            <Route path="/results" element={<Result />} />
+            {/* <Route path="/results" element={<DemoResult />} /> */}
             <Route path="/win" element={<Win />} />
             <Route path="/search-lottery" element={<SearchLottery/>} />
             {/* <Route path="/lucky-hour" element={<CreateTime/>}/>  not in use anymore  */} 
