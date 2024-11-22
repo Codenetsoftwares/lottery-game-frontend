@@ -146,11 +146,12 @@ const PurchasedTickets = () => {
               </td>
             </tr>
           ) : purchasedTickets.length === 0 ? (
-          
-              <tr>
-             { !loader && <td colSpan="6" className="text-center">
-                No tickets found.
-              </td> }
+            <tr>
+              {!loader && (
+                <td colSpan="6" className="text-center">
+                  No tickets found.
+                </td>
+              )}
             </tr>
           ) : (
             purchasedTickets.map((ticket, index) => (
@@ -160,44 +161,44 @@ const PurchasedTickets = () => {
                 <td>{ticket.sem}</td>
                 <td>
                   <div className="dropdown" style={{ position: "relative" }}>
-          <button
-            className="btn btn-link dropdown-toggle"
-            type="button"
-            onClick={() => toggleDropdown(index)}
-          >
-            View Tickets
-          </button>
-          <div
-            className="custom-dropdown-content"
-            style={{
+                    <button
+                      className="btn btn-link dropdown-toggle"
+                      type="button"
+                      onClick={() => toggleDropdown(index)}
+                    >
+                      View Tickets
+                    </button>
+                    <div
+                      className="custom-dropdown-content"
+                      style={{
                         height: dropdownOpen === index ? "150px" : "0",
                         overflow: "hidden",
                         transition: "height 0.3s ease",
-            }}
-          >
-            {dropdownOpen === index && (
-              <div className="custom-dropdown-menu">
+                      }}
+                    >
+                      {dropdownOpen === index && (
+                        <div className="custom-dropdown-menu">
                           <span className="dropdown-item-text">
                             Ticket Numbers:
                           </span>
-                <div className="dropdown-divider" />
-                {ticket.tickets.length > 0 ? (
-                  ticket.tickets.map((number, i) => (
-                    <span key={i} className="dropdown-item">
-                      {number}
-                    </span>
-                  ))
-                ) : (
+                          <div className="dropdown-divider" />
+                          {ticket.tickets.length > 0 ? (
+                            ticket.tickets.map((number, i) => (
+                              <span key={i} className="dropdown-item">
+                                {number}
+                              </span>
+                            ))
+                          ) : (
                             <span className="dropdown-item text-muted">
                               No ticket numbers available
                             </span>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </td>
-      <td>{ticket.price}</td>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </td>
+                <td>{ticket.price}</td>
                 <td>{ticket.userName || "N/A"}</td>
               </tr>
             ))

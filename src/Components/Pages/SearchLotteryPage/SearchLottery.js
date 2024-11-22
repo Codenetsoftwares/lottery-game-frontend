@@ -87,7 +87,7 @@ const SearchLottery = () => {
         <Container fluid className="alt-dashboard-container">
             {/* Sidebar */}
             <aside className="alt-sidebar p-4">
-                <h5 className="text-center text-white">Lottery Markets</h5>
+                <h5 className="text-center text-white" style={{fontWeight:"800", letterSpacing:"1px"}}>Lottery Markets</h5>
                 <div className="market-card-grid">
                     {allActiveMarket.length > 0 ? (
                         allActiveMarket.map((market) => (
@@ -106,7 +106,7 @@ const SearchLottery = () => {
                             className="d-flex justify-content-center align-items-center"
                             style={{ minHeight: "480px", width: "100%" }}
                         >
-                            <h4 className="text-center fw-bold bg-white p-5 rounded-5">
+                            <h4 className="text-center bg-white  p-5 rounded-5" style={{color: "#2b3a67", fontWeight:"900"}}>
                                 No <br />
                                 Market <br />
                                 Available
@@ -134,11 +134,9 @@ const SearchLottery = () => {
                 ) : (
                     <Card className="welcome-card shadow-sm">
                         <Card.Body>
-                            {!isLoading && <Card.Title className="welcome-title">
+                            {!isLoading && <Card.Title className="welcome-title" >
                                 No Market Available
                             </Card.Title>}
-
-
                         </Card.Body>
                     </Card>
                 )}
