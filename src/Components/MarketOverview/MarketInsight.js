@@ -78,7 +78,7 @@ const MarketInsight = () => {
     <Container fluid className="alt-dashboard-container">
       {/* Sidebar */}
       <aside className="alt-sidebar p-4">
-        <h5 className="text-center text-white">Lottery Markets</h5>
+        <h5 className="text-center text-white" style={{fontWeight:"800", letterSpacing:"1px"}}>Lottery Markets</h5>
         <div className="market-card-grid">
           {marketTimes.length > 0 ? (
             marketTimes.map((market) => (
@@ -100,7 +100,7 @@ const MarketInsight = () => {
               className="d-flex justify-content-center align-items-center "
               style={{ minHeight: "480px", width: "100%" }}
             >
-              <h4 className="text-center fw-bold text-black bg-white p-5 rounded-5">
+              <h4 className="text-center  bg-white p-5 rounded-5" style={{color: "#2b3a67", fontWeight:"900"}}>
                 No <br />
                 Market <br />
                 Available
@@ -243,7 +243,7 @@ const MarketInsight = () => {
               </Card.Text>
               {marketTimes.length === 0 && !showStats && (
                 <div className="d-flex justify-content-center align-items-center">
-                  <h4 className="text-center text-dark fw-bold">
+                  <h4 className="text-center" style={{color:"#2b3a67", fontWeight:"800"}}>
                     No Market Available
                   </h4>
                 </div>
