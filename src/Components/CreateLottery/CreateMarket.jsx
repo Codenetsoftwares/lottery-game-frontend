@@ -31,6 +31,9 @@ const CreateMarket = () => {
   const [filterGroupTo, setFilterGroupTo] = useState([]);
   const [filterSeriesTo, setFilterSeriesTo] = useState([]);
   const [filterNumberTo, setFilterNumberTo] = useState([]);
+  // const [selectedDate, setSelectedDate] = useState("")
+  const [price, setPrice] = useState("");
+  const [selectDate, setSelectDate] = useState("");
 
   const rangeStart = 0;
   const rangeEnd = 99999;
@@ -354,7 +357,8 @@ const CreateMarket = () => {
       return;
     }
     // Format today's date as "YYYY-MM-DD"
-    const selectedDate = formatDateToYYYYMMDD(new Date());
+      const selectedDate = formatDateToYYYYMMDD(new Date());
+      const isoDate = new Date(selectDate).toISOString();
 
     try {
       const requestBody = {
@@ -370,6 +374,8 @@ const CreateMarket = () => {
           min: numberFrom,
           max: numberTo,
         },
+        price: Number(price),
+        date : isoDate,
         start_time: convertToISODateTime(timerFrom, selectedDate),
         end_time: convertToISODateTime(timerTo, selectedDate),
         marketName: marketName,
@@ -389,6 +395,9 @@ const CreateMarket = () => {
       setTimerFrom("");
       setTimerTo("");
       setMarketName("");
+      setPrice("");
+      setSelectDate("");
+
     } catch (error) {
       console.error("Error:", error);
     }
@@ -616,7 +625,7 @@ const CreateMarket = () => {
               Choose Your Group, Series, and Number
             </h3>
             {/* Date Input */}
-            {/* <div className="mb-3">
+            <div className="mb-0">
               <label
                 htmlFor="date"
                 className="form-label"
@@ -628,21 +637,24 @@ const CreateMarket = () => {
                 type="date"
                 className="form-control"
                 id="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
+                value={selectDate}
+                 min={currentDate} 
+                    defaultValue={currentDate} 
+                    onFocus={(e) => (e.target.type = "date")}
+                onChange={(e) => setSelectDate(e.target.value)}
               />
-            </div> */}
+            </div>
             <div className="mb-3">
               <label htmlFor="" className="form-label"></label>
               <input
-                type=""
+                type="text"
                 className="form-control"
                 placeholder="Market Name"
                 onChange={(e) => setMarketName(e.target.value)}
               />
             </div>
 
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <div className="d-flex justify-content-center mb-2">
                 <div
                   className="position-relative mx-1"
@@ -657,7 +669,7 @@ const CreateMarket = () => {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="mb-3">
               <div className="d-flex justify-content-center mb-2">
                 <div
@@ -940,9 +952,9 @@ const CreateMarket = () => {
                   style={{ width: "84%" }}
                 >
                   <input
-                    type="text"
+                    type="text" value={price}
                     placeholder="Price For Each SEM"
-                    className="form-control"
+                    className="form-control" onChange={(e) => setPrice(e.target.value)}
                   />
                 </div>
               </div>
