@@ -3,7 +3,7 @@ import { GetResultMarket, GetWiningResult } from "../../Utils/apiService";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Result = () => {
-  const { marketId } = useParams(); // Access marketId from the route
+  const { marketId } = useParams(); 
   const navigate = useNavigate(); // For navigation
   const [markets, setMarkets] = useState([]);
   const [results, setResults] = useState([]); // State to store fetched prize data

@@ -105,9 +105,9 @@ const NavTop = () => {
               </Link>
 
               <Link
-                to="/purchase-history"
+                to="/purchase-history/:marketId"
                 className={`nav-link purchase-history ${
-                  activeLink === "/purchase-history" ? "active-link" : ""
+                  activeLink === "/purchase-history/:marketId" ? "active-link" : ""
                 }`}
                 onClick={() => handleClick("/purchase-history")}
               >

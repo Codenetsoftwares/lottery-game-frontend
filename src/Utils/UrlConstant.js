@@ -29,6 +29,7 @@ class UrlConstant {
   getMarketTime = `${this.url_dev}/get-range`;
   getPurchaseDetails= `${this.url_dev}/tickets/purchases`;
   getResultMarkets= `${this.url_dev}/admin/dateWise-markets`
+  getPurchaseMarketTime = `${this.url_dev}/${this.admin}/get-markets`
 
 }
 

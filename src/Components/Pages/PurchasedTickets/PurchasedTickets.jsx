@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAppContext } from "../../../contextApi/context";
-import { PurchasedTicketsHistory } from "../../../Utils/apiService";
-import strings from "../../../Utils/constant/stringConstant";
+import { GetPurchaseHistoryMarketTimings, PurchasedTicketsHistory } from "../../../Utils/apiService";
 import { Table, Spinner } from "react-bootstrap";
-import "./PurchasedLotteries.css";
-import Pagination from "../../Common/Pagination";
 import debounce from "lodash.debounce";
+import { useParams, useNavigate } from "react-router-dom";
 
 const PurchasedTickets = () => {
   const { dispatch, showLoader, hideLoader } = useAppContext();
+  const { marketId: paramMarketId } = useParams(); // Get marketId from route params
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [loader, setLoader] = useState(true);
   const [purchasedTickets, setPurchasedTickets] = useState([]);
@@ -21,40 +22,31 @@ const PurchasedTickets = () => {
 
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [markets, setMarkets] = useState([]);
+  const [selectedMarketId, setSelectedMarketId] = useState(paramMarketId || null); // Track selected market ID
   const toggleDropdown = (id) => {
     setDropdownOpen(dropdownOpen === id ? null : id);
   };
-
-  // Debounce the search function to reduce API calls
-  const fetchPurchasedLotteryTickets = useCallback(
-    debounce(async (searchTerm) => {
-      setLoader(true);
-      const response = await PurchasedTicketsHistory({
-        page: pagination.page,
-        limit: pagination.limit,
-        searchBySem: searchTerm,
-      });
-
-      if (response && response.success) {
-        setPurchasedTickets(response.data || []);
-        setPagination({
-          page: response?.pagination?.page || pagination.page,
-          limit: response?.pagination?.limit || pagination.limit,
-          totalPages: response?.pagination?.totalPages || 0,
-          totalItems: response?.pagination?.totalItems || 0,
-        });
-        dispatch({
-          type: strings.PURCHASED_LOTTERY_TICKETS,
-          payload: response.data,
-        });
-      } else {
-        console.error("Failed to fetch purchased tickets");
+  useEffect(() => {
+    const fetchMarketData = async () => {
+      try {
+        const response = await GetPurchaseHistoryMarketTimings();
+        if (response?.success) {
+          setMarkets(response.data || []);
+          if (!paramMarketId && response.data.length > 0) {
+            // If no marketId from route, select the first market in the list
+            setSelectedMarketId(response.data[0].marketId);
+          }
+        } else {
+          console.error("Failed to fetch markets");
+        }
+      } catch (error) {
+        console.error("Error fetching markets:", error);
       }
-      setLoader(false);
-    }, 500), // Adjust debounce time to 500ms or any suitable time for your case
-    [pagination.page, pagination.limit, dispatch]
-  );
+    };
+
+    fetchMarketData();
+  }, [paramMarketId]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,36 +65,90 @@ const PurchasedTickets = () => {
     fetchData();
 
     return () => {
-      fetchPurchasedLotteryTickets.cancel(); // Cleanup on component unmount or dependency change
+      fetchPurchasedLotteryTickets.cancel();
     };
-  }, [pagination.page, pagination.limit, searchTerm]);
-  if (loading) {
-    return null;
-  }
+  }, [selectedMarketId, pagination.page, pagination.limit, searchTerm]);
+
+  const fetchPurchasedLotteryTickets = useCallback(
+    debounce(async (searchTerm) => {
+      setLoader(true);
+      try {
+        const response = await PurchasedTicketsHistory({
+          marketId: selectedMarketId, // Use the selected market ID
+          page: pagination.page,
+          limit: pagination.limit,
+          searchBySem: searchTerm,
+        });
+
+        if (response && response.success) {
+          setPurchasedTickets(response.data || []);
+          setPagination({
+            page: response?.pagination?.page || pagination.page,
+            limit: response?.pagination?.limit || pagination.limit,
+            totalPages: response?.pagination?.totalPages || 0,
+            totalItems: response?.pagination?.totalItems || 0,
+          });
+          dispatch({
+            type: "PURCHASED_LOTTERY_TICKETS",
+            payload: response.data,
+          });
+        } else {
+          console.error("Failed to fetch purchased tickets");
+        }
+      } catch (error) {
+        console.error("Error fetching purchased tickets:", error);
+      }
+      setLoader(false);
+    }, 500),
+    [selectedMarketId, pagination.page, pagination.limit, dispatch]
+  );
+
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
-    setPagination((prev) => ({ ...prev, page: 1 })); // Reset to the first page
+    setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
   const handlePageChange = (newPage) => {
     setPagination((prev) => ({ ...prev, page: newPage }));
   };
 
+  const handleMarketClick = (marketId) => {
+    setSelectedMarketId(marketId); // Update selected market ID
+    setPagination((prev) => ({ ...prev, page: 1 })); // Reset to the first page
+    navigate(`/purchase-history/${marketId}`); // Navigate to the route with marketId
+  };
+
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
-  const endIndex = Math.min(
-    pagination.page * pagination.limit,
-    pagination.totalItems
-  );
+  const endIndex = Math.min(pagination.page * pagination.limit, pagination.totalItems);
+
+  if (loading) {
+    return null;
+  }
 
   return (
-    <div
-      className="container mt-4 p-3"
-      style={{
-        background: "#e6f7ff",
-        borderRadius: "10px",
-        boxShadow: "0 0 15px rgba(0,0,0,0.1)",
-      }}
-    >
+    <div className="container mt-4 p-3">
+      {/* Top Navigation for Markets */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h4>Markets</h4>
+        <div className="d-flex flex-wrap">
+          {markets.length > 0 ? (
+            markets.map((market) => (
+              <span
+                key={market.marketId}
+                className="badge bg-primary me-2"
+                style={{ cursor: "pointer" }}
+                onClick={() => handleMarketClick(market.marketId)}
+              >
+                {market.marketName}
+              </span>
+            ))
+          ) : (
+            <span>No markets available</span>
+          )}
+        </div>
+      </div>
+
+      {/* Purchased Tickets Table */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 style={{ color: "#4682B4" }}>Purchased Lottery Tickets</h2>
         <div className="w-50">
@@ -131,7 +177,6 @@ const PurchasedTickets = () => {
             <th>Market Name</th>
             <th>SEM</th>
             <th>Tickets</th>
-            {/* <th>Price</th> */}
             <th>User Name</th>
           </tr>
         </thead>
@@ -145,15 +190,7 @@ const PurchasedTickets = () => {
                 </div>
               </td>
             </tr>
-          ) : purchasedTickets.length === 0 ? (
-            <tr>
-              {!loader && (
-                <td colSpan="6" className="text-center">
-                  No tickets found.
-                </td>
-              )}
-            </tr>
-          ) : (
+          ) : purchasedTickets.length > 0 ? (
             purchasedTickets.map((ticket, index) => (
               <tr key={index}>
                 <td>{startIndex + index}</td>
@@ -202,19 +239,18 @@ const PurchasedTickets = () => {
                 <td>{ticket.userName || "N/A"}</td>
               </tr>
             ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="text-center">
+                No tickets found.
+              </td>
+            </tr>
           )}
         </tbody>
       </Table>
-      {purchasedTickets.length > 0 && (
-        <Pagination
-          currentPage={pagination.page}
-          totalPages={pagination.totalPages}
-          handlePageChange={handlePageChange}
-          startIndex={startIndex}
-          endIndex={endIndex}
-          totalData={pagination.totalItems}
-        />
-      )}
+
+      {/* Pagination Component */}
+      {/* Add pagination here */}
     </div>
   );
 };
