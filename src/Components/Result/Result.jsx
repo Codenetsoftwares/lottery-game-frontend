@@ -1,54 +1,61 @@
 import React, { useState, useEffect } from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import { GetResultMarket, GetWiningResult } from "../../Utils/apiService";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Result = () => {
+  const { marketId } = useParams(); // Access marketId from the route
+  const navigate = useNavigate(); // For navigation
   const [markets, setMarkets] = useState([]);
-  const [selectedMarket, setSelectedMarket] = useState(null);
-  const [scrollIndex, setScrollIndex] = useState(0);
   const [results, setResults] = useState([]); // State to store fetched prize data
   const [error, setError] = useState(null); // State to handle fetch errors
+  const [scrollIndex, setScrollIndex] = useState(0); // Scroll control for market buttons
 
   const maxVisibleMarkets = 5;
   const visibleMarkets = markets.slice(scrollIndex, scrollIndex + maxVisibleMarkets);
 
   // Fetch markets using the API
   useEffect(() => {
-    const fetchMarkets = () => {
-      GetResultMarket({ date: new Date().toISOString().slice(0, 10) }).then((response) => {
+    const fetchMarkets = async () => {
+      try {
+        const response = await GetResultMarket({ date: new Date().toISOString().slice(0, 10) });
         if (response && response.success && response.data) {
           setMarkets(response.data);
-          setSelectedMarket(response.data[0]); // Default to the first market
+          // If no marketId in URL, default to the first market
+          if (!marketId) {
+            navigate(`/results/${response.data[0].marketId}`);
+          }
         } else {
           setError("Failed to fetch markets or no data available.");
         }
-      });
+      } catch (err) {
+        setError("Error fetching markets.");
+      }
     };
+
     fetchMarkets();
-  }, []);
+  }, [marketId, navigate]);
 
-  // Fetch prize results based on the selected market
+  // Fetch results based on the selected marketId from the URL
   useEffect(() => {
-    if (!selectedMarket) return;
+    if (!marketId) return;
 
-    const fetchResults = () => {
-      setError(null);
-      GetWiningResult({ marketId: selectedMarket.marketId }).then((response) => {
+    const fetchResults = async () => {
+      try {
+        const response = await GetWiningResult({ marketId });
         if (response && response.success) {
-          if (response.data && response.data.length > 0) {
-            setResults(response.data);
-          } else {
-            setResults([]); 
-            setError("No prize data available.");
-          }
+          setResults(response.data || []);
+          setError(null);
         } else {
-          setError(response?.message);
+          setResults([]);
+          setError("No prize data available.");
         }
-      });
+      } catch (err) {
+        setError("Error fetching results.");
+      }
     };
 
     fetchResults();
-  }, [selectedMarket]);
+  }, [marketId]);
 
   const handleScrollLeft = () => {
     if (scrollIndex > 0) setScrollIndex(scrollIndex - 1);
@@ -56,6 +63,10 @@ const Result = () => {
 
   const handleScrollRight = () => {
     if (scrollIndex + maxVisibleMarkets < markets.length) setScrollIndex(scrollIndex + 1);
+  };
+
+  const handleMarketSelect = (market) => {
+    navigate(`/results/${market.marketId}`); // Update URL when selecting a market
   };
 
   const handleOldResults = () => {
@@ -100,12 +111,12 @@ const Result = () => {
           {visibleMarkets.map((market) => (
             <button
               key={market.marketId}
-              className={`btn ${market.marketId === selectedMarket?.marketId ? "btn-primary" : "btn-outline-light"}`}
-              onClick={() => setSelectedMarket(market)}
+              className={`btn ${market.marketId === marketId ? "btn-primary" : "btn-outline-light"}`}
+              onClick={() => handleMarketSelect(market)}
               style={{
                 fontSize: "16px",
                 borderRadius: "4px",
-                boxShadow: market.marketId === selectedMarket?.marketId ? "0px 4px 6px rgba(0, 0, 0, 0.2)" : "none",
+                boxShadow: market.marketId === marketId ? "0px 4px 6px rgba(0, 0, 0, 0.2)" : "none",
                 whiteSpace: "nowrap",
               }}
             >
@@ -148,7 +159,7 @@ const Result = () => {
       {/* Market Result Display */}
       <div className="mt-4">
         <h2 className="text-center" style={{ color: "#3b6e91" }}>
-          Results for <span style={{ color: "#4682B4" }}>{selectedMarket?.marketName || "Selected Market"}</span>
+          Results for <span style={{ color: "#4682B4" }}>{markets.find((m) => m.marketId === marketId)?.marketName || "Selected Market"}</span>
         </h2>
 
         {/* Error Message */}
@@ -159,7 +170,7 @@ const Result = () => {
         )}
 
         {/* Prize Distribution */}
-        {results.length === 0 ? (
+        {results.length === 0 && !error ? (
           <p className="text-center text-muted">No prize declared yet.</p>
         ) : (
           <div className="accordion mt-4" id="prizeAccordion">
@@ -195,13 +206,6 @@ const Result = () => {
                         <li key={idx}>{ticket}</li>
                       ))}
                     </ul>
-                    {/* <p className="text-muted">
-                      Market ID: {result.marketId}
-                      <br />
-                      Created At: {new Date(result.createdAt).toLocaleString()}
-                      <br />
-                      Updated At: {new Date(result.updatedAt).toLocaleString()}
-                    </p> */}
                   </div>
                 </div>
               </div>

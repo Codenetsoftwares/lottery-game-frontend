@@ -131,7 +131,7 @@ const PurchasedTickets = () => {
             <th>Market Name</th>
             <th>SEM</th>
             <th>Tickets</th>
-            <th>Price</th>
+            {/* <th>Price</th> */}
             <th>User Name</th>
           </tr>
         </thead>
@@ -198,7 +198,7 @@ const PurchasedTickets = () => {
                     </div>
                   </div>
                 </td>
-                <td>{ticket.price}</td>
+                {/* <td>{ticket.price }</td> */}
                 <td>{ticket.userName || "N/A"}</td>
               </tr>
             ))
