@@ -13,14 +13,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Import Bootstrap icons
 import "./MarketInsight.css";
 import { GetMarketTimings, GetPurchaseOverview } from "../../Utils/apiService";
-import {useAppContext} from "../../contextApi/context";
+import { useAppContext } from "../../contextApi/context";
 
 const MarketInsight = () => {
   const [marketTimes, setMarketTimes] = useState([]);
   const [selectedMarket, setSelectedMarket] = useState(null);
   const [showStats, setShowStats] = useState(false);
   const [purchasedTickets, setPurchasedTickets] = useState([]);
-  const {showLoader, hideLoader} = useAppContext();
+  const { showLoader, hideLoader } = useAppContext();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -66,7 +66,6 @@ const MarketInsight = () => {
     }
   }, [selectedMarket]); // Runs when selectedMarket changes
 
- 
   const handleMarketClick = (market) => {
     setSelectedMarket(market);
     setShowStats(true);
@@ -78,7 +77,12 @@ const MarketInsight = () => {
     <Container fluid className="alt-dashboard-container">
       {/* Sidebar */}
       <aside className="alt-sidebar p-4">
-        <h5 className="text-center text-white" style={{fontWeight:"800", letterSpacing:"1px"}}>Lottery Markets</h5>
+        <h5
+          className="text-center text-white"
+          style={{ fontWeight: "800", letterSpacing: "1px" }}
+        >
+          Lottery Markets
+        </h5>
         <div className="market-card-grid">
           {marketTimes.length > 0 ? (
             marketTimes.map((market) => (
@@ -100,7 +104,10 @@ const MarketInsight = () => {
               className="d-flex justify-content-center align-items-center "
               style={{ minHeight: "480px", width: "100%" }}
             >
-              <h4 className="text-center  bg-white p-5 rounded-5" style={{color: "#2b3a67", fontWeight:"900"}}>
+              <h4
+                className="text-center  bg-white p-5 rounded-5"
+                style={{ color: "#2b3a67", fontWeight: "900" }}
+              >
                 No <br />
                 Market <br />
                 Available
@@ -183,9 +190,50 @@ const MarketInsight = () => {
                       </p>
                       <p>
                         Start:{" "}
-                        {moment(selectedMarket.start_time).format("HH:mm")} |
-                        End: {moment(selectedMarket.end_time).format("HH:mm")}
+                        {selectedMarket.start_time
+                          ? moment
+                              .utc(selectedMarket.start_time)
+                              .format("HH:mm")
+                          : "N/A"}
+                        | End:{" "}
+                        {selectedMarket.end_time
+                          ? moment.utc(selectedMarket.end_time).format("HH:mm")
+                          : "N/A"}
                       </p>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              {/* Date Card */}
+              <Col md={6} className="mb-3">
+                <Card className="stat-card time-card shadow">
+                  <Card.Body className="d-flex align-items-center">
+                  <i className="bi bi-calendar-plus-fill stat-icon me-3"></i>
+                  <div>
+                      <p className="mb-1">
+                        <strong>Date Range</strong>
+                      </p>
+                      <p>
+                        {selectedMarket
+                          ? moment(selectedMarket.date).format("MMMM Do YYYY")
+                          : "N/A"}
+                      </p>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              {/* Date Card */}
+              <Col md={6} className="mb-3">
+                <Card className="stat-card time-card shadow">
+                  <Card.Body className="d-flex align-items-center">
+                    <i className="bi bi-currency-rupee stat-icon me-5"></i>
+                    <div>
+                      <p className="mb-1">
+                        <strong>Price Range</strong>
+                      </p>
+                      <p>{selectedMarket ? selectedMarket.price : "N/A"}</p>
                     </div>
                   </Card.Body>
                 </Card>
@@ -243,7 +291,10 @@ const MarketInsight = () => {
               </Card.Text>
               {marketTimes.length === 0 && !showStats && (
                 <div className="d-flex justify-content-center align-items-center">
-                  <h4 className="text-center" style={{color:"#2b3a67", fontWeight:"800"}}>
+                  <h4
+                    className="text-center"
+                    style={{ color: "#2b3a67", fontWeight: "800" }}
+                  >
                     No Market Available
                   </h4>
                 </div>

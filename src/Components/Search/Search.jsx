@@ -15,6 +15,8 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 
 const Search = ({
+  marketName, // Receiving the marketName prop
+
   filteredNumbers,
   filteredGroups,
   filteredSeries,
@@ -39,6 +41,7 @@ const Search = ({
   const [responseData, setResponseData] = useState(null);
   const [showSearch, setShowSearch] = useState(true);
   const [errors, setErrors] = useState({});
+  // const [filteredMarket, setFilteredMarket] = useState(null); 
 
   const navigate = useNavigate();
 
@@ -46,7 +49,7 @@ const Search = ({
 
   const formik = useFormik({
     initialValues: getInitialLotteryValues(),
-    validationSchema: searchLottery, 
+    validationSchema: searchLottery,
     onSubmit: async (values, { resetForm }) => {
       const requestBody = {
         group: values.group ? String(values.group) : null,
@@ -60,7 +63,6 @@ const Search = ({
         setResponseData(response.data);
         setShowSearch(false);
 
-       
         resetForm();
       } catch (error) {
         console.error("Error:", error);
@@ -77,7 +79,7 @@ const Search = ({
       () => generateNumbers(lotteryRange.number_start, lotteryRange.number_end),
       1500,
       setFilteredNumbers
-    ); 
+    );
   };
 
   const handleGroupInputChange = (e) => {
@@ -89,7 +91,7 @@ const Search = ({
       () => generateNumbers(lotteryRange.group_start, lotteryRange.group_end),
       1500,
       setFilteredGroups
-    ); 
+    );
   };
 
   const handleSeriesInputChange = (e) => {
@@ -101,10 +103,8 @@ const Search = ({
       () => generateSeries(lotteryRange.series_start, lotteryRange.series_end),
       1500,
       setFilteredSeries
-    ); 
+    );
   };
-
-
 
   const groupLength =
     Math.abs(lotteryRange.group_end - lotteryRange.group_start) + 1;
@@ -211,19 +211,35 @@ const Search = ({
       >
         {showSearch ? (
           <>
-            <form onSubmit={formik.handleSubmit}>
-              <div className="text-center mb-4">
-                <h2
-                  className="mb-1"
-                  style={{
-                    color: "#4682B4",
-                    fontWeight: "bold",
-                    letterSpacing: "1px",
-                  }}
-                >
-                  🔍 Search Lottery Tickets
-                </h2>
-              </div>
+            <form>
+              {/* {filteredMarket && filteredMarket.marketName && (
+                <div className="text-center mb-4">
+                  <h2
+                    className="mb-1"
+                    style={{
+                      color: "#4682B4",
+                      fontWeight: "bold",
+                      letterSpacing: "1px",
+                    }}
+                  >
+                    🔍 Search Lottery Tickets For {filteredMarket.marketName}
+                  </h2>
+                </div>
+              )} */}
+
+              {/* Existing "Search Lottery Tickets" heading */}
+              {/* <div className="text-center mb-4">
+    <h2
+      className="mb-1"
+      style={{
+        color: "#4682B4",
+        fontWeight: "bold",
+        letterSpacing: "1px",
+      }}
+    >
+      🔍 Search Lottery Tickets
+    </h2>
+  </div> */}
 
               {/* SEM Input Field */}
               <div className="mb-4">
@@ -265,9 +281,7 @@ const Search = ({
                     onFocus={() => {
                       setIsGroupPickerVisible(true);
                     }}
-                    onChange={{
-                      handleGroupInputChange,
-                    }}
+                    onChange={handleGroupInputChange}
                     onBlur={formik.handleBlur}
                   />
                   {isGroupPickerVisible && (
@@ -290,16 +304,16 @@ const Search = ({
                     onFocus={() => {
                       setIsSeriesPickerVisible(true);
                     }}
-                    onChange={{
-                      handleSeriesInputChange,
-                    }}
+                    onChange={handleSeriesInputChange}
                     onBlur={formik.handleBlur}
                   />
                   {isSeriesPickerVisible && (
                     <div className="picker-dropdown">{renderSeriesGrid()}</div>
                   )}
                   {formik.touched.series && formik.errors.series && (
-                    <small className="text-danger">{formik.errors.series}</small>
+                    <small className="text-danger">
+                      {formik.errors.series}
+                    </small>
                   )}
                 </div>
               </div>
@@ -321,7 +335,9 @@ const Search = ({
                     <div className="picker-dropdown">{renderNumberGrid()}</div>
                   )}
                   {formik.touched.number && formik.errors.number && (
-                    <small className="text-danger">{formik.errors.number}</small>
+                    <small className="text-danger">
+                      {formik.errors.number}
+                    </small>
                   )}
                 </div>
               </div>
@@ -329,7 +345,6 @@ const Search = ({
               <div className="text-center">
                 <button
                   className="btn btn-primary"
-                 
                   style={{ backgroundColor: "#4682B4" }}
                 >
                   Search
@@ -339,62 +354,70 @@ const Search = ({
           </>
         ) : (
           <>
-          <div style={{ transform: "scale(2)", float: "left", color: "#2B3A67" }} onClick={() => setShowSearch(true)}>
-              <i className="bi bi-arrow-left-circle-fill" style={{ float: "left" }}></i>
-          </div>
-          <div className="text-center">
-            <h4 style={{ color: "#4682B4", fontWeight: "bold" }}>
-              Search Results:
-            </h4>
             <div
-              className="mt-3"
-              style={{
-                maxHeight:
-                  responseData &&
-                  responseData.tickets &&
-                  responseData.tickets.length > 8
-                    ? "150px"
-                    : "auto", 
-                overflowY:
-                  responseData &&
-                  responseData.tickets &&
-                  responseData.tickets.length > 8
-                    ? "auto"
-                    : "visible", 
-              }}
+              style={{ transform: "scale(2)", float: "left", color: "#2B3A67" }}
+              onClick={() => setShowSearch(true)}
             >
-              {responseData &&
-              responseData.tickets &&
-              responseData.tickets.length > 0 ? (
-                <>
-                  <h5>Tickets:</h5>
-                  <ul>
-                    {responseData.tickets.map((ticket, index) => (
-                      <li key={index} style={{ color: "#3b6e91" }}>
-                        {ticket}
-                      </li>
-                    ))}
-                  </ul>
-                  <h5>
-                    Price:{" "}
-                    <span style={{ color: "#3b6e91" }}>
-                      ₹{responseData.price}
-                    </span>
-                  </h5>
-                  <h5>
-                    SEM:{" "}
-                    <span style={{ color: "#3b6e91" }}>{responseData.sem}</span>
-                  </h5>
-                </>
-              ) : (
-                <h5 style={{ color: "#3b6e91" }}>
-                  {responseData
-                    ? responseData.message || "No tickets found."
-                    : "No data available."}
-                </h5>
-              )}
+              <i
+                className="bi bi-arrow-left-circle-fill"
+                style={{ float: "left" }}
+              ></i>
             </div>
-          </div>
+            <div className="text-center">
+              <h4 style={{ color: "#4682B4", fontWeight: "bold" }}>
+                Search Results:
+              </h4>
+              <div
+                className="mt-3"
+                style={{
+                  maxHeight:
+                    responseData &&
+                    responseData.tickets &&
+                    responseData.tickets.length > 8
+                      ? "150px"
+                      : "auto",
+                  overflowY:
+                    responseData &&
+                    responseData.tickets &&
+                    responseData.tickets.length > 8
+                      ? "auto"
+                      : "visible",
+                }}
+              >
+                {responseData &&
+                responseData.tickets &&
+                responseData.tickets.length > 0 ? (
+                  <>
+                    <h5>Tickets:</h5>
+                    <ul>
+                      {responseData.tickets.map((ticket, index) => (
+                        <li key={index} style={{ color: "#3b6e91" }}>
+                          {ticket}
+                        </li>
+                      ))}
+                    </ul>
+                    <h5>
+                      Price:{" "}
+                      <span style={{ color: "#3b6e91" }}>
+                        ₹{responseData.price}
+                      </span>
+                    </h5>
+                    <h5>
+                      SEM:{" "}
+                      <span style={{ color: "#3b6e91" }}>
+                        {responseData.sem}
+                      </span>
+                    </h5>
+                  </>
+                ) : (
+                  <h5 style={{ color: "#3b6e91" }}>
+                    {responseData
+                      ? responseData.message || "No tickets found."
+                      : "No data available."}
+                  </h5>
+                )}
+              </div>
+            </div>
           </>
         )}
       </div>

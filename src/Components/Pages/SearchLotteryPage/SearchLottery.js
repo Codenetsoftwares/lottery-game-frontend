@@ -17,6 +17,7 @@ const SearchLottery = () => {
     const [filteredSeries, setFilteredSeries] = useState([]);
     const { showLoader, hideLoader, isLoading } = useAppContext();
 
+    // Function to handle fetching and setting lottery range and market data
     const handleLotteryRange = async () => {
         const data = await LotteryRange();
         SetAllActiveMarket(data?.data);
@@ -31,31 +32,23 @@ const SearchLottery = () => {
         });
 
         // Initialize the filtered numbers based on the fetched range
-        setFilteredNumbers(
-            generateNumbers(data.data[0]?.number_start, data.data[0]?.number_end)
-        );
-        setFilteredGroups(
-            generateGroups(data.data[0]?.group_start, data.data[0]?.group_end)
-        );
-        setFilteredSeries(
-            generateSeries(data.data[0]?.series_start, data.data[0]?.series_end)
-        );
+        setFilteredNumbers(generateNumbers(data.data[0]?.number_start, data.data[0]?.number_end));
+        setFilteredGroups(generateGroups(data.data[0]?.group_start, data.data[0]?.group_end));
+        setFilteredSeries(generateSeries(data.data[0]?.series_start, data.data[0]?.series_end));
     };
 
     useEffect(() => {
         const fetchData = async () => {
             showLoader();
             try {
-
                 await handleLotteryRange();
             } catch (error) {
                 console.error("Error fetching lottery markets:", error);
             } finally {
                 hideLoader();
             }
-        }
+        };
         fetchData();
-
     }, []);
 
     const handleMarketClick = (market) => {
@@ -72,22 +65,18 @@ const SearchLottery = () => {
         });
 
         // Initialize the filtered numbers based on the fetched range
-        setFilteredNumbers(
-            generateNumbers(filteredObject.number_start, filteredObject.number_end)
-        );
-        setFilteredGroups(
-            generateGroups(filteredObject.group_start, filteredObject.group_end)
-        );
-        setFilteredSeries(
-            generateSeries(filteredObject.series_start, filteredObject.series_end)
-        );
+        setFilteredNumbers(generateNumbers(filteredObject.number_start, filteredObject.number_end));
+        setFilteredGroups(generateGroups(filteredObject.group_start, filteredObject.group_end));
+        setFilteredSeries(generateSeries(filteredObject.series_start, filteredObject.series_end));
     };
 
     return (
         <Container fluid className="alt-dashboard-container">
             {/* Sidebar */}
             <aside className="alt-sidebar p-4">
-                <h5 className="text-center text-white" style={{fontWeight:"800", letterSpacing:"1px"}}>Lottery Markets</h5>
+                <h5 className="text-center text-white" style={{ fontWeight: "800", letterSpacing: "1px" }}>
+                    Lottery Markets
+                </h5>
                 <div className="market-card-grid">
                     {allActiveMarket.length > 0 ? (
                         allActiveMarket.map((market) => (
@@ -106,13 +95,12 @@ const SearchLottery = () => {
                             className="d-flex justify-content-center align-items-center"
                             style={{ minHeight: "480px", width: "100%" }}
                         >
-                            <h4 className="text-center bg-white  p-5 rounded-5" style={{color: "#2b3a67", fontWeight:"900"}}>
+                            <h4 className="text-center bg-white p-5 rounded-5" style={{ color: "#2b3a67", fontWeight: "900" }}>
                                 No <br />
                                 Market <br />
                                 Available
                             </h4>
                         </div>
-
                     )}
                 </div>
             </aside>
@@ -121,27 +109,45 @@ const SearchLottery = () => {
             <main className="alt-main-content p-4">
                 {filteredMarket ? (
                     <Card className="welcome-card shadow-sm">
-                        <Search
-                            filteredNumbers={filteredNumbers}
-                            filteredGroups={filteredGroups}
-                            filteredSeries={filteredSeries}
-                            setFilteredNumbers={setFilteredNumbers}
-                            setFilteredGroups={setFilteredGroups}
-                            setFilteredSeries={setFilteredSeries}
-                            lotteryRange={lotteryRange}
-                        />
+                        <Card.Body>
+                            {/* Display Market Name Above the Form */}
+                            <div className="text-center mb-4">
+                                <h2
+                                    className="mb-1"
+                                    style={{
+                                        color: "#4682B4",
+                                        fontWeight: "bold",
+                                        letterSpacing: "1px",
+                                    }}
+                                >
+                                    🔍 Search Lottery Tickets for {filteredMarket.marketName}
+                                </h2>
+                            </div>
+
+                            {/* Pass filtered market and other props to Search component */}
+                            <Search
+                                filteredNumbers={filteredNumbers}
+                                filteredGroups={filteredGroups}
+                                filteredSeries={filteredSeries}
+                                setFilteredNumbers={setFilteredNumbers}
+                                setFilteredGroups={setFilteredGroups}
+                                setFilteredSeries={setFilteredSeries}
+                                lotteryRange={lotteryRange}
+                            />
+                        </Card.Body>
                     </Card>
                 ) : (
                     <Card className="welcome-card shadow-sm">
                         <Card.Body>
-                            {!isLoading && <Card.Title className="welcome-title" >
-                                No Market Available
-                            </Card.Title>}
+                            {!isLoading && (
+                                <Card.Title className="welcome-title">
+                                    No Market Available
+                                </Card.Title>
+                            )}
                         </Card.Body>
                     </Card>
                 )}
             </main>
-
         </Container>
     );
 };
