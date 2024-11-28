@@ -7,7 +7,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 const PurchasedTickets = () => {
   const { dispatch, showLoader, hideLoader } = useAppContext();
-  const { marketId: paramMarketId } = useParams(); // Get marketId from route params
+  const { marketId: paramMarketId } = useParams();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
@@ -23,10 +23,14 @@ const PurchasedTickets = () => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [markets, setMarkets] = useState([]);
-  const [selectedMarketId, setSelectedMarketId] = useState(paramMarketId || null); // Track selected market ID
+  const [selectedMarketId, setSelectedMarketId] = useState(paramMarketId || null);
+  const [visibleStartIndex, setVisibleStartIndex] = useState(0);
+  const visibleCount = 5;
+
   const toggleDropdown = (id) => {
     setDropdownOpen(dropdownOpen === id ? null : id);
   };
+
   useEffect(() => {
     const fetchMarketData = async () => {
       try {
@@ -34,7 +38,6 @@ const PurchasedTickets = () => {
         if (response?.success) {
           setMarkets(response.data || []);
           if (!paramMarketId && response.data.length > 0) {
-            // If no marketId from route, select the first market in the list
             setSelectedMarketId(response.data[0].marketId);
           }
         } else {
@@ -74,7 +77,7 @@ const PurchasedTickets = () => {
       setLoader(true);
       try {
         const response = await PurchasedTicketsHistory({
-          marketId: selectedMarketId, // Use the selected market ID
+          marketId: selectedMarketId,
           page: pagination.page,
           limit: pagination.limit,
           searchBySem: searchTerm,
@@ -113,10 +116,25 @@ const PurchasedTickets = () => {
   };
 
   const handleMarketClick = (marketId) => {
-    setSelectedMarketId(marketId); // Update selected market ID
-    setPagination((prev) => ({ ...prev, page: 1 })); // Reset to the first page
-    navigate(`/purchase-history/${marketId}`); // Navigate to the route with marketId
+    setSelectedMarketId(marketId);
+    setPagination((prev) => ({ ...prev, page: 1 }));
+    navigate(`/purchase-history/${marketId}`);
   };
+
+  const handleLeftClick = () => {
+    setVisibleStartIndex((prev) => Math.max(0, prev - 1));
+  };
+
+  const handleRightClick = () => {
+    setVisibleStartIndex((prev) =>
+      Math.min(prev + 1, Math.max(0, markets.length - visibleCount))
+    );
+  };
+
+  const visibleMarkets = markets.slice(
+    visibleStartIndex,
+    visibleStartIndex + visibleCount
+  );
 
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
   const endIndex = Math.min(pagination.page * pagination.limit, pagination.totalItems);
@@ -129,28 +147,45 @@ const PurchasedTickets = () => {
     <div className="container mt-4 p-3">
       {/* Top Navigation for Markets */}
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Markets</h4>
-        <div className="d-flex flex-wrap">
-          {markets.length > 0 ? (
-            markets.map((market) => (
-              <span
-                key={market.marketId}
-                className="badge bg-primary me-2"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleMarketClick(market.marketId)}
-              >
-                {market.marketName}
-              </span>
-            ))
-          ) : (
-            <span>No markets available</span>
-          )}
-        </div>
-      </div>
+  <h4 className="fw-bold">Markets</h4>
+  <div className="d-flex align-items-center">
+    <button
+      className="btn btn-sm btn-outline-secondary me-2"
+      onClick={handleLeftClick}
+      disabled={visibleStartIndex === 0}
+    >
+      &lt;
+    </button>
+    <div className="d-flex flex-wrap">
+      {visibleMarkets.length > 0 ? (
+        visibleMarkets.map((market) => (
+          <span
+            key={market.marketId}
+            className={`badge me-2 ${selectedMarketId === market.marketId ? 'bg-success' : 'bg-primary'}`}
+            style={{ cursor: "pointer" }}
+            onClick={() => handleMarketClick(market.marketId)}
+          >
+            {market.marketName}
+          </span>
+        ))
+      ) : (
+        <span>No markets available</span>
+      )}
+    </div>
+    <button
+      className="btn btn-sm btn-outline-secondary ms-2"
+      onClick={handleRightClick}
+      disabled={visibleStartIndex + visibleCount >= markets.length}
+    >
+      &gt;
+    </button>
+  </div>
+</div>
+
 
       {/* Purchased Tickets Table */}
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 style={{ color: "#4682B4" }}>Purchased Lottery Tickets</h2>
+        <h2 className="fw-bold" style={{ color: "#4682B4" }}>Purchased Lottery Tickets</h2>
         <div className="w-50">
           <input
             type="text"
@@ -235,7 +270,6 @@ const PurchasedTickets = () => {
                     </div>
                   </div>
                 </td>
-                {/* <td>{ticket.price }</td> */}
                 <td>{ticket.userName || "N/A"}</td>
               </tr>
             ))
@@ -248,9 +282,6 @@ const PurchasedTickets = () => {
           )}
         </tbody>
       </Table>
-
-      {/* Pagination Component */}
-      {/* Add pagination here */}
     </div>
   );
 };
