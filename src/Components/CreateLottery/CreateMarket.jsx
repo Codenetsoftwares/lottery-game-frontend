@@ -39,6 +39,8 @@ const CreateMarket = () => {
   const rangeEnd = 99999;
   const { debouncedFilter } = useDebouncedFilter();
   const [marketName, setMarketName] = useState("");
+  const [marketNameError, setMarketNameError] = useState("");
+
   const [timerFrom, setTimerFrom] = useState(""); // New state for timer from
   const [timerTo, setTimerTo] = useState(""); // New state for timer to
   const [dropdownFromVisible, setDropdownFromVisible] = useState(false); // Track dropdown visibility for From
@@ -292,7 +294,7 @@ const CreateMarket = () => {
     if (!numberTo) handleError.numberTo = "Number To is required";
     if (!timerFrom) handleError.timerFrom = "Timer From is required";
     if (!timerTo) handleError.timerTo = "Timer To is required";
-    
+
 
     if (Object.keys(handleError).length > 0) {
       setErrors(handleError);
@@ -344,23 +346,27 @@ const CreateMarket = () => {
 
   // Your handleSubmit function
   const handleSubmit = async () => {
-    if (!validateFields()) return;
-    const error = validateForm();
-    if (error) {
-      toast.error(error);
-      return;
-    }
+    try {
+      // Validate fields before making the request
+      if (!validateFields()) return;
 
-    const seriesLength = generateSeries(seriesFrom, seriesTo);
-    if (seriesLength.length < 10) {
-      toast.error("Series must have minimum range of 10m alphabets");
-      return;
-    }
-    // Format today's date as "YYYY-MM-DD"
+      const error = validateForm();
+      if (error) {
+        setMarketNameError(error); // Show validation error below the field
+        return;
+      }
+
+      // const seriesLength = generateSeries(seriesFrom, seriesTo);
+      // if (seriesLength.length < 10) {
+      //   setMarketNameError("Series must have a minimum range of 10 alphabets");
+      //   return;
+      // }
+
+      // Format today's date as "YYYY-MM-DD"
       const selectedDate = formatDateToYYYYMMDD(new Date());
       const isoDate = new Date(selectDate).toISOString();
 
-    try {
+      // Prepare the request payload
       const requestBody = {
         group: {
           min: parseInt(groupFrom),
@@ -375,7 +381,7 @@ const CreateMarket = () => {
           max: numberTo,
         },
         price: Number(price),
-        date : isoDate,
+        date: isoDate,
         start_time: convertToISODateTime(timerFrom, selectedDate),
         end_time: convertToISODateTime(timerTo, selectedDate),
         marketName: marketName,
@@ -383,25 +389,38 @@ const CreateMarket = () => {
 
       console.log("Request Body:", requestBody);
 
+      // Make the API call
       const response = await generateLotteryNumber(requestBody);
-      console.log("Success:", response);
-      setIsSubmitted(true);
-      setGroupFrom("");
-      setGroupTo("");
-      setSeriesFrom("");
-      setSeriesTo("");
-      setNumberFrom("");
-      setNumberTo("");
-      setTimerFrom("");
-      setTimerTo("");
-      setMarketName("");
-      setPrice("");
-      setSelectDate("");
 
+      if (response.success) {
+        // Clear the form and reset state
+        setMarketNameError(""); // Clear any previous error
+        setIsSubmitted(true);
+        setGroupFrom("");
+        setGroupTo("");
+        setSeriesFrom("");
+        setSeriesTo("");
+        setNumberFrom("");
+        setNumberTo("");
+        setTimerFrom("");
+        setTimerTo("");
+        setMarketName("");
+        setPrice("");
+        setSelectDate("");
+      } else if (response.responseCode === 400) {
+        // Handle backend validation error
+        setMarketNameError(response.errMessage); // Show backend error below the input field
+      } else {
+        // Show unexpected error below the field
+        setMarketNameError("An unexpected error occurred.");
+      }
     } catch (error) {
       console.error("Error:", error);
+      // Show error below the input field
+      setMarketNameError("A market with this name already exists for the selected date.");
     }
   };
+
 
   // Generate time options for every minute in a 12-hour format (AM/PM)
   const generateTimeOptions = () => {
@@ -638,20 +657,26 @@ const CreateMarket = () => {
                 className="form-control"
                 id="date"
                 value={selectDate}
-                 min={currentDate} 
-                    defaultValue={currentDate} 
-                    onFocus={(e) => (e.target.type = "date")}
+                min={currentDate}
+                defaultValue={currentDate}
+                onFocus={(e) => (e.target.type = "date")}
                 onChange={(e) => setSelectDate(e.target.value)}
               />
             </div>
-            <div className="mb-3">
-              <label htmlFor="" className="form-label"></label>
+            <div className="mt-3">
               <input
                 type="text"
-                className="form-control"
+                id="marketName"
+                className={`form-control ${marketNameError ? "is-invalid" : ""}`} // Adds red border if error exists
                 placeholder="Market Name"
-                onChange={(e) => setMarketName(e.target.value)}
+                value={marketName}
+                onChange={(e) => {
+                  setMarketName(e.target.value);
+                  setMarketNameError(""); // Clear the error when the user starts typing
+                }}
               />
+              {/* Show the error message dynamically below the input field */}
+              {marketNameError && <div className="invalid-feedback">{marketNameError}</div>}
             </div>
 
             {/* <div className="mb-3">
