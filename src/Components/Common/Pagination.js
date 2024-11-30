@@ -9,7 +9,7 @@ const Pagination = ({ currentPage, totalPages, handlePageChange, startIndex, end
     let startPage = Math.max(currentPage - 1, 1);
     let endPage = Math.min(currentPage + 1, totalPages);
 
-    if (endPage - startPage < 2) {
+    if (endPage - startPage  < 2) {
       startPage = Math.max(endPage - 2, 1);
     }
 

@@ -4,6 +4,7 @@ import { GetPurchaseHistoryMarketTimings, PurchasedTicketsHistory } from "../../
 import { Table, Spinner } from "react-bootstrap";
 import debounce from "lodash.debounce";
 import { useParams, useNavigate } from "react-router-dom";
+import Pagination from '../../Common/Pagination';
 
 const PurchasedTickets = () => {
   const { dispatch, showLoader, hideLoader } = useAppContext();
@@ -36,20 +37,27 @@ const PurchasedTickets = () => {
       try {
         const response = await GetPurchaseHistoryMarketTimings();
         if (response?.success) {
-          setMarkets(response.data || []);
-          if (!paramMarketId && response.data.length > 0) {
-            setSelectedMarketId(response.data[0].marketId);
+          const marketsData = response.data || [];
+          setMarkets(marketsData);
+
+          if (!paramMarketId && marketsData.length > 0) {
+            const firstMarketId = marketsData[0].marketId;
+            navigate(`/purchase-history/${firstMarketId}`, { replace: true });
+            setSelectedMarketId(firstMarketId);
+          } else if (marketsData.length === 0) {
+            navigate("/404", { replace: true });
           }
         } else {
           console.error("Failed to fetch markets");
         }
       } catch (error) {
         console.error("Error fetching markets:", error);
+        navigate("/404", { replace: true });
       }
     };
 
     fetchMarketData();
-  }, [paramMarketId]);
+  }, [paramMarketId, navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,6 +79,35 @@ const PurchasedTickets = () => {
       fetchPurchasedLotteryTickets.cancel();
     };
   }, [selectedMarketId, pagination.page, pagination.limit, searchTerm]);
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      setLoader(true);
+      try {
+        const response = await PurchasedTicketsHistory({
+          marketId: selectedMarketId,
+          page: pagination.page,
+          limit: pagination.limit,
+        });
+        if (response?.success) {
+          setPurchasedTickets(response.data || []);
+          setPagination({
+            page: response.pagination.page,
+            limit: response.pagination.limit,
+            totalPages: response.pagination.totalPages,
+            totalItems: response.pagination.totalItems,
+          });
+        } else {
+          console.error("Failed to fetch results");
+        }
+      } catch (error) {
+        console.error("Error fetching results:", error);
+      }
+      setLoader(false);
+    };
+
+    if (selectedMarketId) fetchResults();
+  }, [selectedMarketId, pagination.page, pagination.limit]);
 
   const fetchPurchasedLotteryTickets = useCallback(
     debounce(async (searchTerm) => {
@@ -144,48 +181,58 @@ const PurchasedTickets = () => {
   }
 
   return (
-    <div className="container mt-4 p-3">
+    <div
+      className="container mt-5 p-3"
+      style={{
+        background: "#e6f7ff",
+        borderRadius: "10px",
+        boxShadow: "0 0 15px rgba(0,0,0,0.1)",
+      }}
+    >
       {/* Top Navigation for Markets */}
       <div className="d-flex justify-content-between align-items-center mb-3">
-  <h4 className="fw-bold">Markets</h4>
-  <div className="d-flex align-items-center">
-    <button
-      className="btn btn-sm btn-outline-secondary me-2"
-      onClick={handleLeftClick}
-      disabled={visibleStartIndex === 0}
-    >
-      &lt;
-    </button>
-    <div className="d-flex flex-wrap">
-      {visibleMarkets.length > 0 ? (
-        visibleMarkets.map((market) => (
-          <span
-            key={market.marketId}
-            className={`badge me-2 ${selectedMarketId === market.marketId ? 'bg-success' : 'bg-primary'}`}
-            style={{ cursor: "pointer" }}
-            onClick={() => handleMarketClick(market.marketId)}
+        <h4 className="fw-bold">Markets</h4>
+        <div className="d-flex align-items-center">
+          <button
+            className="btn btn-sm btn-outline-secondary me-2"
+            onClick={handleLeftClick}
+            disabled={visibleStartIndex === 0}
           >
-            {market.marketName}
-          </span>
-        ))
-      ) : (
-        <span>No markets available</span>
-      )}
-    </div>
-    <button
-      className="btn btn-sm btn-outline-secondary ms-2"
-      onClick={handleRightClick}
-      disabled={visibleStartIndex + visibleCount >= markets.length}
-    >
-      &gt;
-    </button>
-  </div>
-</div>
-
+            &lt;
+          </button>
+          <div className="d-flex flex-wrap">
+            {visibleMarkets.length > 0 ? (
+              visibleMarkets.map((market) => (
+                <span
+                  key={market.marketId}
+                  className={`badge me-2 ${
+                    selectedMarketId === market.marketId ? "bg-success" : "bg-primary"
+                  }`}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleMarketClick(market.marketId)}
+                >
+                  {market.marketName}
+                </span>
+              ))
+            ) : (
+              <span>No markets available</span>
+            )}
+          </div>
+          <button
+            className="btn btn-sm btn-outline-secondary ms-2"
+            onClick={handleRightClick}
+            disabled={visibleStartIndex + visibleCount >= markets.length}
+          >
+            &gt;
+          </button>
+        </div>
+      </div>
 
       {/* Purchased Tickets Table */}
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="fw-bold" style={{ color: "#4682B4" }}>Purchased Lottery Tickets</h2>
+        <h2 className="fw-bold" style={{ color: "#4682B4" }}>
+          Purchased Lottery Tickets
+        </h2>
         <div className="w-50">
           <input
             type="text"
@@ -282,6 +329,14 @@ const PurchasedTickets = () => {
           )}
         </tbody>
       </Table>
+      <Pagination
+        currentPage={pagination.page}
+        totalPages={pagination.totalPages}
+        handlePageChange={handlePageChange}
+        startIndex={startIndex}
+        endIndex={endIndex}
+        totalData={pagination.totalItems}
+      />
     </div>
   );
 };
