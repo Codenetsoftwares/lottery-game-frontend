@@ -36,28 +36,32 @@ const PurchasedTickets = () => {
     const fetchMarketData = async () => {
       try {
         const response = await GetPurchaseHistoryMarketTimings();
+  
         if (response?.success) {
           const marketsData = response.data || [];
           setMarkets(marketsData);
-
+  
           if (!paramMarketId && marketsData.length > 0) {
             const firstMarketId = marketsData[0].marketId;
             navigate(`/purchase-history/${firstMarketId}`, { replace: true });
             setSelectedMarketId(firstMarketId);
           } else if (marketsData.length === 0) {
-            navigate("/404", { replace: true });
+            console.error("Market Not Found");
+            // No markets to handle further, do nothing or add specific fallback logic
           }
         } else {
           console.error("Failed to fetch markets");
+          // Handle unsuccessful fetch scenario here, if needed
         }
       } catch (error) {
         console.error("Error fetching markets:", error);
-        navigate("/404", { replace: true });
+        // Handle fetch failure scenario here, if needed
       }
     };
-
+  
     fetchMarketData();
   }, [paramMarketId, navigate]);
+  
 
   // Create debounced fetchPurchasedLotteryTickets function
   const fetchPurchasedLotteryTickets = useCallback(

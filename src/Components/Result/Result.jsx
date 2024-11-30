@@ -28,7 +28,7 @@ const Result = () => {
           setError("Failed to fetch markets or no data available.");
         }
       } catch (err) {
-        setError("Error fetching markets.");
+        setError("No markets has been declared with any prizes yet so far.");
       }
     };
 
