@@ -59,6 +59,42 @@ const PurchasedTickets = () => {
     fetchMarketData();
   }, [paramMarketId, navigate]);
 
+  // Create debounced fetchPurchasedLotteryTickets function
+  const fetchPurchasedLotteryTickets = useCallback(
+    debounce(async (searchTerm) => {
+      setLoader(true);
+      try {
+        const response = await PurchasedTicketsHistory({
+          marketId: selectedMarketId,
+          page: pagination.page,
+          limit: pagination.limit,
+          searchBySem: searchTerm,
+        });
+
+        if (response?.success) {
+          setPurchasedTickets(response.data || []);
+          setPagination({
+            page: response.pagination.page,
+            limit: response.pagination.limit,
+            totalPages: response.pagination.totalPages,
+            totalItems: response.pagination.totalItems,
+          });
+          dispatch({
+            type: "PURCHASED_LOTTERY_TICKETS",
+            payload: response.data,
+          });
+        } else {
+          console.error("Failed to fetch purchased tickets");
+        }
+      } catch (error) {
+        console.error("Error fetching purchased tickets:", error);
+      }
+      setLoader(false);
+    }, 500),
+    [selectedMarketId, pagination.page, pagination.limit, dispatch]
+  );
+
+  // Effect for fetching purchased tickets when selectedMarketId, pagination, or searchTerm changes
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -76,103 +112,47 @@ const PurchasedTickets = () => {
     fetchData();
 
     return () => {
-      fetchPurchasedLotteryTickets.cancel();
+      fetchPurchasedLotteryTickets.cancel(); // Clean up debounced function on unmount
     };
-  }, [selectedMarketId, pagination.page, pagination.limit, searchTerm]);
+  }, [selectedMarketId, pagination.page, pagination.limit, searchTerm, fetchPurchasedLotteryTickets]);
 
-  useEffect(() => {
-    const fetchResults = async () => {
-      setLoader(true);
-      try {
-        const response = await PurchasedTicketsHistory({
-          marketId: selectedMarketId,
-          page: pagination.page,
-          limit: pagination.limit,
-        });
-        if (response?.success) {
-          setPurchasedTickets(response.data || []);
-          setPagination({
-            page: response.pagination.page,
-            limit: response.pagination.limit,
-            totalPages: response.pagination.totalPages,
-            totalItems: response.pagination.totalItems,
-          });
-        } else {
-          console.error("Failed to fetch results");
-        }
-      } catch (error) {
-        console.error("Error fetching results:", error);
-      }
-      setLoader(false);
-    };
-
-    if (selectedMarketId) fetchResults();
-  }, [selectedMarketId, pagination.page, pagination.limit]);
-
-  const fetchPurchasedLotteryTickets = useCallback(
-    debounce(async (searchTerm) => {
-      setLoader(true);
-      try {
-        const response = await PurchasedTicketsHistory({
-          marketId: selectedMarketId,
-          page: pagination.page,
-          limit: pagination.limit,
-          searchBySem: searchTerm,
-        });
-
-        if (response && response.success) {
-          setPurchasedTickets(response.data || []);
-          setPagination({
-            page: response?.pagination?.page || pagination.page,
-            limit: response?.pagination?.limit || pagination.limit,
-            totalPages: response?.pagination?.totalPages || 0,
-            totalItems: response?.pagination?.totalItems || 0,
-          });
-          dispatch({
-            type: "PURCHASED_LOTTERY_TICKETS",
-            payload: response.data,
-          });
-        } else {
-          console.error("Failed to fetch purchased tickets");
-        }
-      } catch (error) {
-        console.error("Error fetching purchased tickets:", error);
-      }
-      setLoader(false);
-    }, 500),
-    [selectedMarketId, pagination.page, pagination.limit, dispatch]
-  );
-
+  // Handle search input change
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
-    setPagination((prev) => ({ ...prev, page: 1 }));
+    setPagination((prev) => ({ ...prev, page: 1 })); // Reset pagination on search change
   };
 
+  // Handle pagination page change
   const handlePageChange = (newPage) => {
     setPagination((prev) => ({ ...prev, page: newPage }));
   };
 
+  // Handle market click (select a market)
   const handleMarketClick = (marketId) => {
     setSelectedMarketId(marketId);
     setPagination((prev) => ({ ...prev, page: 1 }));
     navigate(`/purchase-history/${marketId}`);
   };
 
+  // Handle pagination left click (to view previous markets)
   const handleLeftClick = () => {
     setVisibleStartIndex((prev) => Math.max(0, prev - 1));
   };
 
+  // Handle pagination right click (to view next markets)
   const handleRightClick = () => {
     setVisibleStartIndex((prev) =>
       Math.min(prev + 1, Math.max(0, markets.length - visibleCount))
     );
   };
 
+  // Slice the visible markets based on pagination settings
   const visibleMarkets = markets.slice(
     visibleStartIndex,
     visibleStartIndex + visibleCount
   );
 
+  // Calculate start and end indices for pagination display
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
   const endIndex = Math.min(pagination.page * pagination.limit, pagination.totalItems);
 
