@@ -1,107 +1,218 @@
-import React, { useEffect, useState } from 'react';
-import { GetWiningResult } from '../../Utils/apiService';
-import { useAppContext } from '../../contextApi/context';
+import React, { useState, useEffect } from "react";
+import { GetResultMarket, GetWiningResult } from "../../Utils/apiService";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Result = () => {
-  const [result, setResult] = useState(null); 
-  const { showLoader, hideLoader, isLoading } = useAppContext();
-  const [error, setError] = useState(null);
-  const [openAccordion, setOpenAccordion] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { marketId } = useParams(); 
+  const navigate = useNavigate(); // For navigation
+  const [markets, setMarkets] = useState([]);
+  const [results, setResults] = useState([]); // State to store fetched prize data
+  const [error, setError] = useState(null); // State to handle fetch errors
+  const [scrollIndex, setScrollIndex] = useState(0); // Scroll control for market buttons
 
+  const maxVisibleMarkets = 5;
+  const visibleMarkets = markets.slice(scrollIndex, scrollIndex + maxVisibleMarkets);
+
+  // Fetch markets using the API
   useEffect(() => {
-    const fetchResults = async () => {
-      showLoader();
-      // setLoading(true);
+    const fetchMarkets = async () => {
       try {
-        const response = await GetWiningResult(); 
-        if (response.success) {
-          setResult(response.data); // Set the result object
+        const response = await GetResultMarket({ date: new Date().toISOString().slice(0, 10) });
+        if (response && response.success && response.data) {
+          setMarkets(response.data);
+          // If no marketId in URL, default to the first market
+          if (!marketId) {
+            navigate(`/results/${response.data[0].marketId}`);
+          }
         } else {
-          setError(response.message); // Set error message if unsuccessful
+          setError("Failed to fetch markets or no data available.");
         }
       } catch (err) {
-        setError('Error fetching prize data');
-      } finally {
-        // setLoading(false);
-        hideLoader();
+        setError("Error fetching markets.");
+      }
+    };
+
+    fetchMarkets();
+  }, [marketId, navigate]);
+
+  // Fetch results based on the selected marketId from the URL
+  useEffect(() => {
+    if (!marketId) return;
+
+    const fetchResults = async () => {
+      try {
+        const response = await GetWiningResult({ marketId });
+        if (response && response.success) {
+          setResults(response.data || []);
+          setError(null);
+        } else {
+          setResults([]);
+          setError("No prize data available.");
+        }
+      } catch (err) {
+        setError("Error fetching results.");
       }
     };
 
     fetchResults();
-  }, []);
+  }, [marketId]);
 
-  // if (loading) {
-  //   return null;
-  // }
-  
-  if (error) {
-    return (
-      <div className="container-fluid d-flex justify-content-center">
-        <div className="border border-3 rounded-3" style={{ padding: '20px', width: '80%', maxWidth: '600px' }}>
-          <div className="text-center py-5">
-            <h4>{error}</h4>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleScrollLeft = () => {
+    if (scrollIndex > 0) setScrollIndex(scrollIndex - 1);
+  };
+
+  const handleScrollRight = () => {
+    if (scrollIndex + maxVisibleMarkets < markets.length) setScrollIndex(scrollIndex + 1);
+  };
+
+  const handleMarketSelect = (market) => {
+    navigate(`/results/${market.marketId}`); // Update URL when selecting a market
+  };
+
+  const handleOldResults = () => {
+    alert("This portion is under development.");
+  };
 
   return (
-    <div className="container-fluid">
-      <div className="text-center my-4">
-        <h2>Prize Results</h2>
-      </div>
-      
-      {result && result.length > 0 ? ( // Render only if data is available
-        <div className="accordion mb-4" id="resultAccordion">
-          <div className="accordion-item">
-            <h2 className="accordion-header" id="headingOne">
-              <button
-                className="accordion-button"
-                type="button"
-                onClick={() => setOpenAccordion(!openAccordion)}
-                aria-expanded={openAccordion}
-                aria-controls="collapseOne"
-              >
-                {new Date(result[0].date).toLocaleDateString()} - {result[0].announceTime}
-              </button>
-            </h2>
-            <div
-              id="collapseOne"
-              className={`accordion-collapse collapse ${openAccordion ? 'show' : ''}`}
-              aria-labelledby="headingOne"
-              data-bs-parent="#resultAccordion"
+    <div style={{ fontFamily: "Arial, sans-serif", margin: "20px" }}>
+      {/* Top Navigation Bar */}
+      <div
+        className="d-flex align-items-center"
+        style={{
+          backgroundColor: "#4682B4",
+          padding: "10px",
+          borderRadius: "8px",
+          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        {/* Left Arrow */}
+        <button
+          className="btn btn-light"
+          style={{
+            padding: "5px 10px",
+            fontSize: "18px",
+            borderRadius: "50%",
+            marginRight: "10px",
+          }}
+          onClick={handleScrollLeft}
+          disabled={scrollIndex === 0}
+        >
+          &#8249;
+        </button>
+
+        {/* Market Buttons */}
+        <div
+          className="d-flex flex-nowrap justify-content-center"
+          style={{
+            overflow: "hidden",
+            gap: "10px",
+          }}
+        >
+          {visibleMarkets.map((market) => (
+            <button
+              key={market.marketId}
+              className={`btn ${market.marketId === marketId ? "btn-primary" : "btn-outline-light"}`}
+              onClick={() => handleMarketSelect(market)}
+              style={{
+                fontSize: "16px",
+                borderRadius: "4px",
+                boxShadow: market.marketId === marketId ? "0px 4px 6px rgba(0, 0, 0, 0.2)" : "none",
+                whiteSpace: "nowrap",
+              }}
             >
-              <div className="accordion-body">
-                {result.map((prize, index) => (
-                  <div key={index} className="border rounded-3 mb-3 p-3" style={{ backgroundColor: '#e6f7ff' }}>
-                    <h4>{prize.prizeCategory}</h4>
-                    <p><strong>Prize Amount:</strong> ₹{prize.prizeAmount.toFixed(2)}</p>
-                    <h5>Winning Ticket Numbers:</h5>
-                    <ul className="list-group">
-                      {prize.ticketNumbers.map((ticketNumber) => (
-                        <li key={ticketNumber} className="list-group-item">
-                          {ticketNumber}
-                        </li>
+              {market.marketName}
+            </button>
+          ))}
+        </div>
+
+        {/* Right Arrow */}
+        <button
+          className="btn btn-light"
+          style={{
+            padding: "5px 10px",
+            fontSize: "18px",
+            borderRadius: "50%",
+            marginLeft: "10px",
+          }}
+          onClick={handleScrollRight}
+          disabled={scrollIndex + maxVisibleMarkets >= markets.length}
+        >
+          &#8250;
+        </button>
+
+        {/* Old Results Button */}
+        <button
+          className="btn btn-warning"
+          onClick={handleOldResults}
+          style={{
+            marginLeft: "auto",
+            borderRadius: "20px",
+            padding: "5px 15px",
+            fontWeight: "bold",
+            fontSize: "14px",
+          }}
+        >
+          Old Results
+        </button>
+      </div>
+
+      {/* Market Result Display */}
+      <div className="mt-4">
+        <h2 className="text-center" style={{ color: "#3b6e91" }}>
+          Results for <span style={{ color: "#4682B4" }}>{markets.find((m) => m.marketId === marketId)?.marketName || "Selected Market"}</span>
+        </h2>
+
+        {/* Error Message */}
+        {error && (
+          <p className="text-danger text-center">
+            {error}
+          </p>
+        )}
+
+        {/* Prize Distribution */}
+        {results.length === 0 && !error ? (
+          <p className="text-center text-muted">No prize declared yet.</p>
+        ) : (
+          <div className="accordion mt-4" id="prizeAccordion">
+            {results.map((result, index) => (
+              <div className="accordion-item" key={result.resultId}>
+                <h2 className="accordion-header" id={`heading${index}`}>
+                  <button
+                    className="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target={`#collapse${index}`}
+                    aria-expanded="false"
+                    aria-controls={`collapse${index}`}
+                  >
+                    {result.prizeCategory} - Amount: ₹{result.prizeAmount}
+                    {result.complementaryPrize > 0 && (
+                      <span className="badge bg-success ms-2">
+                        Complementary Prize: ₹{result.complementaryPrize}
+                      </span>
+                    )}
+                  </button>
+                </h2>
+                <div
+                  id={`collapse${index}`}
+                  className="accordion-collapse collapse"
+                  aria-labelledby={`heading${index}`}
+                  data-bs-parent="#prizeAccordion"
+                >
+                  <div className="accordion-body">
+                    <strong>Winning Ticket Numbers:</strong>
+                    <ul>
+                      {result.ticketNumber.map((ticket, idx) => (
+                        <li key={idx}>{ticket}</li>
                       ))}
                     </ul>
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-        </div>
-      ) : (
-        
-        <div className="container-fluid d-flex justify-content-center">
-         {!isLoading &&  <div className="border border-3 rounded-3" style={{ padding: '20px', width: '80%', maxWidth: '600px' }}>
-            <div className="text-center py-5">
-              <h4>No prize results available at the moment.</h4>
-            </div>
-          </div> }
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

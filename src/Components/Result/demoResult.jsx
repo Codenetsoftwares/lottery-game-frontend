@@ -1,43 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { GetWiningResult } from '../../Utils/apiService'; // Ensure the correct import for the API function
+import { GetWiningResult } from '../../Utils/apiService';
+import { useAppContext } from '../../contextApi/context';
 
 const Result = () => {
-  const [result, setResult] = useState(null); // Changed to hold single result object
-  const [loading, setLoading] = useState(true);
+  // this is the old code for result section which is updated now in the result.jsx component 
+  const [result, setResult] = useState(null); 
+  const { showLoader, hideLoader, isLoading } = useAppContext();
   const [error, setError] = useState(null);
-  const [openAccordion, setOpenAccordion] = useState(false); // State to manage accordion open/close
+  const [openAccordion, setOpenAccordion] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchResults = async () => {
+      showLoader();
+      // setLoading(true);
       try {
         const response = await GetWiningResult(); 
         if (response.success) {
-          setResult(response.data); // Set the entire result object
+          setResult(response.data); // Set the result object
         } else {
-          setError(response.message); // Set error message if not successful
+          setError(response.message); // Set error message if unsuccessful
         }
       } catch (err) {
         setError('Error fetching prize data');
       } finally {
-        setLoading(false);
+        // setLoading(false);
+        hideLoader();
       }
     };
 
     fetchResults();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="container-fluid d-flex justify-content-center">
-        <div className="border border-3 rounded-3" style={{ padding: '20px', width: '80%', maxWidth: '600px' }}>
-          <div className="text-center py-5">
-            <h4>Loading results...</h4>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+  // if (loading) {
+  //   return null;
+  // }
+  
   if (error) {
     return (
       <div className="container-fluid d-flex justify-content-center">
@@ -56,62 +54,55 @@ const Result = () => {
         <h2>Prize Results</h2>
       </div>
       
-      <div className="accordion mb-4" id="resultAccordion">
-        <div className="accordion-item">
-          <h2 className="accordion-header" id="headingOne">
-            <button
-              className="accordion-button"
-              type="button"
-              onClick={() => setOpenAccordion(!openAccordion)}
-              aria-expanded={openAccordion}
-              aria-controls="collapseOne"
+      {result && result.length > 0 ? ( // Render only if data is available
+        <div className="accordion mb-4" id="resultAccordion">
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="headingOne">
+              <button
+                className="accordion-button"
+                type="button"
+                onClick={() => setOpenAccordion(!openAccordion)}
+                aria-expanded={openAccordion}
+                aria-controls="collapseOne"
+              >
+                {new Date(result[0].date).toLocaleDateString()} - {result[0].announceTime}
+              </button>
+            </h2>
+            <div
+              id="collapseOne"
+              className={`accordion-collapse collapse ${openAccordion ? 'show' : ''}`}
+              aria-labelledby="headingOne"
+              data-bs-parent="#resultAccordion"
             >
-              {new Date(result.date).toLocaleDateString()} - {result.announceTime}
-            </button>
-          </h2>
-          <div
-            id="collapseOne"
-            className={`accordion-collapse collapse ${openAccordion ? 'show' : ''}`}
-            aria-labelledby="headingOne"
-            data-bs-parent="#resultAccordion"
-          >
-            <div className="accordion-body">
-              {/* {result.data.map((prize, index) => (
-                <div key={index} className="border rounded-3 mb-3 p-3" style={{ backgroundColor: '#e6f7ff' }}>
-                  <h4>{prize.prizeCategory}</h4>
-                  <p><strong>Prize Amount:</strong> ₹{prize.prizeAmount.toFixed(2)}</p>
-                  <h5>Winning Ticket Numbers:</h5>
-                  <ul className="list-group">
-                    {prize.ticketNumbers.map((ticketNumber) => (
-                      <li key={ticketNumber} className="list-group-item">
-                        {ticketNumber}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))} */}
-              {result.data && result.data.length > 0 ? (
-  result.data.map((prize, index) => (
-    <div key={index} className="border rounded-3 mb-3 p-3" style={{ backgroundColor: '#e6f7ff' }}>
-      <h4>{prize.prizeCategory}</h4>
-      <p><strong>Prize Amount:</strong> ₹{prize.prizeAmount.toFixed(2)}</p>
-      <h5>Winning Ticket Numbers:</h5>
-      <ul className="list-group">
-        {prize.ticketNumbers.map((ticketNumber) => (
-          <li key={ticketNumber} className="list-group-item">
-            {ticketNumber}
-          </li>
-        ))}
-      </ul>
-    </div>
-  ))
-) : (
-  <p>No prize data available.</p> // Display a message when there's no prize data
-)}
+              <div className="accordion-body">
+                {result.map((prize, index) => (
+                  <div key={index} className="border rounded-3 mb-3 p-3" style={{ backgroundColor: '#e6f7ff' }}>
+                    <h4>{prize.prizeCategory}</h4>
+                    <p><strong>Prize Amount:</strong> ₹{prize.prizeAmount.toFixed(2)}</p>
+                    <h5>Winning Ticket Numbers:</h5>
+                    <ul className="list-group">
+                      {prize.ticketNumbers.map((ticketNumber) => (
+                        <li key={ticketNumber} className="list-group-item">
+                          {ticketNumber}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        
+        <div className="container-fluid d-flex justify-content-center">
+         {!isLoading &&  <div className="border border-3 rounded-3" style={{ padding: '20px', width: '80%', maxWidth: '600px' }}>
+            <div className="text-center py-5">
+              <h4>No prize results available at the moment.</h4>
+            </div>
+          </div> }
+        </div>
+      )}
     </div>
   );
 };

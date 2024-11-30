@@ -91,7 +91,7 @@ export async function makeCall(callName, callParams, isToast) {
     }
 
     if (json.success === false) {
-      toast.error(json.errMessage || 'An error occurred');
+      toast.error(json.errMessage );
       return null;
     } else if (isToast && (json.success === true || json.successCode === 200)) {
       toast.success(json.message || 'Operation successful');
