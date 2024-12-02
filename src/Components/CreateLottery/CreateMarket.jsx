@@ -75,14 +75,12 @@ const CreateMarket = () => {
     const groupsFrom = Array.from({ length: 99 }, (_, i) => (i + 1).toString());
     setFilterGroupTo(groupsFrom);
 
-    // Series: A to L, excluding I and F
-    const lettersFrom = Array.from({ length: 26 }, (_, i) =>
-      String.fromCharCode(65 + i)
-    );
+    // Series: A to L, excluding I and F and 0 
+    const lettersFrom = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))
+    .filter(letter => !['I', 'F', 'O'].includes(letter));
     setFilterSeriesFrom(lettersFrom);
-    const lettersTo = Array.from({ length: 26 }, (_, i) =>
-      String.fromCharCode(65 + i)
-    );
+    const lettersTo = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))
+    .filter(letter => !['I', 'F', 'O'].includes(letter));
     setFilterSeriesTo(lettersTo);
 
     // Numbers: 0 to 99999 (or any specified range)
@@ -189,9 +187,8 @@ const CreateMarket = () => {
     debouncedFilter(
       inputValue,
       () => {
-        const lettersFrom = Array.from({ length: 26 }, (_, i) =>
-          String.fromCharCode(65 + i)
-        );
+        const lettersFrom = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))
+        .filter(letter => !['I', 'F', 'O'].includes(letter));
         return lettersFrom;
       },
       1500,
@@ -207,10 +204,9 @@ const CreateMarket = () => {
     debouncedFilter(
       inputValue,
       () => {
-        const lettersFrom = Array.from({ length: 26 }, (_, i) =>
-          String.fromCharCode(65 + i)
-        );
-        return lettersFrom;
+        const lettersTo = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))
+        .filter(letter => !['I', 'F', 'O'].includes(letter));
+        return lettersTo;
       },
       1500,
       setFilterSeriesTo

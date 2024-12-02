@@ -1,8 +1,10 @@
 export const generateSeries = (seriesStart, seriesEnd) => {
-    const letters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+    const allLetters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+    const letters = allLetters.filter(letter => !["I", "F", "O"].includes(letter));
     const startIndex = letters.indexOf(seriesStart);
     const endIndex = letters.indexOf(seriesEnd);
-    console.log("start", startIndex, letters.indexOf(seriesEnd), seriesStart, seriesEnd)
+
+    console.log("start", startIndex, endIndex, seriesStart, seriesEnd);
 
     // Check if start or end index is invalid or if startIndex is greater than endIndex
     if (startIndex === -1 || endIndex === -1 || startIndex > endIndex) {
@@ -15,6 +17,7 @@ export const generateSeries = (seriesStart, seriesEnd) => {
     // Return the sliced array based on the start and end indices
     return letters.slice(startIndex, endIndex + 1);
 };
+
 
 
 // Generate groups within a specified range
