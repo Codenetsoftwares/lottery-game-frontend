@@ -19,6 +19,7 @@ import MarketInsight from '../MarketOverview/MarketInsight';
 import SearchLottery from '../Pages/SearchLotteryPage/SearchLottery';
 import PrivateRoute from '../Common/privateRouting';
 import DemoResult from '../Result/demoResult';
+import CreateMarkets from '../CreateLottery/CreateMarkets';
 
 const AppRoutes = () => {
   return (
@@ -43,6 +44,8 @@ const AppRoutes = () => {
             <Route path="/dashboard" element={<DashBoard />}></Route>
             {/* <Route path="/lottery-markets" element={<LotteryMarkets />} /> old create not in use anymore */}
             <Route path="/lottery-markets" element={<CreateMarket/>} />
+            <Route path="/Newlottery-markets" element={<CreateMarkets/>} />
+            
             {/* <Route path="/Purchased-tickets" element={<PurchasedLotteries />} />  old purchased component not in use anymore */}
             <Route path="/purchase-history/:marketId" element={<PurchasedTickets />}/>
             <Route path="/purchase-history" element={<PurchasedTickets />}/>

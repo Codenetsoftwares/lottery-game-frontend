@@ -35,3 +35,23 @@ export const generateNumbers = (start, end) => {
         (_, i) => i + actualStart
     );
 };
+
+
+// ALL NUMBER SERIES & GROUP IS GENERATED FROM THIS SINGLE UNIFIED FUNCTION 
+
+ export const generateFilterData = ({ type, rangeStart, rangeEnd, excludedChars = [] }) => {
+    switch (type) {
+      case "group":
+        return Array.from({ length: rangeEnd - rangeStart + 1 }, (_, i) => (i + rangeStart).toString().padStart(2, "0"));
+  
+      case "series":
+        return Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))
+          .filter((letter) => !excludedChars.includes(letter));
+  
+      case "number":
+        return Array.from({ length: rangeEnd - rangeStart + 1 }, (_, i) => (i + rangeStart).toString().padStart(5, "0"));
+  
+      default:
+        return [];
+    }
+  };
