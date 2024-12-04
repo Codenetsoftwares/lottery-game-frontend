@@ -10,4 +10,7 @@ export const initialCreateMarketFormStates = {
     timerFrom: "",
     timerTo: "",
     priceForEach: "",
+    groupOptions: [], // Add groupOptions
+    seriesOptions: [], // Add seriesOptions
+    numberOptions: [], // Add numberOptions
 };

@@ -1,64 +1,183 @@
-import React from "react";
+import React, { useRef, useState , useEffect } from "react";
 
-const ReusableInput = ({
-    label,
-    name,
-    type = "text",
-    value,
-    onChange,
-    onBlur,
-    error,
-    placeholder = "",
-    isFromTo = false, 
+export const ReusableInput = ({ placeholder, name, type = "text", value, onChange, onBlur, error }) => (
+    <div className="form-group mb-3">
+        <input
+            type={type}
+            name={name}
+            className={`form-control ${error ? "is-invalid" : ""}`}
+            placeholder={placeholder}  // Using placeholder instead of label
+            value={value}
+            onChange={onChange}
+            onBlur={onBlur}
+        />
+        <div
+            className="text-danger d-flex align-items-center mt-1"
+            style={{ minHeight: "20px", fontSize: "0.85rem" }} // Reserves space for error messages
+        >
+            {error && (
+                <>
+                    <i className="bi bi-info-circle me-1"></i>
+                    <span>{error}</span>
+                </>
+            )}
+        </div>
+    </div>
+);
+export const FromToInput = ({
+    placeholder,
     fromName,
     toName,
     fromValue,
     toValue,
-    fromPlaceholder = "From",
-    toPlaceholder = "To",
+    onChange,
+    onBlur,
     fromError,
     toError,
-}) => {
+    options,
+  }) => {
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [activeInput, setActiveInput] = useState(null); // Track which input is active
+    const dropdownRef = useRef(null); // Reference to the dropdown container
+  
+    const handleInputClick = (inputName) => {
+      setActiveInput(inputName);
+      setIsDropdownOpen(true);
+    };
+  
+    const handleOptionClick = (value, inputName) => {
+      onChange({ target: { name: inputName, value } });
+      setIsDropdownOpen(false); // Close the dropdown after selecting
+    };
+  
+    const renderGrid = (data) => {
+      if (!Array.isArray(data) || data.length === 0) {
+        return <div>No options available</div>;
+      }
+  
+      const columns = 5; // Set the number of columns in the grid
+      const rows = Math.ceil(data.length / columns);
+      const gridItems = [];
+  
+      for (let i = 0; i < rows; i++) {
+        gridItems.push(
+          <div className="d-flex justify-content-between" key={i}>
+            {data.slice(i * columns, (i + 1) * columns).map((item, index) => (
+              <button
+                key={index}
+                className="btn btn-light btn-sm w-100"
+                onClick={() => handleOptionClick(item, activeInput)}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        );
+      }
+  
+      return gridItems;
+    };
+  
+    // Close dropdown if clicked outside of it
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+          setIsDropdownOpen(false); // Close the dropdown if clicked outside
+        }
+      };
+  
+      document.addEventListener("mousedown", handleClickOutside);
+  
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+  
     return (
-        <div className="form-group mb-3">
-            <label className="form-label">{label}</label>
-            {isFromTo ? (
-                <div className="d-flex gap-2">
-                    <input
-                        type={type}
-                        name={fromName}
-                        className="form-control"
-                        placeholder={fromPlaceholder}
-                        value={fromValue}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                    />
-                    <input
-                        type={type}
-                        name={toName}
-                        className="form-control"
-                        placeholder={toPlaceholder}
-                        value={toValue}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                    />
-                </div>
-            ) : (
-                <input
-                    type={type}
-                    name={name}
-                    className="form-control"
-                    placeholder={placeholder}
-                    value={value}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                />
+      <div className="form-group mb-3">
+        <div className="d-flex gap-2">
+          <div className="position-relative" style={{ flex: 1 }}>
+            <input
+              type="text"
+              name={fromName}
+              className={`form-control ${fromError ? "is-invalid" : ""}`}
+              placeholder={placeholder}
+              value={fromValue}
+              onClick={() => handleInputClick(fromName)}
+              onBlur={onBlur}
+            />
+            <div
+              className="text-danger d-flex align-items-center mt-1"
+              style={{ minHeight: "20px", fontSize: "0.85rem" }}
+            >
+              {fromError && (
+                <>
+                  <i className="bi bi-info-circle me-1"></i>
+                  <span>{fromError}</span>
+                </>
+              )}
+            </div>
+  
+            {isDropdownOpen && activeInput === fromName && (
+              <div
+                ref={dropdownRef}
+                className="dropdown-grid"
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  right: 0,
+                  maxHeight: "200px",
+                  overflowY: "auto", // Add vertical scroll if needed
+                  zIndex: 10,
+                }}
+              >
+                {renderGrid(options)}
+              </div>
             )}
-            {error && !isFromTo && <div className="text-danger">{error}</div>}
-            {isFromTo && fromError && <div className="text-danger">{fromError}</div>}
-            {isFromTo && toError && <div className="text-danger">{toError}</div>}
+          </div>
+  
+          <div className="position-relative" style={{ flex: 1 }}>
+            <input
+              type="text"
+              name={toName}
+              className={`form-control ${toError ? "is-invalid" : ""}`}
+              placeholder={placeholder}
+              value={toValue}
+              onClick={() => handleInputClick(toName)}
+              onBlur={onBlur}
+            />
+            <div
+              className="text-danger d-flex align-items-center mt-1"
+              style={{ minHeight: "20px", fontSize: "0.85rem" }}
+            >
+              {toError && (
+                <>
+                  <i className="bi bi-info-circle me-1"></i>
+                  <span>{toError}</span>
+                </>
+              )}
+            </div>
+  
+            {isDropdownOpen && activeInput === toName && (
+              <div
+                ref={dropdownRef}
+                className="dropdown-grid"
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  right: 0,
+                  maxHeight: "200px",
+                  overflowY: "auto",
+                  zIndex: 10,
+                }}
+              >
+                {renderGrid(options)}
+              </div>
+            )}
+          </div>
         </div>
+      </div>
     );
-};
-
-export default ReusableInput;
+  };

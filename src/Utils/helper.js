@@ -55,3 +55,32 @@ export const generateNumbers = (start, end) => {
         return [];
     }
   };
+
+
+  export const convertTimeToISO = () => {
+    const slots = [];
+    const startHour = 0; // Start from midnight
+    const endHour = 23; // End at 11 PM
+  
+    for (let hour = startHour; hour <= endHour; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        const time = new Date();
+        time.setHours(hour);
+        time.setMinutes(minute);
+        time.setSeconds(0);
+  
+        // Format as hh:mm AM/PM
+        const formattedTime = time.toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        });
+  
+        slots.push(formattedTime);
+      }
+    }
+  
+    return slots; // Return an array of formatted time strings
+  };
+  
+  

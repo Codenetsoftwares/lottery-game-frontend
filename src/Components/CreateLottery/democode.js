@@ -1,236 +1,146 @@
-import React, { useState } from 'react';
-import { FaTimes } from 'react-icons/fa'; // Import the cross icon from react-icons
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './Search.css'; 
-import { SearchLotteryTicket } from '../../Utils/apiService';
+import React, { useEffect, useMemo, useState } from "react";
+import { useFormik } from "formik";
+import { validationSchema } from "../../Utils/validationSchema";
+import { initialCreateMarketFormStates } from "../../Utils/initialState";
+import { FromToInput, ReusableInput } from "../ReusableInput/ReusableInput";
+import { generateFilterData } from "../../Utils/helper";
 
-const Search = () => {
-  const [sem, setSem] = useState('');
-  const [group, setGroup] = useState(''); 
-  const [series, setSeries] = useState(''); 
-  const [number, setNumber] = useState(''); 
-  const [isGroupPickerVisible, setIsGroupPickerVisible] = useState(false);
-  const [isSeriesPickerVisible, setIsSeriesPickerVisible] = useState(false);
-  const [isNumberPickerVisible, setIsNumberPickerVisible] = useState(false);
-  const [responseData, setResponseData] = useState(null); 
-  const [showSearch, setShowSearch] = useState(true);
+const CreateMarkets = () => {
+  const [formState, setFormState] = useState(initialCreateMarketFormStates);
+  const formik = useFormik({
+    initialValues: formState,
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log("Form Submitted", values);
+    },
+  });
 
-  const handleSemChange = (e) => {
-    setSem(e.target.value);
-  };
+  // Memoize the dropdown options for better performance
+  const groupOptions = useMemo(() => {
+    return generateFilterData({
+      type: "group",
+      rangeStart: 1,
+      rangeEnd: 99,
+    });
+  }, []);
 
-  const handleGroupSelect = (value) => {
-    setGroup(value);
-    setIsGroupPickerVisible(false);
-  };
+  const seriesOptions = useMemo(() => {
+    return generateFilterData({
+      type: "series",
+    });
+  }, []);
 
-  const renderGroupGrid = () => {
-    const groups = Array.from({ length: 62 }, (_, i) => (i + 38).toString());
-    return (
-      <div className="calendar-grid">
-        {groups.map((group) => (
-          <button
-            key={group}
-            className="calendar-cell"
-            onClick={() => handleGroupSelect(group)}
-          >
-            {group}
-          </button>
-        ))}
-      </div>
-    );
-  };
+  const numberOptions = useMemo(() => {
+    return generateFilterData({
+      type: "number",
+      rangeStart: 1,
+      rangeEnd: 99999,
+    });
+  }, []);
 
-  const handleSeriesSelect = (value) => {
-    setSeries(value);
-    setIsSeriesPickerVisible(false);
-  };
+  // Configuration for single inputs
+  const inputConfig = [
+    { placeholder: "Select Date", type: "date", name: "date" },
+    { placeholder: "Market Name", name: "marketName" },
+    { placeholder: "Price For Each SEM", type: "number", name: "priceForEach" },
+  ];
 
-  // Modify the renderSeriesGrid function to handle restrictions
-  const renderSeriesGrid = () => {
-    const letters = ['A', 'B', 'C', 'D', 'E', 'G', 'H', 'J', 'K', 'L'];
-    const disabledLetters = ['G', 'H', 'J', 'K', 'L']; // Letters to disable for 5 and 25 SEM
-
-    return (
-      <div className="calendar-grid">
-        {letters.map((letter) => {
-          const isDisabled = (sem === '5' || sem === '25') && disabledLetters.includes(letter);
-          return (
-            <button
-              key={letter}
-              className={`calendar-cell ${isDisabled ? 'disabled-cell' : ''}`} // Add a class for disabled buttons
-              onClick={() => !isDisabled && handleSeriesSelect(letter)}
-              disabled={isDisabled}
-              style={{
-                cursor: isDisabled ? 'not-allowed' : 'pointer',
-                position: 'relative', // To place the cross icon correctly
-              }}
-            >
-              {letter}
-              {isDisabled && <FaTimes style={{ position: 'absolute', right: '5px', top: '5px', color: '#dc3545' }} />} {/* Cross icon for disabled letters */}
-            </button>
-          );
-        })}
-      </div>
-    );
-  };
-
-  const handleNumberSelect = (value) => {
-    setNumber(value);
-    setIsNumberPickerVisible(false);
-  };
-
-  const renderNumberGrid = (rangeStart = 0, rangeEnd = 99999, isFormatted = true) => {
-    const numbers = Array.from({ length: rangeEnd - rangeStart + 1 }, (_, i) => i + rangeStart);
-    return (
-      <div className="calendar-grid">
-        {numbers.map((number) => (
-          <button
-            key={number}
-            className="calendar-cell"
-            onClick={() => handleNumberSelect(isFormatted ? number.toString().padStart(5, '0') : number.toString())}
-          >
-            {isFormatted ? number.toString().padStart(5, '0') : number.toString()}
-          </button>
-        ))}
-      </div>
-    );
-  };
-
-  const handleSearch = async () => {
-    const requestBody = {
-      group: group ? parseInt(group) : null,
-      series: series ? series : null,
-      number: number ? parseInt(number) : null,
-      sem: sem ? parseInt(sem) : null,
-    };
-
-    console.log("Request Body:", requestBody); 
-
-    try {
-      const response = await SearchLotteryTicket(requestBody);
-      console.log('Success:', response);
-      
-      // Set the response data and hide the search box
-      setResponseData(response.data);
-
-      setShowSearch(false);
-    } catch (error) {
-      console.error('Error:', error);
-      // Handle the error if necessary
-    }
-  };
+  // Configuration for from-to inputs
+  const fromToInputConfig = [
+    {
+      placeholder: "Group (From - To)",
+      fromName: "groupFrom",
+      toName: "groupTo",
+      options: groupOptions,
+    },
+    {
+      placeholder: "Series (From - To)",
+      fromName: "seriesFrom",
+      toName: "seriesTo",
+      options: seriesOptions,
+    },
+    {
+      placeholder: "Number (From - To)",
+      fromName: "numberFrom",
+      toName: "numberTo",
+      options: numberOptions,
+    },
+    {
+      placeholder: "Enter Timer (hh:mm AM/PM)",
+      fromName: "timerFrom",
+      toName: "timerTo",
+    },
+  ];
 
   return (
-    <div className="container-fluid d-flex justify-content-center" style={{ minHeight: '75vh', backgroundColor: '#f0f4f8' }}>
-      <div className="border border-3 rounded-3 shadow-lg" style={{ padding: '40px', width: '80%', maxWidth: '800px', backgroundColor: '#ffffff' }}>
-        {showSearch ? (
-          <>
-            <div className="text-center mb-4">
-              <h2 className="mb-1" style={{ color: '#4682B4', fontWeight: 'bold', letterSpacing: '1px' }}>🔍 Search Lottery Tickets</h2>
-            </div>
+    <div
+      className="d-flex align-items-center justify-content-center"
+      style={{
+        background: "#f0f0f0",
+        minHeight: "75vh",
+      }}
+    >
+      <div
+        className="container mt-3 p-4 shadow rounded"
+        style={{
+          background: "#fff",
+          border: "2px solid black",
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+          maxWidth: "900px",
+          padding: "20px",
+          width: "100%",
+          height: "auto",
+          maxHeight: "650px",
+        }}
+      >
+        <h3 className="text-center mb-4">Create Lottery Markets</h3>
+        <form onSubmit={formik.handleSubmit}>
+          {/* Render single inputs dynamically */}
+          {inputConfig.map((input) => (
+            <ReusableInput
+              key={input.name}
+              placeholder={input.placeholder}
+              type={input.type || "text"}
+              name={input.name}
+              value={formik.values[input.name]}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched[input.name] && formik.errors[input.name]}
+            />
+          ))}
 
-            {/* SEM Input Field */}
-            <div className="mb-4">
-              <label htmlFor="sem" className="form-label" style={{ color: '#4682B4', fontWeight: 'bold' }}>Select SEM</label>
-              <select id="sem" className="form-select" value={sem} onChange={handleSemChange}>
-                <option value="">Choose SEM</option>
-                <option value="5">5 SEM</option>
-                <option value="10">10 SEM</option>
-                <option value="25">25 SEM</option>
-                <option value="50">50 SEM</option>
-                <option value="100">100 SEM</option>
-                <option value="200">200 SEM</option>
-              </select>
-            </div>
+          {/* Render from-to inputs dynamically */}
+          {fromToInputConfig.map((input) => (
+            <FromToInput
+              key={input.fromName}
+              placeholder={input.placeholder}
+              fromName={input.fromName}
+              toName={input.toName}
+              options={input.options}
+              fromValue={formik.values[input.fromName]}
+              toValue={formik.values[input.toName]}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              fromError={
+                formik.touched[input.fromName] && formik.errors[input.fromName]
+              }
+              toError={formik.touched[input.toName] && formik.errors[input.toName]}
+            />
+          ))}
 
-            {/* Group Input */}
-            <div className="mb-3">
-              <div className="input-wrapper">
-                <input
-                  type="text"
-                  placeholder="Group"
-                  className="form-control"
-                  value={group}
-                  onFocus={() => setIsGroupPickerVisible(true)}
-                  readOnly
-                />
-                {isGroupPickerVisible && (
-                  <div className="picker-dropdown">
-                    {renderGroupGrid()}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Series Input */}
-            <div className="mb-3">
-              <div className="input-wrapper">
-                <input
-                  type="text"
-                  placeholder="Series"
-                  className="form-control"
-                  value={series}
-                  onFocus={() => setIsSeriesPickerVisible(true)}
-                  readOnly
-                />
-                {isSeriesPickerVisible && (
-                  <div className="picker-dropdown">
-                    {renderSeriesGrid()}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Number Input */}
-            <div className="mb-4">
-              <div className="input-wrapper">
-                <input
-                  type="text"
-                  placeholder="Number"
-                  className="form-control"
-                  value={number}
-                  onFocus={() => setIsNumberPickerVisible(true)}
-                  readOnly
-                />
-                {isNumberPickerVisible && (
-                  <div className="picker-dropdown">
-                    {renderNumberGrid()}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Search Button */}
-            <div className="text-center">
-              <button className="btn btn-primary" onClick={handleSearch} style={{ backgroundColor: '#4682B4', padding: '10px 40px', fontWeight: 'bold' }}>Search</button>
-            </div>
-          </>
-        ) : (
-          <div className="text-center">
-            <h4 style={{ color: '#4682B4', fontWeight: 'bold' }}>Search Results:</h4>
-            <div className="mt-3">
-              {responseData && responseData.tickets && responseData.tickets.length > 0 ? ( 
-                <>
-                  <h5>Tickets:</h5>
-                  <ul>
-                    {responseData.tickets.map((ticket, index) => ( 
-                      <li key={index} style={{ color: '#3b6e91' }}>{ticket}</li>
-                    ))}
-                  </ul>
-                  <h5>Price: <span style={{ color: '#3b6e91' }}>₹{responseData.price}</span></h5>
-                  <h5>SEM: <span style={{ color: '#3b6e91' }}>{responseData.sem}</span></h5>
-                </>
-              ) : (
-                <h5 style={{ color: '#3b6e91' }}>{responseData ? responseData.message || 'No tickets found.' : 'No data available.'}</h5> 
-              )}
-              <button className="btn btn-primary mt-3" style={{ backgroundColor: '#4682B4' }} onClick={() => setShowSearch(true)}>New Search</button>
-            </div>
+          <div className="text-center mt-3">
+            <button
+              type="submit"
+              className="btn btn-primary px-4"
+              style={{ background: "#4682B4" }}
+            >
+              Create Market
+            </button>
           </div>
-        )}
+        </form>
       </div>
     </div>
   );
 };
 
-export default Search;
+export default CreateMarkets;
