@@ -238,11 +238,15 @@ const MarketInsight = () => {
                   </Card.Body>
                 </Card>
               </Col>
+              <div className="d-flex justify-content-evenly">
+              <button className="btn btn-primary"> Void</button>
+              <button className="btn btn-success d-flex  "> IsActive</button>
+              </div>
             </Row>
 
             {/* Accordion for Purchased Tickets */}
 
-            <Accordion defaultActiveKey="0">
+            <Accordion defaultActiveKey="0" className="mt-4">
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Purchased Tickets</Accordion.Header>
                 <Accordion.Body>
