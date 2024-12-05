@@ -313,3 +313,23 @@ export async function GetPurchaseHistoryMarketTimings(body = {}, isToast = false
   }
 }
 
+export async function isActiveLottery(body = {}, isToast = false) {
+  try {
+    const callParams = await getAuthCallParams(strings.POST, body, isToast);
+    const response = await makeCall(urls.isActive, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getIsActiveLottery(body = {}, isToast = false) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, body, isToast);
+    const response = await makeCall(urls.getIsActive, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+

@@ -139,14 +139,14 @@ const NavTop = () => {
                 <span>Void</span>
               </Link>
               <Link
-                to=""
+                to="/inactive"
                 className={`nav-link active-icon ${
                   activeLink === "" ? "active-link" : ""
                 }`}
                 onClick={() => handleClick("")}
               >
              <i class="fas fa-check-circle nav-icon"></i>
-                <span>Active</span>
+                <span>InActive</span>
               </Link>
             </div>
 
