@@ -146,7 +146,7 @@ const NavTop = () => {
                 onClick={() => handleClick("")}
               >
              <i class="fas fa-check-circle nav-icon"></i>
-                <span>Active</span>
+                <span>InActive</span>
               </Link>
             </div>
 

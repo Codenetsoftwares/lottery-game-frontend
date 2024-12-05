@@ -12,8 +12,13 @@ import moment from "moment";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Import Bootstrap icons
 import "./MarketInsight.css";
-import { GetMarketTimings, GetPurchaseOverview } from "../../Utils/apiService";
+import {
+  GetMarketTimings,
+  GetPurchaseOverview,
+  voidMarket,
+} from "../../Utils/apiService";
 import { useAppContext } from "../../contextApi/context";
+import { toast } from "react-toastify";
 
 const MarketInsight = () => {
   const [marketTimes, setMarketTimes] = useState([]);
@@ -22,6 +27,8 @@ const MarketInsight = () => {
   const [purchasedTickets, setPurchasedTickets] = useState([]);
   const { showLoader, hideLoader } = useAppContext();
   const [loading, setLoading] = useState(true);
+  const [marketData, setMarketData] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMarketTimings = async () => {
@@ -40,6 +47,42 @@ const MarketInsight = () => {
     };
 
     fetchMarketTimings();
+  }, []);
+  const fetchMarketData = async (marketId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await voidMarket({ marketId });
+      if (response.success) {
+        setMarketData(response.data);
+      } else {
+        setError(response.message);
+      }
+    } catch (err) {
+      setError("Error fetching market data");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleVoidMarket = async (marketId) => {
+    try {
+      const requestBody = { marketId };
+      const response = await voidMarket(requestBody);
+      if (response.success) {
+        toast.success("Market voided successfully");
+        fetchMarketData(marketId);
+      } else {
+        toast.error(response.message || "Failed to void market");
+      }
+    } catch (error) {
+      toast.error("An error occurred while voiding the market");
+    }
+  };
+
+  useEffect(() => {
+    const marketId = "a0587cfe-5600-4675-8d13-00aff76246c1";
+    fetchMarketData(marketId);
   }, []);
 
   useEffect(() => {
@@ -209,10 +252,10 @@ const MarketInsight = () => {
               <Col md={6} className="mb-3">
                 <Card className="stat-card time-card shadow">
                   <Card.Body className="d-flex align-items-center">
-                  <i className="bi bi-calendar-plus-fill stat-icon me-3"></i>
-                  <div>
+                    <i className="bi bi-calendar-plus-fill stat-icon me-3"></i>
+                    <div>
                       <p className="mb-1">
-                        <strong>Date Range</strong>
+                        <strong>Date</strong>
                       </p>
                       <p>
                         {selectedMarket
@@ -231,7 +274,7 @@ const MarketInsight = () => {
                     <i className="bi bi-currency-rupee stat-icon me-5"></i>
                     <div>
                       <p className="mb-1">
-                        <strong>Price Range</strong>
+                        <strong>Price</strong>
                       </p>
                       <p>{selectedMarket ? selectedMarket.price : "N/A"}</p>
                     </div>
@@ -239,8 +282,16 @@ const MarketInsight = () => {
                 </Card>
               </Col>
               <div className="d-flex justify-content-evenly">
-              <button className="btn btn-primary"> Void</button>
-              <button className="btn btn-success d-flex  "> IsActive</button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() =>
+                    selectedMarket && handleVoidMarket(selectedMarket.marketId)
+                  }
+                >
+                  Void
+                </button>
+
+                <button className="btn btn-success d-flex  "> IsActive</button>
               </div>
             </Row>
 

@@ -100,7 +100,7 @@ const DashCard = [
         boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
         color: "#fff",
       },
-      icon: "fas fa-chart-line nav-icon", // icon for Lucky Hour
+      icon: "fas fa-check-circle nav-icon", // icon for Lucky Hour
     },
   ];
   export default DashCard;
