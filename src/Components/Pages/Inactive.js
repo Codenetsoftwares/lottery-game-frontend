@@ -4,7 +4,7 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Pagination from "../Common/Pagination";
 import { useAppContext } from "../../contextApi/context";
-import { getIsActiveLottery } from "../../Utils/apiService";
+import { getIsActiveLottery, isRevokeLottery } from "../../Utils/apiService";
 import SingleCard from "../Common/SingleCard";
 
 const Inactive = () => {
@@ -15,25 +15,26 @@ const Inactive = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [totalPages, setTotalPages] = useState("");
     const [totalData, setTotalData] = useState("");
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         fetchInactiveGames();
-    }, []);
+    }, [refresh,currentPage,itemsPerPage]);
 
     const fetchInactiveGames = async () => {
         try {
-            const res = await getIsActiveLottery(
-                // currentPage,
-                // itemsPerPage,
+            const res = await getIsActiveLottery({
+                page: currentPage,
+                limit: itemsPerPage,
                 // searchTerm
+            }
             );
-
             const gamesData = res?.data || [];
             console.log("gamesData", res.data);
 
             setInactiveGames(gamesData);
-            // setTotalData(res.data.pagination.totalItems);
-            // setTotalPages(res.data.pagination.totalPages);
+            setTotalData(res?.pagination?.totalItems);
+            setTotalPages(res?.pagination?.totalPages);
         } catch (err) {
             console.error("Error fetching inactive games:", err);
         }
@@ -43,21 +44,16 @@ const Inactive = () => {
         setSearchTerm("");
     };
 
-    const handleRevokeAnnouncement = (marketId, runnerId) => {
-        console.log("===>> runner id", runnerId);
-        const data = {
-            marketId: marketId,
-            runnerId: runnerId,
-        };
-
-        // AccountServices.revokeAnnounceWin(data, store.user)
-        //     .then((response) => {
-        //         toast.success("Revoke announcement successful", response.data);
-        //         fetchInactiveGames(); // Refresh the list after a successful revoke
-        //     })
-        //     .catch((err) => {
-        //         toast.error("Error revoking announcement:", err);
-        //     });
+    const handleRevokeAnnouncement = async (marketId) => {
+        console.log("first", marketId)
+        try {
+            const res = await isRevokeLottery({ marketId: marketId });
+            if (res) {
+                setRefresh((prev) => !prev)
+            }
+        } catch (err) {
+            console.error("Error fetching inactive games:", err);
+        }
     };
 
     const handlePageChange = (pageNumber) => {
@@ -190,7 +186,18 @@ const Inactive = () => {
                                                     <td >
                                                         {game.marketName}
                                                     </td>
-
+                                                    <td>
+                                                        <button
+                                                            className="btn btn-danger"
+                                                            onClick={() =>
+                                                                handleRevokeAnnouncement(
+                                                                    game.marketId
+                                                                )
+                                                            }
+                                                        >
+                                                            {`Revoke Announcement of ${game.marketName}`}
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             )
                                         })

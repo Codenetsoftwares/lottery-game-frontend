@@ -67,7 +67,7 @@ const MarketInsight = () => {
 
       fetchPurchasedTickets();
     }
-  }, [selectedMarket]); // Runs when selectedMarket changes
+  }, [selectedMarket,refresh]); // Runs when selectedMarket changes
 
   const handleisActive = async (id, status) => {
     try {
@@ -78,7 +78,6 @@ const MarketInsight = () => {
       console.error("Error activating/deactivating lottery:", error);
     }
   };
-
 
   const handleMarketClick = (market) => {
     setSelectedMarket(market);
