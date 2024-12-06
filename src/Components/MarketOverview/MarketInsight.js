@@ -67,18 +67,34 @@ const MarketInsight = () => {
   };
   const handleVoidMarket = async (marketId) => {
     try {
+      showLoader();
+
       const requestBody = { marketId };
       const response = await voidMarket(requestBody);
+
       if (response.success) {
         toast.success("Market voided successfully");
-        fetchMarketData(marketId);
+
+        // Remove the voided market from the marketTimes state
+        setMarketTimes((prevMarketTimes) =>
+          prevMarketTimes.filter((market) => market.marketId !== marketId)
+        );
+
+        if (selectedMarket?.marketId === marketId) {
+          setSelectedMarket(null);
+          setShowStats(false);
+        }
       } else {
         toast.error(response.message || "Failed to void market");
       }
     } catch (error) {
+      console.error("Error in voiding market:", error);
       toast.error("An error occurred while voiding the market");
+    } finally {
+      hideLoader();
     }
   };
+
 
   useEffect(() => {
     const marketId = "a0587cfe-5600-4675-8d13-00aff76246c1";
@@ -95,7 +111,7 @@ const MarketInsight = () => {
             marketId: selectedMarket.marketId,
           });
           if (response.success) {
-            setPurchasedTickets(response.data.tickets || []); // Update the state with purchased ticket data
+            setPurchasedTickets(response.data.tickets || []);
           }
         } catch (error) {
           console.error("Error fetching purchased tickets:", error);
@@ -107,7 +123,7 @@ const MarketInsight = () => {
 
       fetchPurchasedTickets();
     }
-  }, [selectedMarket]); // Runs when selectedMarket changes
+  }, [selectedMarket]);
 
   const handleMarketClick = (market) => {
     setSelectedMarket(market);
@@ -148,7 +164,7 @@ const MarketInsight = () => {
               style={{ minHeight: "480px", width: "100%" }}
             >
               <h4
-                className="text-center  bg-white p-5 rounded-5"
+                className="text-center bg-white p-5 rounded-5"
                 style={{ color: "#2b3a67", fontWeight: "900" }}
               >
                 No <br />
@@ -159,6 +175,7 @@ const MarketInsight = () => {
           )}
         </div>
       </aside>
+
 
       {/* Main Content */}
       <main className="alt-main-content p-4">
@@ -235,8 +252,8 @@ const MarketInsight = () => {
                         Start:{" "}
                         {selectedMarket.start_time
                           ? moment
-                              .utc(selectedMarket.start_time)
-                              .format("HH:mm")
+                            .utc(selectedMarket.start_time)
+                            .format("HH:mm")
                           : "N/A"}
                         | End:{" "}
                         {selectedMarket.end_time

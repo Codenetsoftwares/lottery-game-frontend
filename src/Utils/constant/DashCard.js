@@ -79,7 +79,7 @@ const DashCard = [
       description:
         "Create and manage multiple draw times for lotteries each day for a more dynamic experience!",
       buttonName: "Void",
-      buttonLink: "/void-market-lottery" ,
+      buttonLink: "/get-void-market" ,
       cardstyle: {
         borderRadius: "20px",
         backgroundColor: "rgb(207, 63, 82)",

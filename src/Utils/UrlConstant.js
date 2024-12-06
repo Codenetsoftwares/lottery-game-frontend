@@ -31,6 +31,7 @@ class UrlConstant {
   getResultMarkets = `${this.url_dev}/admin/dateWise-markets`;
   getPurchaseMarketTime = `${this.url_dev}/${this.admin}/get-markets`;
   getVoidMarket = `${this.url_dev}/void-market-lottery`;
+  // getVoidMarket = `${this.url_dev}/get-void-market`;
 }
 
 const urls = new UrlConstant();
