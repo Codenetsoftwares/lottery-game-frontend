@@ -12,9 +12,9 @@ import moment from "moment";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Import Bootstrap icons
 import "./MarketInsight.css";
-import { GetMarketTimings, GetPurchaseOverview, isActiveLottery } from "../../Utils/apiService";
+import { GetMarketTimings, GetPurchaseOverview,voidMarket, isActiveLottery } from "../../Utils/apiService";
 import { useAppContext } from "../../contextApi/context";
-
+import { toast } from "react-toastify";
 const MarketInsight = () => {
   const [marketTimes, setMarketTimes] = useState([]);
   const [selectedMarket, setSelectedMarket] = useState(null);
@@ -22,7 +22,10 @@ const MarketInsight = () => {
   const [purchasedTickets, setPurchasedTickets] = useState([]);
   const { showLoader, hideLoader } = useAppContext();
   const [loading, setLoading] = useState(true);
+  const [marketData, setMarketData] = useState([]);
+  const [error, setError] = useState(null);
   const [refresh, setRefresh] = useState(false)
+
 
 
   console.log("refresh",refresh)
@@ -44,6 +47,58 @@ const MarketInsight = () => {
 
     fetchMarketTimings();
   }, []);
+  const fetchMarketData = async (marketId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await voidMarket({ marketId });
+      if (response.success) {
+        setMarketData(response.data);
+      } else {
+        setError(response.message);
+      }
+    } catch (err) {
+      setError("Error fetching market data");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleVoidMarket = async (marketId) => {
+    try {
+      showLoader();
+
+      const requestBody = { marketId };
+      const response = await voidMarket(requestBody);
+
+      if (response.success) {
+        toast.success("Market voided successfully");
+
+        // Remove the voided market from the marketTimes state
+        setMarketTimes((prevMarketTimes) =>
+          prevMarketTimes.filter((market) => market.marketId !== marketId)
+        );
+
+        if (selectedMarket?.marketId === marketId) {
+          setSelectedMarket(null);
+          setShowStats(false);
+        }
+      } else {
+        toast.error(response.message || "Failed to void market");
+      }
+    } catch (error) {
+      console.error("Error in voiding market:", error);
+      toast.error("An error occurred while voiding the market");
+    } finally {
+      hideLoader();
+    }
+  };
+
+
+  useEffect(() => {
+    const marketId = "a0587cfe-5600-4675-8d13-00aff76246c1";
+    fetchMarketData(marketId);
+  }, []);
 
   useEffect(() => {
     if (selectedMarket) {
@@ -55,7 +110,7 @@ const MarketInsight = () => {
             marketId: selectedMarket.marketId,
           });
           if (response.success) {
-            setPurchasedTickets(response.data.tickets || []); // Update the state with purchased ticket data
+            setPurchasedTickets(response.data.tickets || []);
           }
         } catch (error) {
           console.error("Error fetching purchased tickets:", error);
@@ -67,6 +122,7 @@ const MarketInsight = () => {
 
       fetchPurchasedTickets();
     }
+
   }, [selectedMarket,refresh]); // Runs when selectedMarket changes
 
   const handleisActive = async (id, status) => {
@@ -78,6 +134,7 @@ const MarketInsight = () => {
       console.error("Error activating/deactivating lottery:", error);
     }
   };
+
 
   const handleMarketClick = (market) => {
     setSelectedMarket(market);
@@ -118,7 +175,7 @@ const MarketInsight = () => {
               style={{ minHeight: "480px", width: "100%" }}
             >
               <h4
-                className="text-center  bg-white p-5 rounded-5"
+                className="text-center bg-white p-5 rounded-5"
                 style={{ color: "#2b3a67", fontWeight: "900" }}
               >
                 No <br />
@@ -129,6 +186,7 @@ const MarketInsight = () => {
           )}
         </div>
       </aside>
+
 
       {/* Main Content */}
       <main className="alt-main-content p-4">
@@ -225,7 +283,7 @@ const MarketInsight = () => {
                     <i className="bi bi-calendar-plus-fill stat-icon me-3"></i>
                     <div>
                       <p className="mb-1">
-                        <strong>Date Range</strong>
+                        <strong>Date</strong>
                       </p>
                       <p>
                         {selectedMarket
@@ -244,7 +302,7 @@ const MarketInsight = () => {
                     <i className="bi bi-currency-rupee stat-icon me-5"></i>
                     <div>
                       <p className="mb-1">
-                        <strong>Price Range</strong>
+                        <strong>Price</strong>
                       </p>
                       <p>{selectedMarket ? selectedMarket.price : "N/A"}</p>
                     </div>
@@ -252,9 +310,16 @@ const MarketInsight = () => {
                 </Card>
               </Col>
               <div className="d-flex justify-content-evenly">
-                <button className="btn btn-primary"> Void</button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() =>
+                    selectedMarket && handleVoidMarket(selectedMarket.marketId)
+                  }
+                >
+                  Void
+                </button>
                 {selectedMarket.isActive ? <button className="btn btn-danger" onClick={() => handleisActive(selectedMarket.marketId, false)}>Suspend</button> : <button className="btn btn-success" onClick={() => handleisActive(selectedMarket.marketId, true)}> IsActive</button>}
-
+                
               </div>
             </Row>
 

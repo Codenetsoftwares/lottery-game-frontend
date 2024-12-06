@@ -129,11 +129,11 @@ const NavTop = () => {
               </Link>
 
               <Link
-                to="/void-market-lottery"
+                to="/get-void-market"
                 className={`nav-link void-icon ${
-                  activeLink === "/void-market-lottery" ? "active-link" : ""
+                  activeLink === "/get-void-market" ? "active-link" : ""
                 }`}
-                onClick={() => handleClick("/void-market-lottery")}
+                onClick={() => handleClick("/get-void-market")}
               >
               <i class="fas fa-minus-circle nav-icon"></i>
                 <span>Void</span>

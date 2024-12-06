@@ -79,7 +79,7 @@ const DashCard = [
       description:
         "Create and manage multiple draw times for lotteries each day for a more dynamic experience!",
       buttonName: "Void",
-      buttonLink: "/void-market-lottery" ,
+      buttonLink: "/get-void-market" ,
       cardstyle: {
         borderRadius: "20px",
         backgroundColor: "rgb(207, 63, 82)",
@@ -100,7 +100,7 @@ const DashCard = [
         boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
         color: "#fff",
       },
-      icon: "fas fa-chart-line nav-icon", // icon for Lucky Hour
+      icon: "fas fa-check-circle nav-icon", // icon for Lucky Hour
     },
   ];
   export default DashCard;

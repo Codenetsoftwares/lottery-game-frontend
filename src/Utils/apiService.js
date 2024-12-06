@@ -343,4 +343,24 @@ export async function isRevokeLottery(body = {}, isToast = false) {
     throw error;
   }
 }
-
+export async function voidMarket(body, isToast = true) {
+  try {
+    const callParams = await getAuthCallParams(strings.POST, body, isToast);
+    const response = await makeCall(urls.getVoidMarket, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+export async function GetVoidMarketData(body = {}, isToast = false) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, body, isToast);
+    const response = await makeCall(
+      `${urls.allVoidMarketData}?page=${body.page}&limit=${body.limit}&searchByMarketName=${body.searchTerm}`,
+      callParams,
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}

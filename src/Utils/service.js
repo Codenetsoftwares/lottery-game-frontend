@@ -67,40 +67,43 @@ export const getAuthCallParams = async (methodType, body) => {
   }
 };
 
-export async function makeCall(callName, callParams, isToast) {
+export async function makeCall(callName, callParams, isToast = true) {
   try {
+    console.log("API Call Initiated:", { callName, callParams }); // Debugging logs
     let call = await fetch(callName, callParams);
     let timeout = getTimeoutPromise();
 
-    const response = await Promise.race([timeout, call]).catch((err) => {
-      throw err;
-    });
-
+    const response = await Promise.race([timeout, call]);
     const json = await response.json();
 
-    if (json.responseCode === 401) {
+    if (response.status === 401) {
       localStorage.clear();
-      sessionStorage.setItem('sessionExpierd', true);
-      window.location.href = '/';
+      sessionStorage.setItem("sessionExpired", true);
+      window.location.href = "/";
+      return null; // Stop further processing
     }
 
-    // Handle 400: Bad Request - Centralized error
-    if (json.responseCode === 400) {
-      toast.error(json.errMessage || 'Bad request. Please try again.');
-      return null; // Optionally, return null to stop further processing
-    }
-
-    if (json.success === false) {
-      toast.error(json.errMessage );
+    if (response.status === 400) {
+      toast.error(json.errMessage || "Bad request. Please try again.");
       return null;
-    } else if (isToast && (json.success === true || json.successCode === 200)) {
-      toast.success(json.message || 'Operation successful');
+    }
+
+    if (!response.ok) {
+      const errorMessage =
+        json?.message || `Error: ${response.status} ${response.statusText}`;
+      toast.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+
+    if (isToast && json.success) {
+      toast.success(json.message || "Operation successful");
     }
 
     return json;
   } catch (error) {
-    toast.error(error.message || 'An error occurred');
-    return null;
+    console.error("Error in makeCall:", error); // Log errors
+    toast.error(error.message || "An error occurred");
+    throw error; // Rethrow to handle upstream
   }
 }
 
@@ -109,6 +112,7 @@ export function getTimeoutPromise() {
     setTimeout(() => reject({ error: true, message: 'Timeout', success: false }), 5000);
   });
 }
+
 
 //   export const checkStatus = async (error) => {
 //     const navigate = useNavigate();
