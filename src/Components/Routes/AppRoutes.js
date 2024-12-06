@@ -52,7 +52,7 @@ const AppRoutes = () => {
             {/* <Route path="/results" element={<DemoResult />} /> */}
             <Route path="/win" element={<Win />} />
             <Route path="/search-lottery" element={<SearchLottery/>} />
-            <Route path="/void-market-lottery" element={<Void/>} />
+            <Route path="/get-void-market" element={<Void/>} />
 
             {/* <Route path="/lucky-hour" element={<CreateTime/>}/>  not in use anymore  */} 
             <Route path="/Market-overview" element={<MarketInsight/>} />

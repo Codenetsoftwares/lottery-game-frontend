@@ -308,14 +308,11 @@ export async function GetResultMarket(body = {}) {
     throw error;
   }
 }
-export async function GetPurchaseHistoryMarketTimings(
-  body = {},
-  isToast = false
-) {
+export async function GetPurchaseHistoryMarketTimings(body = {},isToast = false) {
   try {
     const callParams = await getAuthCallParams(strings.GET, body, isToast);
     const response = await makeCall(
-      urls.getPurchaseMarketTime,
+      `${urls.getPurchaseMarketTime}?date=${body.date}`,
       callParams,
       isToast
     );
@@ -329,6 +326,20 @@ export async function voidMarket(body, isToast = true) {
   try {
     const callParams = await getAuthCallParams(strings.POST, body, isToast);
     const response = await makeCall(urls.getVoidMarket, callParams, isToast);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function GetVoidMarketData(body = {}, isToast = false) {
+  try {
+    const callParams = await getAuthCallParams(strings.GET, body, isToast);
+
+    const response = await makeCall(
+      `${urls.allVoidMarketData}?page=${body.page}&limitPerPage=${body.limit}&searchByMarketName=${body.searchTerm}`,
+      callParams,
+    );
     return response;
   } catch (error) {
     throw error;

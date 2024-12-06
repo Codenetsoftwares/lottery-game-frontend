@@ -35,7 +35,7 @@ const PurchasedTickets = () => {
   useEffect(() => {
     const fetchMarketData = async () => {
       try {
-        const response = await GetPurchaseHistoryMarketTimings();
+        const response = await GetPurchaseHistoryMarketTimings({ date: new Date().toISOString().slice(0, 10) });
   
         if (response?.success) {
           const marketsData = response.data || [];
