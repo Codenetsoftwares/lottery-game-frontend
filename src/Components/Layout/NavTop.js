@@ -139,7 +139,7 @@ const NavTop = () => {
                 <span>Void</span>
               </Link>
               <Link
-                to=""
+                to="/inactive"
                 className={`nav-link active-icon ${
                   activeLink === "" ? "active-link" : ""
                 }`}

@@ -12,14 +12,9 @@ import moment from "moment";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Import Bootstrap icons
 import "./MarketInsight.css";
-import {
-  GetMarketTimings,
-  GetPurchaseOverview,
-  voidMarket,
-} from "../../Utils/apiService";
+import { GetMarketTimings, GetPurchaseOverview,voidMarket, isActiveLottery } from "../../Utils/apiService";
 import { useAppContext } from "../../contextApi/context";
 import { toast } from "react-toastify";
-
 const MarketInsight = () => {
   const [marketTimes, setMarketTimes] = useState([]);
   const [selectedMarket, setSelectedMarket] = useState(null);
@@ -29,7 +24,11 @@ const MarketInsight = () => {
   const [loading, setLoading] = useState(true);
   const [marketData, setMarketData] = useState([]);
   const [error, setError] = useState(null);
+  const [refresh, setRefresh] = useState(false)
 
+
+
+  console.log("refresh",refresh)
   useEffect(() => {
     const fetchMarketTimings = async () => {
       showLoader();
@@ -123,7 +122,19 @@ const MarketInsight = () => {
 
       fetchPurchasedTickets();
     }
-  }, [selectedMarket]);
+
+  }, [selectedMarket,refresh]); // Runs when selectedMarket changes
+
+  const handleisActive = async (id, status) => {
+    try {
+      const response = await isActiveLottery({ status: status, marketId: id }, true);
+      setRefresh((prev) => !prev)
+      console.log("Response:", response);
+    } catch (error) {
+      console.error("Error activating/deactivating lottery:", error);
+    }
+  };
+
 
   const handleMarketClick = (market) => {
     setSelectedMarket(market);
@@ -307,8 +318,8 @@ const MarketInsight = () => {
                 >
                   Void
                 </button>
-
-                <button className="btn btn-success d-flex  "> IsActive</button>
+                {selectedMarket.isActive ? <button className="btn btn-danger" onClick={() => handleisActive(selectedMarket.marketId, false)}>Suspend</button> : <button className="btn btn-success" onClick={() => handleisActive(selectedMarket.marketId, true)}> IsActive</button>}
+                
               </div>
             </Row>
 
