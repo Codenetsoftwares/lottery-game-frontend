@@ -41,7 +41,7 @@ const Search = ({
   const [responseData, setResponseData] = useState(null);
   const [showSearch, setShowSearch] = useState(true);
   const [errors, setErrors] = useState({});
-  // const [filteredMarket, setFilteredMarket] = useState(null); 
+  // const [filteredMarket, setFilteredMarket] = useState(null);
 
   const navigate = useNavigate();
 
@@ -134,7 +134,7 @@ const Search = ({
         {filteredNumbers.length === 0 ? (
           <div className="text-center">No Results</div>
         ) : (
-          filteredNumbers.map((num) => (
+          filteredNumbers.slice(0, 10000).map((num) => (
             <button
               key={num}
               className="calendar-cell"
