@@ -74,6 +74,34 @@ const DashCard = [
       },
       icon: "fas fa-chart-line nav-icon", // icon for Lucky Hour
     },
+    {
+      name: "Void",
+      description:
+        "Create and manage multiple draw times for lotteries each day for a more dynamic experience!",
+      buttonName: "Void",
+      buttonLink: "/void-market-lottery" ,
+      cardstyle: {
+        borderRadius: "20px",
+        backgroundColor: "rgb(207, 63, 82)",
+        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+        color: "#fff",
+      },
+      icon: "fas fa-minus-circle nav-icon", // icon for Lucky Hour
+    },
+    {
+      name: "Active",
+      description:
+        "Create and manage multiple draw times for lotteries each day for a more dynamic experience!",
+      buttonName: "Active",
+      buttonLink: "/" ,
+      cardstyle: {
+        borderRadius: "20px",
+        backgroundColor: "rgb(11, 134, 32)",
+        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+        color: "#fff",
+      },
+      icon: "fas fa-chart-line nav-icon", // icon for Lucky Hour
+    },
   ];
   export default DashCard;
   

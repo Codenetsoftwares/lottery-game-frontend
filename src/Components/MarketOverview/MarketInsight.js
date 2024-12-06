@@ -12,7 +12,7 @@ import moment from "moment";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Import Bootstrap icons
 import "./MarketInsight.css";
-import { GetMarketTimings, GetPurchaseOverview } from "../../Utils/apiService";
+import { GetMarketTimings, GetPurchaseOverview, isActiveLottery } from "../../Utils/apiService";
 import { useAppContext } from "../../contextApi/context";
 
 const MarketInsight = () => {
@@ -22,7 +22,10 @@ const MarketInsight = () => {
   const [purchasedTickets, setPurchasedTickets] = useState([]);
   const { showLoader, hideLoader } = useAppContext();
   const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false)
 
+
+  console.log("refresh",refresh)
   useEffect(() => {
     const fetchMarketTimings = async () => {
       showLoader();
@@ -64,7 +67,17 @@ const MarketInsight = () => {
 
       fetchPurchasedTickets();
     }
-  }, [selectedMarket]); // Runs when selectedMarket changes
+  }, [selectedMarket,refresh]); // Runs when selectedMarket changes
+
+  const handleisActive = async (id, status) => {
+    try {
+      const response = await isActiveLottery({ status: status, marketId: id }, true);
+      setRefresh((prev) => !prev)
+      console.log("Response:", response);
+    } catch (error) {
+      console.error("Error activating/deactivating lottery:", error);
+    }
+  };
 
   const handleMarketClick = (market) => {
     setSelectedMarket(market);
@@ -192,8 +205,8 @@ const MarketInsight = () => {
                         Start:{" "}
                         {selectedMarket.start_time
                           ? moment
-                              .utc(selectedMarket.start_time)
-                              .format("HH:mm")
+                            .utc(selectedMarket.start_time)
+                            .format("HH:mm")
                           : "N/A"}
                         | End:{" "}
                         {selectedMarket.end_time
@@ -209,8 +222,8 @@ const MarketInsight = () => {
               <Col md={6} className="mb-3">
                 <Card className="stat-card time-card shadow">
                   <Card.Body className="d-flex align-items-center">
-                  <i className="bi bi-calendar-plus-fill stat-icon me-3"></i>
-                  <div>
+                    <i className="bi bi-calendar-plus-fill stat-icon me-3"></i>
+                    <div>
                       <p className="mb-1">
                         <strong>Date Range</strong>
                       </p>
@@ -238,11 +251,16 @@ const MarketInsight = () => {
                   </Card.Body>
                 </Card>
               </Col>
+              <div className="d-flex justify-content-evenly">
+                <button className="btn btn-primary"> Void</button>
+                {selectedMarket.isActive ? <button className="btn btn-danger" onClick={() => handleisActive(selectedMarket.marketId, false)}>Suspend</button> : <button className="btn btn-success" onClick={() => handleisActive(selectedMarket.marketId, true)}> IsActive</button>}
+
+              </div>
             </Row>
 
             {/* Accordion for Purchased Tickets */}
 
-            <Accordion defaultActiveKey="0">
+            <Accordion defaultActiveKey="0" className="mt-4">
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Purchased Tickets</Accordion.Header>
                 <Accordion.Body>

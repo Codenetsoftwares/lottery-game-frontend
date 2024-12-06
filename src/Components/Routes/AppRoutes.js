@@ -19,6 +19,8 @@ import MarketInsight from '../MarketOverview/MarketInsight';
 import SearchLottery from '../Pages/SearchLotteryPage/SearchLottery';
 import PrivateRoute from '../Common/privateRouting';
 import DemoResult from '../Result/demoResult';
+import Void from '../Void/Void';
+import Inactive from '../Pages/Inactive';
 
 const AppRoutes = () => {
   return (
@@ -51,6 +53,8 @@ const AppRoutes = () => {
             {/* <Route path="/results" element={<DemoResult />} /> */}
             <Route path="/win" element={<Win />} />
             <Route path="/search-lottery" element={<SearchLottery/>} />
+            <Route path="/void-market-lottery" element={<Void/>} />
+            <Route path="/inactive" element={<Inactive/>} />
             {/* <Route path="/lucky-hour" element={<CreateTime/>}/>  not in use anymore  */} 
             <Route path="/Market-overview" element={<MarketInsight/>} />
           </Route>
