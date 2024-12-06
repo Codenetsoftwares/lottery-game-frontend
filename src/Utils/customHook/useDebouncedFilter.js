@@ -1,29 +1,27 @@
 import { useRef, useCallback } from "react";
 
 function useDebouncedFilter() {
-    const debounceTimeoutRef = useRef(null);
+  const debounceTimeoutRef = useRef(null);
 
-    const debouncedFilter = useCallback((value, func, time, onFiltered) => {
-        if (debounceTimeoutRef.current) {
-            clearTimeout(debounceTimeoutRef.current); // Clear the previous timeout
-        }
+  const debouncedFilter = useCallback((value, func, time, onFiltered) => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current); 
+    }
 
-        debounceTimeoutRef.current = setTimeout(() => {
-            let filtered = [];
-            if (value) {
-                filtered = func().filter((num) => num.toString().startsWith(value));
-                onFiltered(filtered); // Pass filtered results via callback
-            } else {
-                // If input is empty, reset using the provided function
+    debounceTimeoutRef.current = setTimeout(() => {
+      let filtered = [];
+      if (value) {
+        filtered = func().filter((num) => num.toString().startsWith(value));
+        onFiltered(filtered);
+      } else {
+        onFiltered(func());
+      }
+    }, time);
+  }, []);
 
-                onFiltered(func());
-            }
-        }, time);
-    }, []);
-
-    return {
-        debouncedFilter,
-    };
+  return {
+    debouncedFilter,
+  };
 }
 
 export default useDebouncedFilter;

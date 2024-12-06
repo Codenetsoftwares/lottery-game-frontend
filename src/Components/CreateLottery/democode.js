@@ -1,146 +1,166 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useFormik } from "formik";
-import { validationSchema } from "../../Utils/validationSchema";
-import { initialCreateMarketFormStates } from "../../Utils/initialState";
-import { FromToInput, ReusableInput } from "../ReusableInput/ReusableInput";
-import { generateFilterData } from "../../Utils/helper";
+import React, { useEffect, useRef, useState } from "react";
 
-const CreateMarkets = () => {
-  const [formState, setFormState] = useState(initialCreateMarketFormStates);
-  const formik = useFormik({
-    initialValues: formState,
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.log("Form Submitted", values);
-    },
-  });
+export const FromToInput = ({
+  placeholder,
+  fromName,
+  toName,
+  fromValue,
+  toValue,
+  onChange,
+  onBlur,
+  fromError,
+  toError,
+  options,
+}) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [activeInput, setActiveInput] = useState(null); // Track which input is active
+  const dropdownRef = useRef(null); // Reference to the dropdown container
 
-  // Memoize the dropdown options for better performance
-  const groupOptions = useMemo(() => {
-    return generateFilterData({
-      type: "group",
-      rangeStart: 1,
-      rangeEnd: 99,
-    });
+  const handleInputClick = (inputName) => {
+    setActiveInput(inputName);
+    setIsDropdownOpen(true);
+  };
+
+  const handleOptionClick = (value, inputName) => {
+    onChange({ target: { name: inputName, value } });
+    setIsDropdownOpen(false); // Close the dropdown after selecting
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    onChange({ target: { name, value } });
+  };
+
+  const renderGrid = (data) => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return <div>No options available</div>;
+    }
+
+    const columns = 5; // Set the number of columns in the grid
+    const rows = Math.ceil(data.length / columns);
+    const gridItems = [];
+
+    for (let i = 0; i < rows; i++) {
+      gridItems.push(
+        <div className="d-flex justify-content-between" key={i}>
+          {data.slice(i * columns, (i + 1) * columns).map((item, index) => (
+            <button
+              key={index}
+              className="btn btn-light btn-sm w-100"
+              onClick={() => handleOptionClick(item, activeInput)}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      );
+    }
+
+    return gridItems;
+  };
+
+  // Close dropdown if clicked outside of it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false); // Close the dropdown if clicked outside
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
-
-  const seriesOptions = useMemo(() => {
-    return generateFilterData({
-      type: "series",
-    });
-  }, []);
-
-  const numberOptions = useMemo(() => {
-    return generateFilterData({
-      type: "number",
-      rangeStart: 1,
-      rangeEnd: 99999,
-    });
-  }, []);
-
-  // Configuration for single inputs
-  const inputConfig = [
-    { placeholder: "Select Date", type: "date", name: "date" },
-    { placeholder: "Market Name", name: "marketName" },
-    { placeholder: "Price For Each SEM", type: "number", name: "priceForEach" },
-  ];
-
-  // Configuration for from-to inputs
-  const fromToInputConfig = [
-    {
-      placeholder: "Group (From - To)",
-      fromName: "groupFrom",
-      toName: "groupTo",
-      options: groupOptions,
-    },
-    {
-      placeholder: "Series (From - To)",
-      fromName: "seriesFrom",
-      toName: "seriesTo",
-      options: seriesOptions,
-    },
-    {
-      placeholder: "Number (From - To)",
-      fromName: "numberFrom",
-      toName: "numberTo",
-      options: numberOptions,
-    },
-    {
-      placeholder: "Enter Timer (hh:mm AM/PM)",
-      fromName: "timerFrom",
-      toName: "timerTo",
-    },
-  ];
 
   return (
-    <div
-      className="d-flex align-items-center justify-content-center"
-      style={{
-        background: "#f0f0f0",
-        minHeight: "75vh",
-      }}
-    >
-      <div
-        className="container mt-3 p-4 shadow rounded"
-        style={{
-          background: "#fff",
-          border: "2px solid black",
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
-          maxWidth: "900px",
-          padding: "20px",
-          width: "100%",
-          height: "auto",
-          maxHeight: "650px",
-        }}
-      >
-        <h3 className="text-center mb-4">Create Lottery Markets</h3>
-        <form onSubmit={formik.handleSubmit}>
-          {/* Render single inputs dynamically */}
-          {inputConfig.map((input) => (
-            <ReusableInput
-              key={input.name}
-              placeholder={input.placeholder}
-              type={input.type || "text"}
-              name={input.name}
-              value={formik.values[input.name]}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched[input.name] && formik.errors[input.name]}
-            />
-          ))}
-
-          {/* Render from-to inputs dynamically */}
-          {fromToInputConfig.map((input) => (
-            <FromToInput
-              key={input.fromName}
-              placeholder={input.placeholder}
-              fromName={input.fromName}
-              toName={input.toName}
-              options={input.options}
-              fromValue={formik.values[input.fromName]}
-              toValue={formik.values[input.toName]}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              fromError={
-                formik.touched[input.fromName] && formik.errors[input.fromName]
-              }
-              toError={formik.touched[input.toName] && formik.errors[input.toName]}
-            />
-          ))}
-
-          <div className="text-center mt-3">
-            <button
-              type="submit"
-              className="btn btn-primary px-4"
-              style={{ background: "#4682B4" }}
-            >
-              Create Market
-            </button>
+    <div className="form-group mb-3">
+      <div className="d-flex gap-2">
+        <div className="position-relative" style={{ flex: 1 }}>
+          <input
+            type="text"
+            name={fromName}
+            className={`form-control ${fromError ? "is-invalid" : ""}`}
+            placeholder={`${placeholder} From`}
+            value={fromValue}
+            onClick={() => handleInputClick(fromName)}
+            onBlur={onBlur}
+            onChange={handleInputChange} // Allow manual input
+          />
+          <div
+            className="text-danger d-flex align-items-center mt-1"
+            style={{ minHeight: "20px", fontSize: "0.85rem" }}
+          >
+            {fromError && (
+              <>
+                <i className="bi bi-info-circle me-1"></i>
+                <span>{fromError}</span>
+              </>
+            )}
           </div>
-        </form>
+
+          {isDropdownOpen && activeInput === fromName && (
+            <div
+              ref={dropdownRef}
+              className="dropdown-grid"
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                right: 0,
+                maxHeight: "200px",
+                overflowY: "auto",
+                zIndex: 10,
+              }}
+            >
+              {renderGrid(options)}
+            </div>
+          )}
+        </div>
+
+        <div className="position-relative" style={{ flex: 1 }}>
+          <input
+            type="text"
+            name={toName}
+            className={`form-control ${toError ? "is-invalid" : ""}`}
+            placeholder={`${placeholder} To`}
+            value={toValue}
+            onClick={() => handleInputClick(toName)}
+            onBlur={onBlur}
+            onChange={handleInputChange} // Allow manual input
+          />
+          <div
+            className="text-danger d-flex align-items-center mt-1"
+            style={{ minHeight: "20px", fontSize: "0.85rem" }}
+          >
+            {toError && (
+              <>
+                <i className="bi bi-info-circle me-1"></i>
+                <span>{toError}</span>
+              </>
+            )}
+          </div>
+
+          {isDropdownOpen && activeInput === toName && (
+            <div
+              ref={dropdownRef}
+              className="dropdown-grid"
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                right: 0,
+                maxHeight: "200px",
+                overflowY: "auto",
+                zIndex: 10,
+              }}
+            >
+              {renderGrid(options)}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 };
-
-export default CreateMarkets;

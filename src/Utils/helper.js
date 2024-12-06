@@ -57,30 +57,58 @@ export const generateNumbers = (start, end) => {
   };
 
 
-  export const convertTimeToISO = () => {
-    const slots = [];
-    const startHour = 0; // Start from midnight
-    const endHour = 23; // End at 11 PM
+// Helper function to convert time to ISO string
+export const convertTimeToISO = (time, date) => {
+  if (!time || !date) return null;
+
+  const [hourMin, meridiem] = time.split(" ");
+  const [hours, minutes] = hourMin.split(":").map(Number);
+
+  // Convert 12-hour clock to 24-hour clock
+  const adjustedHours =
+    meridiem === "PM" && hours !== 12
+      ? hours + 12
+      : hours === 12 && meridiem === "AM"
+      ? 0
+      : hours;
+
+  // Create a new Date object with the selected date
+  const dateTime = new Date(date);
+  dateTime.setHours(adjustedHours, minutes, 0, 0);
+
+  // Convert the date-time to UTC (Z) in ISO 8601 format
+  return dateTime.toISOString();
+};
+
+
+
+// helper.js
+
+export const generateTimerOptions = () => {
+  const slots = [];
+  const now = new Date();
+  const istNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
   
-    for (let hour = startHour; hour <= endHour; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
-        const time = new Date();
-        time.setHours(hour);
-        time.setMinutes(minute);
-        time.setSeconds(0);
-  
-        // Format as hh:mm AM/PM
-        const formattedTime = time.toLocaleString("en-US", {
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true,
-        });
-  
-        slots.push(formattedTime);
-      }
+  for (let hour = 9; hour <= 23; hour++) {
+    for (let minute = 0; minute < 60; minute += 30) {
+      const slotDate = new Date(istNow);
+      slotDate.setHours(hour, minute, 0, 0);
+
+      // Skip past times
+      if (slotDate <= istNow) continue;
+
+      const hours12 = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+      const meridiem = hour >= 12 ? "PM" : "AM";
+      const formattedTime = `${hours12}:${minute < 10 ? "0" + minute : minute} ${meridiem}`;
+      slots.push(formattedTime);
     }
+  }
+  return slots;
+};
+
+
+
   
-    return slots; // Return an array of formatted time strings
-  };
+
   
   
