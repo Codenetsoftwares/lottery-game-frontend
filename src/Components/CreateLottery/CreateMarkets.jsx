@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo } from "react";
 import { useFormik } from "formik";
-
 import { validationSchema } from "../../Utils/validationSchema";
 import { initialCreateMarketFormStates } from "../../Utils/initialState";
 import { FromToInput, ReusableInput } from "../ReusableInput/ReusableInput";
@@ -108,6 +107,7 @@ const CreateMarkets = () => {
           border: "2px solid black",
           boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
           maxWidth: "900px",
+          position: "relative",
         }}
       >
         <h3 className="text-center mb-4">Create Lottery Markets</h3>
@@ -122,6 +122,7 @@ const CreateMarkets = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={formik.touched[input.name] && formik.errors[input.name]}
+             
             />
           ))}
 
@@ -138,19 +139,28 @@ const CreateMarkets = () => {
               onBlur={formik.handleBlur}
               fromError={
                 formik.touched[input.fromName] && formik.errors[input.fromName]
-              }
+              } // Show error if touched
               toError={
                 formik.touched[input.toName] && formik.errors[input.toName]
-              }
+              } // Show error if touched
               options={input.options}
             />
           ))}
 
-          <div className="text-center mt-3">
+          <div className="text-center mt-3"  style={{
+              // position: "relative", 
+          
+            }}>
             <button
               type="submit"
               className="btn btn-primary px-4"
-              style={{ background: "#4682B4" }}
+              style={{
+                background: "#4682B4",
+                position: "absolute",
+                bottom: "-20px", 
+                left: "50%",
+                transform: "translateX(-50%)",
+              }}
             >
               Create Market
             </button>

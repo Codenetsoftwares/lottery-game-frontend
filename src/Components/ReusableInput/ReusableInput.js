@@ -1,4 +1,5 @@
 import React, { useRef, useState , useEffect } from "react";
+import useDebounce from "../../Utils/customHook/useDebounce ";
 
 export const ReusableInput = ({ placeholder, name, type = "text", value, onChange, onBlur, error }) => (
     <div className="form-group mb-3">
@@ -12,9 +13,11 @@ export const ReusableInput = ({ placeholder, name, type = "text", value, onChang
             onBlur={onBlur}
         />
         <div
-            className="text-danger d-flex align-items-center mt-1"
+            className="text-danger d-flex align-items-center  mt-1"
             style={{ minHeight: "20px", fontSize: "0.85rem" }} // Reserves space for error messages
+           
         >
+        
             {error && (
                 <>
                     <i className="bi bi-info-circle me-1"></i>
@@ -24,6 +27,9 @@ export const ReusableInput = ({ placeholder, name, type = "text", value, onChang
         </div>
     </div>
 );
+
+
+
 export const FromToInput = ({
   placeholder,
   fromName,
@@ -39,7 +45,13 @@ export const FromToInput = ({
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [activeInput, setActiveInput] = useState(null); // Track which input is active
-  const dropdownRef = useRef(null); // Reference to the dropdown container
+  const [typedFromValue, setTypedFromValue] = useState(fromValue); // For debouncing 'from' input
+  const [typedToValue, setTypedToValue] = useState(toValue); // For debouncing 'to' input
+  const dropdownRef = useRef(null);
+
+  // Debounced values
+  const debouncedFromValue = useDebounce(typedFromValue, 300);
+  const debouncedToValue = useDebounce(typedToValue, 300);
 
   const handleInputClick = (inputName) => {
     setActiveInput(inputName);
@@ -48,11 +60,13 @@ export const FromToInput = ({
 
   const handleOptionClick = (value, inputName) => {
     if (inputName === fromName) {
-      onChangeFrom({ target: { name: fromName, value } });
+      setTypedFromValue(value); // Update typed value immediately
+      onChangeFrom({ target: { name: fromName, value } }); // Notify parent of change
     } else if (inputName === toName) {
-      onChangeTo({ target: { name: toName, value } });
+      setTypedToValue(value); // Update typed value immediately
+      onChangeTo({ target: { name: toName, value } }); // Notify parent of change
     }
-    setIsDropdownOpen(false); // Close the dropdown after selecting
+    setIsDropdownOpen(false); // Close dropdown after selection
   };
 
   const renderGrid = (data) => {
@@ -60,7 +74,7 @@ export const FromToInput = ({
       return <div>No options available</div>;
     }
 
-    const columns = 5; // Set the number of columns in the grid
+    const columns = 5;
     const rows = Math.ceil(data.length / columns);
     const gridItems = [];
 
@@ -83,6 +97,15 @@ export const FromToInput = ({
     return gridItems;
   };
 
+  // Filter options based on the debounced value
+  const filteredFromOptions = options.filter(option =>
+    option.toString().includes(debouncedFromValue)
+  );
+
+  const filteredToOptions = options.filter(option =>
+    option.toString().includes(debouncedToValue)
+  );
+
   // Close dropdown if clicked outside of it
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -98,23 +121,35 @@ export const FromToInput = ({
     };
   }, []);
 
+  // Handle changes for 'from' input and apply debouncing
+  const handleFromChange = (e) => {
+    setTypedFromValue(e.target.value);
+  };
+
+  // Handle changes for 'to' input and apply debouncing
+  const handleToChange = (e) => {
+    setTypedToValue(e.target.value);
+  };
+
   return (
     <div className="form-group mb-3">
       <div className="d-flex gap-2">
+        {/* From Input */}
         <div className="position-relative" style={{ flex: 1 }}>
           <input
             type="text"
             name={fromName}
             className={`form-control ${fromError ? "is-invalid" : ""}`}
             placeholder={placeholder}
-            value={fromValue}
+            value={typedFromValue} // Reflect typed value in the input
             onClick={() => handleInputClick(fromName)}
             onBlur={onBlur}
-            onChange={onChangeFrom} // Use onChangeFrom for "From" input
+            onChange={handleFromChange}
           />
           <div
-            className="text-danger d-flex align-items-center mt-1"
+            className="text-danger no-cursor d-flex align-items-center mt-1"
             style={{ minHeight: "20px", fontSize: "0.85rem" }}
+            readOnly
           >
             {fromError && (
               <>
@@ -138,25 +173,27 @@ export const FromToInput = ({
                 zIndex: 10,
               }}
             >
-              {renderGrid(options)}
+              {renderGrid(filteredFromOptions)} 
             </div>
           )}
         </div>
 
+        {/* To Input */}
         <div className="position-relative" style={{ flex: 1 }}>
           <input
             type="text"
             name={toName}
             className={`form-control ${toError ? "is-invalid" : ""}`}
             placeholder={placeholder}
-            value={toValue}
+            value={typedToValue} // Reflect typed value in the input
             onClick={() => handleInputClick(toName)}
             onBlur={onBlur}
-            onChange={onChangeTo} // Use onChangeTo for "To" input
+            onChange={handleToChange}
           />
           <div
-            className="text-danger d-flex align-items-center mt-1"
+            className="text-danger no-cursor  d-flex align-items-center mt-1"
             style={{ minHeight: "20px", fontSize: "0.85rem" }}
+            readOnly
           >
             {toError && (
               <>
@@ -180,7 +217,7 @@ export const FromToInput = ({
                 zIndex: 10,
               }}
             >
-              {renderGrid(options)}
+              {renderGrid(filteredToOptions)} 
             </div>
           )}
         </div>
@@ -188,3 +225,4 @@ export const FromToInput = ({
     </div>
   );
 };
+
