@@ -1,8 +1,3 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useDebounce } from "use-debounce";
-
-// last updated needs to be changed accordingly on 9/12/2024
-
 export const FromToInput = ({
   placeholder,
   fromName,
@@ -21,11 +16,12 @@ export const FromToInput = ({
   const [typedFromValue, setTypedFromValue] = useState(fromValue);
   const [typedToValue, setTypedToValue] = useState(toValue);
   const dropdownRef = useRef(null);
+  const containerRef = useRef(null); // Ref for the container
+  const [containerWidth, setContainerWidth] = useState(0);
 
   const debouncedFromValue = useDebounce(typedFromValue, 300);
   const debouncedToValue = useDebounce(typedToValue, 300);
 
-  // Synchronize local state with formik values
   useEffect(() => {
     setTypedFromValue(fromValue);
   }, [fromValue]);
@@ -33,6 +29,13 @@ export const FromToInput = ({
   useEffect(() => {
     setTypedToValue(toValue);
   }, [toValue]);
+
+  useEffect(() => {
+    // Set container width dynamically
+    if (containerRef.current) {
+      setContainerWidth(containerRef.current.offsetWidth);
+    }
+  }, [containerRef.current]); // Recalculate width when the container is resized
 
   const handleInputClick = (inputName) => {
     setActiveInput(inputName);
@@ -50,37 +53,41 @@ export const FromToInput = ({
     setIsDropdownOpen(false);
   };
 
-  const renderGrid = (data) => {
-    if (!Array.isArray(data) || data.length === 0) {
-      return <div>No options available</div>;
-    }
-    const columns = 5;
-    const rows = Math.ceil(data.length / columns);
-    const gridItems = [];
-    for (let i = 0; i < rows; i++) {
-      gridItems.push(
-        <div className="d-flex justify-content-between" key={i}>
-          {data.slice(i * columns, (i + 1) * columns).map((item, index) => (
-            <button
-              key={index}
-              className="btn btn-light btn-sm w-100"
-              onClick={() => handleOptionClick(item, activeInput)}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      );
-    }
-    return gridItems;
-  };
+  const filteredOptions =
+    activeInput === fromName
+      ? options.filter((option) =>
+          option.toString().includes(debouncedFromValue)
+        )
+      : options.filter((option) =>
+          option.toString().includes(debouncedToValue)
+        );
 
-  const filteredFromOptions = options.filter((option) =>
-    option.toString().includes(debouncedFromValue)
-  );
-  const filteredToOptions = options.filter((option) =>
-    option.toString().includes(debouncedToValue)
-  );
+  const Row = ({ columnIndex, rowIndex, style }) => {
+    const index = rowIndex * 3 + columnIndex; // 3 columns per row
+    if (index >= filteredOptions.length) return null;
+
+    return (
+      <button
+        style={{
+          ...style,
+          display: "block", // Ensures that each option appears on its own row and column
+          margin: "0", // Remove any margin between options
+          padding: "8px",
+          textAlign: "left",
+          border: "1px solid #ddd",
+          borderRadius: "4px",
+          backgroundColor: "#f8f9fa",
+          transition: "background-color 0.3s",
+        }}
+        className="btn btn-light btn-sm text-start"
+        onClick={() => handleOptionClick(filteredOptions[index], activeInput)}
+        onMouseEnter={(e) => (e.target.style.backgroundColor = "#e6f7ff")}
+        onMouseLeave={(e) => (e.target.style.backgroundColor = "#f8f9fa")}
+      >
+        {filteredOptions[index]}
+      </button>
+    );
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -88,7 +95,9 @@ export const FromToInput = ({
         setIsDropdownOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -100,7 +109,6 @@ export const FromToInput = ({
   return (
     <div className="form-group mb-3">
       <div className="d-flex gap-2">
-        {/* From Input */}
         <div className="position-relative" style={{ flex: 1 }}>
           <input
             type="text"
@@ -111,34 +119,26 @@ export const FromToInput = ({
             onClick={() => handleInputClick(fromName)}
             onBlur={onBlur}
             onChange={handleFromChange}
+            style={{ height: "40px" }}
           />
-          {fromError && (
-            <div className="text-danger mt-1">
-              <i className="bi bi-info-circle me-1"></i>
-              {fromError}
-            </div>
-          )}
-          {isDropdownOpen && activeInput === fromName && (
-            <div
-              ref={dropdownRef}
-              className="dropdown-grid"
-              style={{
-                position: "absolute",
-                top: "100%",
-                left: 0,
-                right: 0,
-                maxHeight: "200px",
-                overflowY: "auto",
-                zIndex: 10,
-              }}
-            >
-              {renderGrid(filteredFromOptions)}
-            </div>
-          )}
+          {/* Consistent error message space */}
+          <div
+            className="text-danger no-cursor d-flex align-items-center mt-1"
+            style={{
+              height: "20px", // Fixed height for error message
+              fontSize: "0.85rem",
+            }}
+          >
+            {fromError && (
+              <>
+                <i className="bi bi-info-circle me-1"></i>
+                {fromError}
+              </>
+            )}
+          </div>
         </div>
 
-        {/* To Input */}
-        <div className="position-relative" style={{ flex: 1 }}>
+        <div className="position-relative" style={{ flex: 1 }} ref={containerRef}>
           <input
             type="text"
             name={toName}
@@ -148,32 +148,69 @@ export const FromToInput = ({
             onClick={() => handleInputClick(toName)}
             onBlur={onBlur}
             onChange={handleToChange}
+            style={{ height: "40px" }}
           />
-          {toError && (
-            <div className="text-danger mt-1">
-              <i className="bi bi-info-circle me-1"></i>
-              {toError}
-            </div>
-          )}
-          {isDropdownOpen && activeInput === toName && (
+          {/* Consistent error message space */}
+          <div
+            className="text-danger no-cursor d-flex align-items-center mt-1"
+            style={{
+              height: "20px", // Fixed height for error message
+              fontSize: "0.85rem",
+            }}
+          >
+            {toError && (
+              <>
+                <i className="bi bi-info-circle me-1"></i>
+                {toError}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {isDropdownOpen && containerWidth > 0 && (
+        <div
+          ref={dropdownRef}
+          className="dropdown-grid"
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            right: 0,
+            maxHeight: "200px",
+            overflowY: "auto", // Ensure only one scroll
+            zIndex: 10,
+            width: "100%", // Ensure it takes full width
+            border: "1px solid #ddd",
+            borderRadius: "4px",
+            backgroundColor: "#fff",
+          }}
+        >
+          {filteredOptions.length > 0 ? (
+            <Grid
+              columnCount={3}
+              columnWidth={containerWidth / 3}
+              height={200}
+              rowCount={Math.ceil(filteredOptions.length / 3)}
+              rowHeight={40}
+              width={containerWidth}
+            >
+              {Row}
+            </Grid>
+          ) : (
             <div
-              ref={dropdownRef}
-              className="dropdown-grid"
               style={{
-                position: "absolute",
-                top: "100%",
-                left: 0,
-                right: 0,
-                maxHeight: "200px",
-                overflowY: "auto",
-                zIndex: 10,
+                padding: "8px",
+                textAlign: "center",
+                color: "#999",
+                fontStyle: "italic",
               }}
             >
-              {renderGrid(filteredToOptions)}
+              No data
             </div>
           )}
         </div>
-      </div>
+      )}
     </div>
   );
 };

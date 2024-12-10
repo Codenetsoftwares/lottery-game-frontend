@@ -13,7 +13,7 @@ import { generateLotteryNumber } from "../../Utils/apiService";
 const CreateMarkets = () => {
   const formik = useFormik({
     initialValues: initialCreateMarketFormStates,
-    validationSchema,
+    validationSchema :validationSchema ,
     onSubmit: async (values) => {
       const startTimeISO = convertTimeToISO(values.timerFrom, values.date);
       const endTimeISO = convertTimeToISO(values.timerTo, values.date);
@@ -51,7 +51,7 @@ const CreateMarkets = () => {
     []
   );
   const numberOptions = useMemo(
-    () => generateFilterData({ type: "number", rangeStart: 1, rangeEnd: 5000 }),
+    () => generateFilterData({ type: "number", rangeStart: 1, rangeEnd: 99999 }),
     []
   );
   const timerOptions = useMemo(() => generateTimerOptions(), []);

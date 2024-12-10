@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from "react";
+import { FixedSizeList as List } from "react-window";
+
 export const generateSeries = (seriesStart, seriesEnd) => {
     const allLetters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
     const letters = allLetters.filter(letter => !["I", "F", "O"].includes(letter));
