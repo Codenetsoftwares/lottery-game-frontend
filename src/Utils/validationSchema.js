@@ -11,7 +11,7 @@ export const validationSchema = Yup.object({
       return selectedDate >= today; // Ensure the selected date is today or in the future
     }),
 
-    marketName: Yup.string()
+  marketName: Yup.string()
     .matches(/^[a-zA-Z0-9\s]+$/, "Market name can only contain letters, numbers, and spaces")
     .required("Market name is required"),
 
@@ -25,6 +25,15 @@ export const validationSchema = Yup.object({
         const { groupFrom } = this.parent;
         if (!value || !groupFrom) return true;
         return groupFrom < value;
+      }
+    )
+    .test(
+      "no-same-group",
+      "Group From and Group To cannot be the same",
+      function (value) {
+        const { groupFrom } = this.parent;
+        if (!value || !groupFrom) return true;
+        return groupFrom !== value;
       }
     ),
 
@@ -45,6 +54,15 @@ export const validationSchema = Yup.object({
         const diff = value.charCodeAt(0) - seriesFrom.charCodeAt(0);
         return diff >= 10; // Minimum 10 series difference
       }
+    )
+    .test(
+      "no-same-series",
+      "Series From and Series To cannot be the same",
+      function (value) {
+        const { seriesFrom } = this.parent;
+        if (!value || !seriesFrom) return true;
+        return seriesFrom !== value;
+      }
     ),
 
   numberFrom: Yup.number().required("Number From is required"),
@@ -56,6 +74,15 @@ export const validationSchema = Yup.object({
       function (value) {
         const { numberFrom } = this.parent;
         return value > numberFrom;
+      }
+    )
+    .test(
+      "no-same-number",
+      "Number From and Number To cannot be the same",
+      function (value) {
+        const { numberFrom } = this.parent;
+        if (!value || !numberFrom) return true;
+        return numberFrom !== value;
       }
     ),
 

@@ -1,3 +1,7 @@
+import React, { useState, useEffect, useRef } from "react";
+import { FixedSizeGrid as Grid } from "react-window";
+import useDebounce from "./useDebounce"; // Ensure you have this utility hook
+
 export const FromToInput = ({
   placeholder,
   fromName,
@@ -35,7 +39,7 @@ export const FromToInput = ({
     if (containerRef.current) {
       setContainerWidth(containerRef.current.offsetWidth);
     }
-  }, [containerRef.current]); // Recalculate width when the container is resized
+  }, [containerRef.current]);
 
   const handleInputClick = (inputName) => {
     setActiveInput(inputName);
@@ -46,20 +50,20 @@ export const FromToInput = ({
     if (inputName === fromName) {
       setTypedFromValue(value);
       onChangeFrom({ target: { name: fromName, value } });
+      setIsDropdownOpen(false);
     } else if (inputName === toName) {
       setTypedToValue(value);
       onChangeTo({ target: { name: toName, value } });
     }
-    setIsDropdownOpen(false);
   };
 
   const filteredOptions =
     activeInput === fromName
       ? options.filter((option) =>
-          option.toString().includes(debouncedFromValue)
+          option.toString().toLowerCase().includes(debouncedFromValue.toLowerCase())
         )
       : options.filter((option) =>
-          option.toString().includes(debouncedToValue)
+          option.toString().toLowerCase().includes(debouncedToValue.toLowerCase())
         );
 
   const Row = ({ columnIndex, rowIndex, style }) => {
@@ -70,8 +74,8 @@ export const FromToInput = ({
       <button
         style={{
           ...style,
-          display: "block", // Ensures that each option appears on its own row and column
-          margin: "0", // Remove any margin between options
+          display: "block",
+          margin: "0",
           padding: "8px",
           textAlign: "left",
           border: "1px solid #ddd",
@@ -121,13 +125,9 @@ export const FromToInput = ({
             onChange={handleFromChange}
             style={{ height: "40px" }}
           />
-          {/* Consistent error message space */}
           <div
             className="text-danger no-cursor d-flex align-items-center mt-1"
-            style={{
-              height: "20px", // Fixed height for error message
-              fontSize: "0.85rem",
-            }}
+            style={{ height: "20px", fontSize: "0.85rem" }}
           >
             {fromError && (
               <>
@@ -136,8 +136,50 @@ export const FromToInput = ({
               </>
             )}
           </div>
+          {isDropdownOpen && activeInput === fromName && containerWidth > 0 && (
+            <div
+              ref={dropdownRef}
+              className="dropdown-grid"
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                right: 0,
+                maxHeight: "200px",
+                overflowY: "auto",
+                zIndex: 10,
+                width: "100%",
+                border: "1px solid #ddd",
+                borderRadius: "4px",
+                backgroundColor: "#fff",
+              }}
+            >
+              {filteredOptions.length > 0 ? (
+                <Grid
+                  columnCount={3}
+                  columnWidth={containerWidth / 3}
+                  height={200}
+                  rowCount={Math.ceil(filteredOptions.length / 3)}
+                  rowHeight={40}
+                  width={containerWidth}
+                >
+                  {Row}
+                </Grid>
+              ) : (
+                <div
+                  style={{
+                    padding: "8px",
+                    textAlign: "center",
+                    color: "#999",
+                    fontStyle: "italic",
+                  }}
+                >
+                  No matching data found
+                </div>
+              )}
+            </div>
+          )}
         </div>
-
         <div className="position-relative" style={{ flex: 1 }} ref={containerRef}>
           <input
             type="text"
@@ -150,13 +192,9 @@ export const FromToInput = ({
             onChange={handleToChange}
             style={{ height: "40px" }}
           />
-          {/* Consistent error message space */}
           <div
             className="text-danger no-cursor d-flex align-items-center mt-1"
-            style={{
-              height: "20px", // Fixed height for error message
-              fontSize: "0.85rem",
-            }}
+            style={{ height: "20px", fontSize: "0.85rem" }}
           >
             {toError && (
               <>
@@ -165,52 +203,51 @@ export const FromToInput = ({
               </>
             )}
           </div>
-        </div>
-      </div>
-
-      {isDropdownOpen && containerWidth > 0 && (
-        <div
-          ref={dropdownRef}
-          className="dropdown-grid"
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            right: 0,
-            maxHeight: "200px",
-            overflowY: "auto", // Ensure only one scroll
-            zIndex: 10,
-            width: "100%", // Ensure it takes full width
-            border: "1px solid #ddd",
-            borderRadius: "4px",
-            backgroundColor: "#fff",
-          }}
-        >
-          {filteredOptions.length > 0 ? (
-            <Grid
-              columnCount={3}
-              columnWidth={containerWidth / 3}
-              height={200}
-              rowCount={Math.ceil(filteredOptions.length / 3)}
-              rowHeight={40}
-              width={containerWidth}
-            >
-              {Row}
-            </Grid>
-          ) : (
+          {isDropdownOpen && activeInput === toName && containerWidth > 0 && (
             <div
+              ref={dropdownRef}
+              className="dropdown-grid"
               style={{
-                padding: "8px",
-                textAlign: "center",
-                color: "#999",
-                fontStyle: "italic",
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                right: 0,
+                maxHeight: "200px",
+                overflowY: "auto",
+                zIndex: 10,
+                width: "100%",
+                border: "1px solid #ddd",
+                borderRadius: "4px",
+                backgroundColor: "#fff",
               }}
             >
-              No data
+              {filteredOptions.length > 0 ? (
+                <Grid
+                  columnCount={3}
+                  columnWidth={containerWidth / 3}
+                  height={200}
+                  rowCount={Math.ceil(filteredOptions.length / 3)}
+                  rowHeight={40}
+                  width={containerWidth}
+                >
+                  {Row}
+                </Grid>
+              ) : (
+                <div
+                  style={{
+                    padding: "8px",
+                    textAlign: "center",
+                    color: "#999",
+                    fontStyle: "italic",
+                  }}
+                >
+                  No matching data found
+                </div>
+              )}
             </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

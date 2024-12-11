@@ -1,36 +1,39 @@
-import React, { useRef, useState , useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import useDebounce from "../../Utils/customHook/useDebounce ";
 import { FixedSizeGrid as Grid } from "react-window";
 
-export const ReusableInput = ({ placeholder, name, type = "text", value, onChange, onBlur, error }) => (
-    <div className="form-group mb-3">
-        <input
-            type={type}
-            name={name}
-            className={`form-control ${error ? "is-invalid" : ""}`}
-            placeholder={placeholder}  // Using placeholder instead of label
-            value={value}
-            onChange={onChange}
-            onBlur={onBlur}
-        />
-        <div
-            className="text-danger d-flex align-items-center  mt-1"
-            style={{ minHeight: "20px", fontSize: "0.85rem" }} // Reserves space for error messages
-           
-        >
-        
-            {error && (
-                <>
-                    <i className="bi bi-info-circle me-1"></i>
-                    <span>{error}</span>
-                </>
-            )}
-        </div>
+export const ReusableInput = ({
+  placeholder,
+  name,
+  type = "text",
+  value,
+  onChange,
+  onBlur,
+  error,
+}) => (
+  <div className="form-group mb-3">
+    <input
+      type={type}
+      name={name}
+      className={`form-control ${error ? "is-invalid" : ""}`}
+      placeholder={placeholder} // Using placeholder instead of label
+      value={value}
+      onChange={onChange}
+      onBlur={onBlur}
+    />
+    <div
+      className="text-danger d-flex align-items-center  mt-1"
+      style={{ minHeight: "20px", fontSize: "0.85rem" }} // Reserves space for error messages
+    >
+      {error && (
+        <>
+          <i className="bi bi-info-circle me-1"></i>
+          <span>{error}</span>
+        </>
+      )}
     </div>
+  </div>
 );
-
-
-
 
 export const FromToInput = ({
   placeholder,
@@ -77,6 +80,8 @@ export const FromToInput = ({
   };
 
   const handleOptionClick = (value, inputName) => {
+    console.log("Option clicked:", value);
+
     if (inputName === fromName) {
       setTypedFromValue(value);
       onChangeFrom({ target: { name: fromName, value } });
@@ -104,8 +109,8 @@ export const FromToInput = ({
       <button
         style={{
           ...style,
-          display: "block", // Ensures that each option appears on its own row and column
-          margin: "0", // Remove any margin between options
+          display: "block",
+          margin: "0",
           padding: "8px",
           textAlign: "left",
           border: "1px solid #ddd",
@@ -180,8 +185,8 @@ export const FromToInput = ({
                 left: 0,
                 right: 0,
                 maxHeight: "200px",
-                overflowY: "auto",
-                overflowX: "auto", // Allow horizontal scroll if needed
+                overflowY: "hidden",
+                overflowX: "hidden", // Allow horizontal scroll if needed
                 zIndex: 10,
                 width: "100%", // Ensure it takes full width
                 border: "1px solid #ddd",
@@ -216,7 +221,11 @@ export const FromToInput = ({
           )}
         </div>
 
-        <div className="position-relative" style={{ flex: 1 }} ref={containerRef}>
+        <div
+          className="position-relative"
+          style={{ flex: 1 }}
+          ref={containerRef}
+        >
           <input
             type="text"
             name={toName}
@@ -253,8 +262,8 @@ export const FromToInput = ({
                 left: 0,
                 right: 0,
                 maxHeight: "200px",
-                overflowY: "auto",
-                overflowX: "auto", // Allow horizontal scroll if needed
+                overflowY: "hidden",
+                overflowX: "hidden", 
                 zIndex: 10,
                 width: "100%", // Ensure it takes full width
                 border: "1px solid #ddd",
@@ -282,7 +291,7 @@ export const FromToInput = ({
                     fontStyle: "italic",
                   }}
                 >
-                  No data
+                  No matching data found
                 </div>
               )}
             </div>
@@ -292,7 +301,3 @@ export const FromToInput = ({
     </div>
   );
 };
-
-
-
-
