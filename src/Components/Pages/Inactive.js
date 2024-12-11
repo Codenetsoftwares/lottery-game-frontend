@@ -19,7 +19,7 @@ const Inactive = () => {
 
     useEffect(() => {
         fetchInactiveGames();
-    }, [refresh,currentPage,itemsPerPage]);
+    }, [refresh, currentPage, itemsPerPage]);
 
     const fetchInactiveGames = async () => {
         try {
@@ -212,14 +212,15 @@ const Inactive = () => {
                     </SingleCard>
 
                     {/* Pagination */}
-                    <Pagination
+                    {inactiveGames.length > 0 && <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
                         handlePageChange={handlePageChange}
                         startIndex={startIndex}
                         endIndex={endIndex}
                         totalData={totalData}
-                    />
+                    />}
+
                 </div>
             </div>
         </div>

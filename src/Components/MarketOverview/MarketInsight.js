@@ -98,7 +98,7 @@ const MarketInsight = () => {
   // useEffect(() => {
   //   const marketId = "a0587cfe-5600-4675-8d13-00aff76246c1";
   //   fetchMarketData(marketId);
-  // }, []);
+  // }, []);`
 
   useEffect(() => {
     if (selectedMarket) {

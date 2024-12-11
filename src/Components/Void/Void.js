@@ -28,7 +28,7 @@ const Void = () => {
         page: pagination.page,
         limit: pagination.limit,
         searchTerm: searchTerm,
-      });
+      }, false);
       if (response.success) {
         setVoidMarkets(response.data);
         setPagination({
@@ -37,11 +37,9 @@ const Void = () => {
           totalPages: response.pagination.totalPages || 0,
           totalItems: response.pagination.totalItems || 0,
         });
-      } else {
-        setError(response.message || "Failed to fetch data.");
       }
     } catch (err) {
-      setError(err.message || "An error occurred.");
+    
     } finally {
       setIsLoading(false);
     }
@@ -52,8 +50,8 @@ const Void = () => {
   };
 
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value); 
-    setPagination((prev) => ({ ...prev, page: 1 })); 
+    setSearchTerm(event.target.value);
+    setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
@@ -74,8 +72,8 @@ const Void = () => {
         <div className="card-body p-3">
           {isLoading ? (
             <div className="text-center">Loading...</div>
-          ) : error ? (
-            <div className="text-danger text-center">{error}</div>
+          ) : voidMarkets.length == 0 ? (
+            <div className=" text-center">No Data</div>
           ) : (
             <>
               {/* Search and Pagination Controls */}
@@ -91,7 +89,7 @@ const Void = () => {
                     }}
                     placeholder="Search..."
                     value={searchTerm}
-                    onChange={handleSearchChange} 
+                    onChange={handleSearchChange}
                   />
                 </div>
               </div>
