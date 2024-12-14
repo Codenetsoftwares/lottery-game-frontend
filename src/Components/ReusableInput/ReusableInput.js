@@ -1,6 +1,39 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import useDebounce from "../../Utils/customHook/useDebounce ";
 import { FixedSizeGrid as Grid } from "react-window";
-import useDebounce from "./useDebounce"; // Ensure you have this utility hook
+
+export const ReusableInput = ({
+  placeholder,
+  name,
+  type = "text",
+  value,
+  onChange,
+  onBlur,
+  error,
+}) => (
+  <div className="form-group mb-3">
+    <input
+      type={type}
+      name={name}
+      className={`form-control ${error ? "is-invalid" : ""}`}
+      placeholder={placeholder} // Using placeholder instead of label
+      value={value}
+      onChange={onChange}
+      onBlur={onBlur}
+    />
+    <div
+      className="text-danger d-flex align-items-center  mt-1"
+      style={{ minHeight: "20px", fontSize: "0.85rem" }} // Reserves space for error messages
+    >
+      {error && (
+        <>
+          <i className="bi bi-info-circle me-1"></i>
+          <span>{error}</span>
+        </>
+      )}
+    </div>
+  </div>
+);
 
 export const FromToInput = ({
   placeholder,
@@ -39,7 +72,7 @@ export const FromToInput = ({
     if (containerRef.current) {
       setContainerWidth(containerRef.current.offsetWidth);
     }
-  }, [containerRef.current]);
+  }, [containerRef.current]); // Recalculate width when the container is resized
 
   const handleInputClick = (inputName) => {
     setActiveInput(inputName);
@@ -47,23 +80,25 @@ export const FromToInput = ({
   };
 
   const handleOptionClick = (value, inputName) => {
+    console.log("Option clicked:", value);
+
     if (inputName === fromName) {
       setTypedFromValue(value);
       onChangeFrom({ target: { name: fromName, value } });
-      setIsDropdownOpen(false);
     } else if (inputName === toName) {
       setTypedToValue(value);
       onChangeTo({ target: { name: toName, value } });
     }
+    setIsDropdownOpen(false);
   };
 
   const filteredOptions =
     activeInput === fromName
       ? options.filter((option) =>
-          option.toString().toLowerCase().includes(debouncedFromValue.toLowerCase())
+          option.toString().includes(debouncedFromValue)
         )
       : options.filter((option) =>
-          option.toString().toLowerCase().includes(debouncedToValue.toLowerCase())
+          option.toString().includes(debouncedToValue)
         );
 
   const Row = ({ columnIndex, rowIndex, style }) => {
@@ -125,9 +160,13 @@ export const FromToInput = ({
             onChange={handleFromChange}
             style={{ height: "40px" }}
           />
+          {/* Consistent error message space */}
           <div
             className="text-danger no-cursor d-flex align-items-center mt-1"
-            style={{ height: "20px", fontSize: "0.85rem" }}
+            style={{
+              height: "20px", // Fixed height for error message
+              fontSize: "0.85rem",
+            }}
           >
             {fromError && (
               <>
@@ -146,9 +185,10 @@ export const FromToInput = ({
                 left: 0,
                 right: 0,
                 maxHeight: "200px",
-                overflowY: "auto",
+                overflowY: "hidden",
+                overflowX: "hidden", // Allow horizontal scroll if needed
                 zIndex: 10,
-                width: "100%",
+                width: "100%", // Ensure it takes full width
                 border: "1px solid #ddd",
                 borderRadius: "4px",
                 backgroundColor: "#fff",
@@ -174,13 +214,18 @@ export const FromToInput = ({
                     fontStyle: "italic",
                   }}
                 >
-                  No matching data found
+                  No data
                 </div>
               )}
             </div>
           )}
         </div>
-        <div className="position-relative" style={{ flex: 1 }} ref={containerRef}>
+
+        <div
+          className="position-relative"
+          style={{ flex: 1 }}
+          ref={containerRef}
+        >
           <input
             type="text"
             name={toName}
@@ -192,9 +237,13 @@ export const FromToInput = ({
             onChange={handleToChange}
             style={{ height: "40px" }}
           />
+          {/* Consistent error message space */}
           <div
             className="text-danger no-cursor d-flex align-items-center mt-1"
-            style={{ height: "20px", fontSize: "0.85rem" }}
+            style={{
+              height: "20px", // Fixed height for error message
+              fontSize: "0.85rem",
+            }}
           >
             {toError && (
               <>
@@ -213,9 +262,10 @@ export const FromToInput = ({
                 left: 0,
                 right: 0,
                 maxHeight: "200px",
-                overflowY: "auto",
+                overflowY: "hidden",
+                overflowX: "hidden", 
                 zIndex: 10,
-                width: "100%",
+                width: "100%", // Ensure it takes full width
                 border: "1px solid #ddd",
                 borderRadius: "4px",
                 backgroundColor: "#fff",
