@@ -19,15 +19,20 @@ import MarketInsight from '../MarketOverview/MarketInsight';
 import SearchLottery from '../Pages/SearchLotteryPage/SearchLottery';
 import PrivateRoute from '../Common/privateRouting';
 import DemoResult from '../Result/demoResult';
+
 import CreateMarkets from '../CreateLottery/CreateMarkets';
 import AlphabetForm from '../ReusableInput/AlphabetForm';
+
+import Void from '../Void/Void';
+import Inactive from '../Pages/Inactive';
+
 
 const AppRoutes = () => {
   return (
     <AppProvider>
       <ToastContainer
-        position="top-right"
-        autoClose={3000}
+        position="top-center"
+        autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -56,6 +61,10 @@ const AppRoutes = () => {
             {/* <Route path="/results" element={<DemoResult />} /> */}
             <Route path="/win" element={<Win />} />
             <Route path="/search-lottery" element={<SearchLottery/>} />
+            <Route path="/get-void-market" element={<Void/>} />
+            <Route path="/void-market-lottery" element={<Void/>} />
+            <Route path="/inactive" element={<Inactive/>} />
+
             {/* <Route path="/lucky-hour" element={<CreateTime/>}/>  not in use anymore  */} 
             <Route path="/Market-overview" element={<MarketInsight/>} />
           </Route>

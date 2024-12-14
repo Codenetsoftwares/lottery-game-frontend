@@ -81,6 +81,12 @@
 .nav-options .nav-link.market-overview{
   color: rgb(221 125 119);
 }
+.nav-options .nav-link.void-icon{
+  color: rgb(207, 63, 82);
+}
+.nav-options .nav-link.active-icon{
+  color: rgb(11, 134, 32);
+}
 /* Blinking effect for Results */
 .blink {
   animation: colorChange 1.5s linear infinite;

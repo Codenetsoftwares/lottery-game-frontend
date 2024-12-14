@@ -127,6 +127,27 @@ const NavTop = () => {
                 <i className="fas fa-search nav-icon" />
                 <span>Search Lottery</span>
               </Link>
+
+              <Link
+                to="/get-void-market"
+                className={`nav-link void-icon ${
+                  activeLink === "/get-void-market" ? "active-link" : ""
+                }`}
+                onClick={() => handleClick("/get-void-market")}
+              >
+              <i class="fas fa-minus-circle nav-icon"></i>
+                <span>Void</span>
+              </Link>
+              <Link
+                to="/inactive"
+                className={`nav-link active-icon ${
+                  activeLink === "" ? "active-link" : ""
+                }`}
+                onClick={() => handleClick("")}
+              >
+             <i class="fas fa-check-circle nav-icon"></i>
+                <span>InActive</span>
+              </Link>
             </div>
 
             <div className="profile_info d-flex align-items-center mx-4">

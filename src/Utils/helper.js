@@ -40,6 +40,7 @@ export const generateNumbers = (start, end) => {
 };
 
 
+
 // ALL NUMBER SERIES & GROUP IS GENERATED FROM THIS SINGLE UNIFIED FUNCTION 
 
  export const generateFilterData = ({ type, rangeStart, rangeEnd, excludedChars = [] }) => {
@@ -115,3 +116,21 @@ export const generateTimerOptions = () => {
 
   
   
+
+export function compareDigitsByPlace(num1, num2) {
+    const digits1 = num1.toString().padStart(5, '0').split('').reverse(); 
+    const digits2 = num2.toString().padStart(5, '0').split('').reverse();
+
+    const result = [];
+
+    for (let i = 0; i < digits1.length; i++) {
+        const digit1 = parseInt(digits1[i], 10);
+        const digit2 = parseInt(digits2[i], 10);
+
+        // Push the greater digit to the result array
+        result.push(Math.max(digit1, digit2));
+    }
+
+    return result.reverse(); // Reverse back to match original number order
+}
+
