@@ -25,6 +25,43 @@ const MarketInsight = () => {
   const [marketData, setMarketData] = useState([]);
   const [error, setError] = useState(null);
   const [refresh, setRefresh] = useState(false)
+  const [filteredMarkets, setFilteredMarkets] = useState([]);
+
+  // Updated function for toggling market status
+  const handleMarketStatusToggle = async () => {
+    const newStatus = !selectedMarket.isActive;
+
+    try {
+      showLoader();
+      const response = await isActiveLottery({ status: newStatus, marketId: selectedMarket.marketId }, true);
+      if (response.success) {
+        setRefresh((prev) => !prev);
+        setSelectedMarket((prevState) => ({
+          ...prevState,
+          isActive: newStatus,
+        }));
+        toast.success(`Market is now ${newStatus ? "Active" : "Inactive"}`);
+      } else {
+        toast.error("Failed to update market status");
+      }
+    } catch (error) {
+      console.error("Error activating/deactivating lottery:", error);
+      toast.error("An error occurred while updating market status");
+    } finally {
+      hideLoader();
+    }
+  };
+  
+
+
+
+
+  useEffect(() => {
+    if (!refresh) {
+      setFilteredMarkets(marketTimes); // Reset the filter when not active
+    }
+  }, [marketTimes, refresh]);
+  
 
 
 
@@ -162,10 +199,21 @@ const MarketInsight = () => {
                 onClick={() => handleMarketClick(market)}
               >
                 <Card.Body>
+                
                   <Card.Title>{market.marketName}</Card.Title>
-                  <Badge bg="light" text="dark" className="mb-2">
+                  {market.isActive ? (
+                        <Badge bg="success" className="ms-2">
+                          Active
+                        </Badge>
+                      ) : (
+                        <Button variant="secondary" size="sm" className="ms-2">
+                          Inactive
+                        </Button>
+                      )}
+                 
+                  {/* <Badge bg="light" text="dark" className="mb-2">
                     {`ID: ${market.marketId.slice(-6).toUpperCase()}`}
-                  </Badge>
+                  </Badge> */}
                 </Card.Body>
               </Card>
             ))
@@ -190,11 +238,27 @@ const MarketInsight = () => {
 
       {/* Main Content */}
       <main className="alt-main-content p-4">
+
         {showStats && selectedMarket ? (
           <div className="stats-popup">
             <h3 className="market-title text-center mb-4">
               {selectedMarket.marketName} Stats
             </h3>
+    {/* Switch for Market Status Filter */}
+    <div className="d-flex justify-content-end mb-3">
+              <div className="form-check form-switch">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="flexSwitchCheckActive"
+                  checked={selectedMarket.isActive}
+                  onChange={handleMarketStatusToggle}
+                />
+                <label className="form-check-label" htmlFor="flexSwitchCheckActive">
+                  {selectedMarket.isActive ? "Active" : "Inactive"}
+                </label>
+              </div>
+            </div>
             <Row>
               {/* Group Range Card */}
               <Col md={6} className="mb-3">
@@ -318,14 +382,14 @@ const MarketInsight = () => {
                 >
                   Void
                 </button>
-                {selectedMarket.isActive ? <button className="btn btn-danger" onClick={() => handleisActive(selectedMarket.marketId, false)}>Suspend</button> : <button className="btn btn-success" onClick={() => handleisActive(selectedMarket.marketId, true)}> IsActive</button>}
+                {/* {selectedMarket.isActive ? <button className="btn btn-danger" onClick={() => handleisActive(selectedMarket.marketId, false)}>Suspend</button> : <button className="btn btn-success" onClick={() => handleisActive(selectedMarket.marketId, true)}> Active</button>} */}
                 
               </div>
             </Row>
 
             {/* Accordion for Purchased Tickets */}
 
-            <Accordion defaultActiveKey="0" className="mt-4">
+            {/* <Accordion defaultActiveKey="0" className="mt-4">
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Purchased Tickets</Accordion.Header>
                 <Accordion.Body>
@@ -335,7 +399,7 @@ const MarketInsight = () => {
                         <div key={index} className="ticket-card">
                           <Card className="ticket-card-item shadow-sm">
                             <Card.Body>
-                              {/* Display all ticket numbers in a grid */}
+                             
                               <div className="ticket-numbers">
                                 {ticket.ticketList.map((ticketNumber, idx) => (
                                   <span key={idx} className="ticket-number">
@@ -353,7 +417,7 @@ const MarketInsight = () => {
                   )}
                 </Accordion.Body>
               </Accordion.Item>
-            </Accordion>
+            </Accordion> */}
 
             <Button
               variant="outline-primary"
