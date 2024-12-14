@@ -3,12 +3,9 @@ class UrlConstant {
   //url was commented
 
   //  url_dev = "https://lottery.server.dummydoma.in/api";
-  url_dev = 'http://localhost:8080/api';
+  url_dev = "http://localhost:8080/api";
 
-  url_dev = "https://lottery.server.dummydoma.in/api";
-  // url_dev = 'http://localhost:8080/api';
-
-  admin = 'admin'
+  admin = "admin";
   login = `${this.url_dev}/login`;
   generateTicketId = `${this.url_dev}/ticket-create`;
   generateLottery = `${this.url_dev}/create-lottery`;
@@ -35,10 +32,9 @@ class UrlConstant {
   getPurchaseMarketTime = `${this.url_dev}/${this.admin}/get-markets`;
   getVoidMarket = `${this.url_dev}/void-market-lottery`;
   allVoidMarketData = `${this.url_dev}/get-void-market`;
-  isActive = `${this.url_dev}/update-market-status`
-  getIsActive = `${this.url_dev}/get-inactive-markets`
-  isRevoke = `${this.url_dev}/revoke-market-lottery`
-
+  isActive = `${this.url_dev}/update-market-status`;
+  getIsActive = `${this.url_dev}/get-inactive-markets`;
+  isRevoke = `${this.url_dev}/revoke-market-lottery`;
 }
 
 const urls = new UrlConstant();
