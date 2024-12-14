@@ -50,7 +50,7 @@ const NavTop = () => {
               </Link>
 
               <Link
-                to="/lottery-markets"
+                to="/Newlottery-markets"
                 className={`nav-link create-lottery ${
                   activeLink === "/lottery-markets" ? "active-link" : ""
                 }`}
