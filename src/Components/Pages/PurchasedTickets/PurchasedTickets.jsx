@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAppContext } from "../../../contextApi/context";
-import { GetPurchaseHistoryMarketTimings, PurchasedTicketsHistory } from "../../../Utils/apiService";
+import {
+  GetPurchaseHistoryMarketTimings,
+  PurchasedTicketsHistory,
+} from "../../../Utils/apiService";
 import { Table, Spinner } from "react-bootstrap";
 import debounce from "lodash.debounce";
 import { useParams, useNavigate } from "react-router-dom";
-import Pagination from '../../Common/Pagination';
+import Pagination from "../../Common/Pagination";
 
 const PurchasedTickets = () => {
   const { dispatch, showLoader, hideLoader } = useAppContext();
@@ -24,7 +27,9 @@ const PurchasedTickets = () => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [markets, setMarkets] = useState([]);
-  const [selectedMarketId, setSelectedMarketId] = useState(paramMarketId || null);
+  const [selectedMarketId, setSelectedMarketId] = useState(
+    paramMarketId || null
+  );
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
   const visibleCount = 5;
 
@@ -35,12 +40,14 @@ const PurchasedTickets = () => {
   useEffect(() => {
     const fetchMarketData = async () => {
       try {
-        const response = await GetPurchaseHistoryMarketTimings({ date: new Date().toISOString().slice(0, 10) });
-  
+        const response = await GetPurchaseHistoryMarketTimings({
+          date: new Date().toISOString().slice(0, 10),
+        });
+
         if (response?.success) {
           const marketsData = response.data || [];
           setMarkets(marketsData);
-  
+
           if (!paramMarketId && marketsData.length > 0) {
             const firstMarketId = marketsData[0].marketId;
             navigate(`/purchase-history/${firstMarketId}`, { replace: true });
@@ -58,10 +65,9 @@ const PurchasedTickets = () => {
         // Handle fetch failure scenario here, if needed
       }
     };
-  
+
     fetchMarketData();
   }, [paramMarketId, navigate]);
-  
 
   // Create debounced fetchPurchasedLotteryTickets function
   const fetchPurchasedLotteryTickets = useCallback(
@@ -118,7 +124,13 @@ const PurchasedTickets = () => {
     return () => {
       fetchPurchasedLotteryTickets.cancel(); // Clean up debounced function on unmount
     };
-  }, [selectedMarketId, pagination.page, pagination.limit, searchTerm, fetchPurchasedLotteryTickets]);
+  }, [
+    selectedMarketId,
+    pagination.page,
+    pagination.limit,
+    searchTerm,
+    fetchPurchasedLotteryTickets,
+  ]);
 
   // Handle search input change
   const handleSearchChange = (event) => {
@@ -158,7 +170,10 @@ const PurchasedTickets = () => {
 
   // Calculate start and end indices for pagination display
   const startIndex = (pagination.page - 1) * pagination.limit + 1;
-  const endIndex = Math.min(pagination.page * pagination.limit, pagination.totalItems);
+  const endIndex = Math.min(
+    pagination.page * pagination.limit,
+    pagination.totalItems
+  );
 
   if (loading) {
     return null;
@@ -190,7 +205,9 @@ const PurchasedTickets = () => {
                 <span
                   key={market.marketId}
                   className={`badge me-2 ${
-                    selectedMarketId === market.marketId ? "bg-success" : "bg-primary"
+                    selectedMarketId === market.marketId
+                      ? "bg-success"
+                      : "bg-primary"
                   }`}
                   style={{ cursor: "pointer" }}
                   onClick={() => handleMarketClick(market.marketId)}
@@ -274,9 +291,9 @@ const PurchasedTickets = () => {
                     <div
                       className="custom-dropdown-content"
                       style={{
-                        height: dropdownOpen === index ? "150px" : "0",
-                        overflow: "hidden",
-                        transition: "height 0.3s ease",
+                        maxHeight: dropdownOpen === index ? "200px" : "0", // Adjust to your desired max-height
+                        overflow: "hidden", // Hide overflow initially
+                        transition: "max-height 0.3s ease", // Smooth transition when opening
                       }}
                     >
                       {dropdownOpen === index && (
